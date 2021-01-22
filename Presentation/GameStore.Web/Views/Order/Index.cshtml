@@ -1,0 +1,53 @@
+﻿@model OrderModel
+
+@{
+    ViewData["Title"] = "Корзина";
+}
+
+<h2 class="ml-5 mb-3">Корзина</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col">Товар</th>
+            <th scope="col">Категория</th>
+            <th scope="col"></th>
+            <th scope="col">Количество</th>
+            <th scope="col" class="text-right">Цена</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.OrderItems.Length; i++)
+        {
+        <tr>
+            <td class="">@(i + 1)</td>
+            <td><strong>@Model.OrderItems[i].Name</strong></td>
+            <td>@Model.OrderItems[i].Category</td>
+            <td>
+                @if (Model.OrderItems[i].ImageData != null)
+                {
+                    <img style="width:95px; height:120px;" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.OrderItems[i].ImageData))" />
+                }
+            </td>
+            <td class="text-center">@Model.OrderItems[i].Count</td>
+            <td class="text-right">@Model.OrderItems[i].Price &#8381;</td>
+            <td class="text-right">
+                <form class="form-inline ml-3" asp-controller="order" asp-action="removeitem" method="post">
+                    <input type="hidden" name="gameId" value="@Model.OrderItems[i].GameId" />
+                    <button class="btn btn-danger" type="submit">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        }
+    </tbody>
+    <tfoot  >
+        <tr>
+            <td colspan="4" class="text-right "><strong>Итого</strong></td>
+            <td class="text-center"><strong>@Model.TotalCount</strong></td>
+            <td class="text-right"><strong>@Model.TotalPrice &#8381;</strong></td>
+        </tr>
+    </tfoot>
+</table>
+

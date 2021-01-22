@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Application\GameStore.Web.App\GameStore.Web.App.csproj" />
     <ProjectReference Include="..\..\Domain\GameStore\GameStore.csproj" />
     <ProjectReference Include="..\..\Infrastructure\GameStore.MemoryStorage\GameStore.MemoryStorage.csproj" />
   </ItemGroup>

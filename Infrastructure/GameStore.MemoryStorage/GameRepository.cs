@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 
@@ -40,7 +42,7 @@ namespace GameStore.MemoryStorage
 
                 new Game(4, "Wasteland 3","inXile Entertainment",
                         "Радиоактивные пустоши взывают к вам!Высоко оцененная серия ролевых игр от inXile Entertainment продолжает своё победоносное шествие, выпустив третью часть занимательной вселенной постапокалипсиса. Решившись купить Wasteland 3 и повлиять на судьбы многих, на судьбу всей Аризоны. Вам придётся посетить раскаленные пустыни, холодные горы, потерять всё и даже построить новую базу. Собственными руками вы построите нечто, что станет маяком безопасности и надёжности в опасном мире, полный опасных фракций, интриг, сумасшедших культистов, банд головорезов и хищников!",
-                        "Стратегии",1599m,gamesImageData.Wasteland.ParseHexString(), "28 августа 2020")
+                        "Стратегии",1599m, gamesImageData.Wasteland.ParseHexString(), "28 августа 2020")
              
             };
         }
@@ -56,6 +58,18 @@ namespace GameStore.MemoryStorage
             return nameOrPublisher != null ? games.Where(game => game.Name.ToLower().Contains((nameOrPublisher).ToLower())
                                        || game.Publisher.ToLower().Contains((nameOrPublisher).ToLower())).ToArray() : new Game[0];
         }
+
+        public Game GetGameById(int id)
+        {
+            return games.Single(game => game.Id == id);
+        }
+
+        public Game[] GetGamesByIds(IEnumerable<int> gamesId)
+        {
+            return games.Join(gamesId, game => game.Id, id => id, (game,id) => game).ToArray();
+        }
+    
+
     }
 
 }
