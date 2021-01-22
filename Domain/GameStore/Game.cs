@@ -11,7 +11,7 @@ namespace GameStore
         public string Category { get; }
         public decimal Price { get; }
         public byte[] ImageData { get; }
-        public string ReleaseData { get; set; }
+        public string ReleaseData { get; }
         public Game (int id, string name, string publisher, string description, string category, 
                     decimal price, byte[] imageData, string releaseData)
         {

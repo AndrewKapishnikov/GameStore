@@ -7,20 +7,21 @@ using System.Threading.Tasks;
 
 namespace GameStore.Web.Controllers
 {
-    public class SearchController:Controller
+    public class GameController: Controller
     {
         private readonly GameService gameService;
 
-        public SearchController(GameService gameService)
+        public GameController(GameService gameService)
         {
             this.gameService = gameService;
+
         }
 
-        public IActionResult Index(string query)
+        public IActionResult Index(int id)
         {
-            var games = gameService.GetAllGamesByNameOrPublisher(query);
+            var model = gameService.GetGameById(id);
 
-            return View(games);
+            return View(model);
         }
     }
 }

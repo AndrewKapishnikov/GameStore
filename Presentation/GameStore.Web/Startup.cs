@@ -1,10 +1,12 @@
 using GameStore.MemoryStorage;
+using GameStore.Web.App;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.IO;
 
 namespace GameStore.Web
@@ -27,9 +29,20 @@ namespace GameStore.Web
         {
 
             services.Configure<GameImageData>(options => Configuration.GetSection("ImagesData").Bind(options));
-            
+
+            services.AddHttpContextAccessor();
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
+
             services.AddSingleton<IGameRepository, GameRepository>();
+            services.AddSingleton<IOrderRepository, OrderRepository>();
             services.AddSingleton<GameService>();
+            services.AddSingleton<OrderService>();
             services.AddControllersWithViews();
         }
 
@@ -49,6 +62,8 @@ namespace GameStore.Web
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

@@ -10,5 +10,7 @@ namespace GameStore
     {
         Game[] GetAllByNameOrPublisher(string nameOrPublisher);
         Game[] GetAllByCategory(string category);
+        Game[] GetGamesByIds(IEnumerable<int> gamesId);
+        Game GetGameById(int id);
     }
 }

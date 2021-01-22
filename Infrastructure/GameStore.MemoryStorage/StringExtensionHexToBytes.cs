@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GameStore.MemoryStorage
 {
-    public static class StringExtentionHexToBytes
+    public static class StringExtensionHexToBytes
     {
         public static byte[] ParseHexString(this string text)
         {
