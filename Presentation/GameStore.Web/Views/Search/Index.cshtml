@@ -1,47 +1,59 @@
 ﻿@model IReadOnlyCollection<GameModel>
 @{
-    ViewData["Title"] = "Search";
+    ViewData["Title"] = "Поиск по запросу";
 }
-<h3>Игры по запросу поиска</h3>
-<table class="table" style="width:800px;">
-    <thead>
-        <tr>
-            <th>Название игры </th>
-            <th>Производитель</th>
-            <th>Жанр</th>
-            <th></th>
-            <th>Цена</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<form id="searchForm" asp-controller="search" asp-action="index" method="get">
+    <p><input class="search" type="search" name="query" placeholder="Название или разработчик игры" value="" /></p>
+    <p><input class="go searh_submit" type="submit" value="" /><p>
+</form>
+
+@if (Model.Count != 0)
+{
+    <h3 class="search_h3">Игры по запросу поиска</h3>
+    <table class="table table-search">
+        <thead>
             <tr>
-                <td>
-                    <a asp-controller="game" asp-action="index" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.Name)</a>
-                    <form style="margin-top:20px;" asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
-                            <input type="hidden" name="gameId" value="@item.GameId" />
-                            <button class="btn btn-success" type="submit">В корзину</button>
-                    </form>
-                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Publisher)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category)
-                </td>
-                <td>
-                    @if (item.ImageData != null)
-                    {
-                        <a asp-controller="game" asp-action="index"  asp-route-id="@item.GameId">
-                            <img style="width:125px; height:150px;" src="data:image/jpeg;base64,@(Convert.ToBase64String(item.ImageData))" />
-                        </a>
-                    }
-                </td>
-                <td>
-                    @Math.Truncate(item.Price) &#8381;
-                </td>
+                <th>Название игры </th>
+                <th>Производитель</th>
+                <th>Жанр</th>
+                <th></th>
+                <th>Цена</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="game" asp-action="index" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.Name)</a>
+                        <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
+                            <input type="hidden" name="gameId" value="@item.GameId" />
+                            <button class="incor" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
+                        </form>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Publisher)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category)
+                    </td>
+                    <td>
+                        @if (item.ImageData != null)
+                        {
+                            <a asp-controller="game" asp-action="index" asp-route-id="@item.GameId">
+                                <img src="data:image/jpeg;base64,@(Convert.ToBase64String(item.ImageData))" />
+                            </a>
+                        }
+                    </td>
+                    <td class="price">
+                        @Math.Truncate(item.Price) руб.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3 class="search_h3">По вашему запросу ничего не найдено!</h3>
+}

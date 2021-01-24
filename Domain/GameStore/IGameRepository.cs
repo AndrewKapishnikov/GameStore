@@ -12,5 +12,6 @@ namespace GameStore
         Game[] GetAllByCategory(string category);
         Game[] GetGamesByIds(IEnumerable<int> gamesId);
         Game GetGameById(int id);
+        Game[] GetLastSixGameByDataAdding();
     }
 }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="~/bundle/css/bundle.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/bundle/css/bundle.min.css" rel="stylesheet" asp-append-version="true"/>
 </head>
 <body>
     <div id="wrapper">
@@ -25,7 +25,7 @@
                                     <img class="cart_image" src="~/images/cartnew.png" />
                                 </a>
                             }
-                            else
+                            else 
                             {
                                 <a>
                                     <div>Корзина пуста</div>
@@ -36,6 +36,9 @@
                     </li>
                 </ul>
             </div>
+        </div>
+        <div id="slider">
+            <div id="slider_img"></div>
         </div>
         <div id="content">
             <div id="lSidebar">
@@ -58,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <div id="sale" class="sale_padding">
+            <div id="sale">
                 @RenderBody()
             </div>
             <div id="rSidebar">
@@ -78,12 +81,26 @@
                         <img src="/images/mafia.jpg" alt="rightBanner">
                     </div>
                 </div>
-             </div>
+                <div class="block">
+                    <h3>Отзывы посетителей</h3>
+                    <div id="otz">
+                        <div class="otziv">
+                            <p class="date">24.03.12,<a href="/profile/">Alex</a></p>
+                            <p>Спасибо за сайт! Широкий выбор игр, адекватные цены. Обязательно посоветую своим друзьям</p>
+                        </div>
+                        <div class="otziv">
+                            <p class="date">24.03.12,<a href="/profile/">Денис</a></p>
+                            <p>Вчера впервые купил игру через интернет и остался очень доволен: быстро, удобно. Спасибо!</p>
+                        </div>
+                        <a class="otzv" href="#">Все отзывы</a>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="clear"></div>
         <div id="footer">
             <div id="copyRight">
-                <p>Copyright @DateTime.Today.Year.ToString() <u><a href="https://promautomation.somee.com">My Other site</a></u> &copy;</p>
+                <p>Copyright @DateTime.Today.Year.ToString()  <u><a href="https://promautomation.somee.com">My Other site</a></u> &copy;</p>
             </div>
         </div>
     </div>

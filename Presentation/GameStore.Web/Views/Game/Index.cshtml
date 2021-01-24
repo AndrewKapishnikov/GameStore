@@ -1,23 +1,28 @@
 ﻿@model GameModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Описание игры";
+    Layout = "_Layout";
 }
-<h3>Информация об игре</h3>
-<table class="table" style="width:800px;">
+<form id="searchForm" asp-controller="search" asp-action="index" method="get">
+    <p><input class="search" type="search" name="query" placeholder="Название или разработчик игры" value="" /></p>
+    <p><input class="go searh_submit" type="submit" value="" /><p>
+</form>
+
+<h3 class="search_h3">Информация об игре</h3>
+<table class="table table-search" >
     <thead>
         <tr>
             <th>Название игры </th>
             <th>Производитель</th>
             <th>Жанр</th>
-            <th class="text-right">Дата выхода игры</th>
-            <th>Цена</th>
+            <th class="text-right">Дата выхода</th>
+            <th class="text-right">Цена</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>
-                <strong>@Html.DisplayFor(modelItem => modelItem.Name)</strong>
-                
+              @Html.DisplayFor(modelItem => modelItem.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => modelItem.Publisher)
@@ -26,25 +31,25 @@
                 @Html.DisplayFor(modelItem => modelItem.Category)
             </td>
             <td class="text-right">
-                @Html.DisplayFor(modelItem => modelItem.ReleaseData)
+                @Html.DisplayFor(modelItem => modelItem.ReleaseDate)
             </td>
-            <td>
-                @Math.Truncate(Model.Price) &#8381;
+            <td class="price text-right">
+                @Math.Truncate(Model.Price) руб.
             </td>
         </tr>
 
     </tbody>
 </table>
-<div class="float-left mr-4">
+<div class="imagemodel">
     @if (Model.ImageData != null)
     {
-        <img style="width:220px;" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" />
+        <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" />
     }
 </div>
-<div class ="text-justify">
-    @Model.Description
+<div class="description">
+    <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
+        <input type="hidden" name="gameId" value="@Model.GameId" />
+        <button class="incor" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
+    </form>
+    <div class="description__text">@Model.Description</div>
 </div>
-<form style="margin-top:20px;" asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
-    <input type="hidden" name="gameId" value="@Model.GameId" />
-    <button class="btn btn-success" type="submit">В корзину</button>
-</form>
