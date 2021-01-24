@@ -37,18 +37,27 @@ namespace GameStore
             return game.Select(Map).ToArray();
         }
 
+        public IReadOnlyCollection<GameModel> GetGamesByDescedingOrder()
+        {
+            var game = gameRepository.GetLastSixGameByDataAdding();
+
+            return game.Select(Map).ToArray();
+        }
+
         private GameModel Map(Game game)
         {
             return new GameModel
             {
                 GameId = game.Id,
-                Publisher  = game.Publisher,
+                Publisher = game.Publisher,
                 Category = game.Category,
-                Name  = game.Name,
+                Name = game.Name,
+                ShortDescription = game.ShortDescription,
                 Description = game.Description,
                 Price = game.Price,
                 ImageData = game.ImageData,
-                ReleaseData = game.ReleaseData
+                ReleaseDate = game.ReleaseDate,
+                DateOfAdding = game.DateOfAdding
             };
         }
     }

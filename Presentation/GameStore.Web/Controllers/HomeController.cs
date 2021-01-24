@@ -1,7 +1,6 @@
 ﻿using GameStore.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,16 +11,19 @@ namespace GameStore.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
+        private readonly GameService gameService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, GameService gameService)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.gameService = gameService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var games = gameService.GetGamesByDescedingOrder().ToList();
+            return View("Index", games);
         }
 
         public IActionResult Privacy()

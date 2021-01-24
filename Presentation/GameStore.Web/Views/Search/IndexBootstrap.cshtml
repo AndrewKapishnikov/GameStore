@@ -1,0 +1,47 @@
+﻿@model IReadOnlyCollection<GameModel>
+@{
+    ViewData["Title"] = "Search";
+}
+<h3>Игры по запросу поиска</h3>
+<table class="table" style="width:800px;">
+    <thead>
+        <tr>
+            <th>Название игры </th>
+            <th>Производитель</th>
+            <th>Жанр</th>
+            <th></th>
+            <th>Цена</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="game" asp-action="index" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.Name)</a>
+                    <form style="margin-top:20px;" asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
+                            <input type="hidden" name="gameId" value="@item.GameId" />
+                            <button class="btn btn-success" type="submit">В корзину</button>
+                    </form>
+                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publisher)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @if (item.ImageData != null)
+                    {
+                        <a asp-controller="game" asp-action="index"  asp-route-id="@item.GameId">
+                            <img style="width:125px; height:150px;" src="data:image/jpeg;base64,@(Convert.ToBase64String(item.ImageData))" />
+                        </a>
+                    }
+                </td>
+                <td>
+                    @Math.Truncate(item.Price) &#8381;
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

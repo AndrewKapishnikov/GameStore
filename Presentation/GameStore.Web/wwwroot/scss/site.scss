@@ -1,0 +1,115 @@
+﻿$base-color: #39647e;
+$font: Tahoma;
+$font_size: 15px;
+$gap: 1em;
+$font-item: $font_size+3 $font, Geneva, sans-serif;
+$indent:30px;
+a {
+    color:$base-color;
+}
+
+.searchFormclass {
+    margin: $indent auto;
+}
+.sale_padding {
+    padding-top: $indent;
+    margin-right:30px;
+}
+
+.cards{
+    padding-top:12px;
+}
+.searh_submit {
+    background-image: url(/images/go_search.png);
+    width: 185px;
+    height: 28px;
+}
+#naviHeader ul {
+    display: flex;
+    & > li:nth-child(4) {
+        margin-left: auto;
+        margin-right: 10px;
+        a > div {
+            float: left;
+            padding-right: 10px;
+        }
+        a > img {
+            width:50px;
+        }
+    }
+}
+.incor {
+    border: none;
+    img {
+        width: 130px;
+        margin-top: 15px;
+    }
+}
+
+.lSale_block, .rSale_block {
+    height: 290px;
+
+    & > p.descr {
+        font-size: $font_size;
+        text-align:justify;
+    }
+    img{
+        border:none;
+    }
+}
+
+.table-search {
+    width: 775px;
+    thead tr > th, h2 {
+        font: $font-item;
+        color: $base-color;
+        margin-bottom: $gap;
+    }
+    tbody td {
+        font: $font_size+1 $font, Geneva, sans-serif;
+        & > form {
+            margin-top: 20px;
+        }
+        &.price {
+            font: $font-item;
+        }
+        a > img {
+            width: 130px;
+            height: 150px;
+        }
+    }
+}
+
+.search_h3 {
+    font: $font_size+8 $font,Geneva,sans-serif;
+    color: $base-color;
+    margin-bottom: $gap;
+    margin-top: 10px;
+    margin-left: $gap;
+}
+
+.rSale_block, .lSale_block {
+     & a > img {
+        width: 125px;
+        height: 150px;
+    }
+}
+
+.imagemodel {
+    margin-right: $indent;
+    margin-bottom: 10px;
+    float: left;
+
+    img {
+        width: 220px;
+    }
+}
+.description {
+    .description__text {
+        padding-top: $indent;
+        padding-bottom: $indent;
+        text-align: justify;
+        font: $font_size $font, Geneva, sans-serif;
+        line-height:1.5em;
+    }
+}

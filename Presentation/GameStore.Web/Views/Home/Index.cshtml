@@ -1,9 +1,50 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IList<GameModel>
+@{
+    Layout = "_LayoutMain";
+    ViewData["Title"] = "Главная страница";
 }
-
-<form class="form-inline my-1" asp-controller="search" asp-action="index" method="get">
-    <input class="form-control mr-2" style="width:300px" type="search" name="query" placeholder="Название или разработчик" value="" />
-    <button class="btn btn-primary my-2 my-sm-0" type="submit">Искать</button>
+<form id="searchForm" asp-controller="search" asp-action="index" method="get">
+    <p><input class="search" type="search" name="query" placeholder="Название или разработчик игры" value="" /></p>
+    <p><input class="go searh_submit" type="submit" value="" /><p>
 </form>
+<div class="cards">
+    @for (int i = 0; i < Model.Count; i += 2)
+    {
+        <div class="lSale_block">
+            @if (i == 0)
+            {
+                <div id="hot"></div>
+            }
+            <h2>
+                <a asp-controller="game" asp-action="index" asp-route-id="@Model[i].GameId">@Model[i].Name</a>
+            </h2>
+            <a asp-controller="game" asp-action="index" asp-route-id="@Model[i].GameId">
+                <img alt="Picture" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model[i].ImageData))" />
+            </a>
+            <p class="price">Цена: <span>@Math.Truncate(Model[i].Price) руб.</span></p>
+            <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
+                <input type="hidden" name="gameId" value="@Model[i].GameId" />
+                <button class="incor" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
+            </form>
+            <div class="clear"></div>
+            <p class="descr">@Model[i].ShortDescription</p>
+        </div>
+
+        <div class="rSale_block">
+            <h2>
+                <a asp-controller="game" asp-action="index" asp-route-id="@Model[i + 1].GameId">@Model[i + 1].Name</a>
+            </h2>
+            <a asp-controller="game" asp-action="index" asp-route-id="@Model[i + 1].GameId">
+                <img alt="Picture" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model[i + 1].ImageData))" />
+            </a>
+            <p class="price">Цена: <span>@Math.Truncate(Model[i + 1].Price) руб.</span></p>
+            <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
+                <input type="hidden" name="gameId" value="@Model[i + 1].GameId" />
+                <button class="incor" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
+            </form>
+            <div class="clear"></div>
+            <p class="descr">@Model[i + 1].ShortDescription</p>
+        </div>
+    }
+</div>
 
