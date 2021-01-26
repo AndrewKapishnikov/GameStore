@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 
 
 namespace GameStore.MemoryStorage
@@ -30,7 +27,7 @@ namespace GameStore.MemoryStorage
                         "Grand Theft Auto V на Playstation 4 – продолжение криминального боевика с сатирой на современную действительность.",
                         "Grand Theft Auto V на Playstation 4 – продолжение криминального боевика с сатирой на современную действительность. В этот раз история возвращается в город Лос-Сантос, " +
                         "прообразом которого послужил Лос-Анджелес. Главных героя сразу три: Майкл, Франклин и Тревор. У каждого свои умения и особенности. ",
-                        "Шутеры/Action",2590m, gamesImageData.GTA.ParseHexString(), "2013", new DateTime(2019, 6, 23, 18, 30, 25) ),
+                        "Шутеры/Action", 2590m, gamesImageData.GTA.ParseHexString(), "2013", new DateTime(2019, 6, 23, 18, 30, 25) ),
 
                 new Game(2,"FIFA 21","Electronic Arts",
                         "Серия компьютерных игр в жанре симулятора футбола, которая разрабатывается студией EA Canada, входящей в состав корпорации Electronic Arts. ",

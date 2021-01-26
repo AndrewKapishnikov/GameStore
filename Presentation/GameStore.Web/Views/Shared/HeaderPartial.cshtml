@@ -1,0 +1,28 @@
+﻿<div id="header">
+    <div id="logo"><a href="/"></a></div>
+    <div id="naviHeader">
+        <ul>
+            <li><a href="#">О нас</a></li>
+            <li><a href="#">Новости</a></li>
+            <li><a href="#">Личный кабинет</a></li>
+            <li>
+              @{
+                  if (Context.Session.TryGetCart(out Cart cart) && cart.TotalCount > 0)
+                  {
+                      <a asp-controller="order" asp-action="index">
+                          <div>Товаров @cart.TotalCount на Cумму @cart.TotalPrice &#8381; </div>
+                          <img class="cart_image" src="~/images/cartnew.png" />
+                      </a>
+                  }
+                  else
+                  {
+                      <a>
+                          <div>Корзина пуста</div>
+                          <img class="cart_image" src="~/images/cartnew.png" />
+                      </a>
+                  }
+              }
+            </li>
+        </ul>
+    </div>
+</div>

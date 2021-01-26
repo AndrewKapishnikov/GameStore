@@ -1,15 +1,10 @@
 ﻿@model GameModel
 @{
     ViewData["Title"] = "Описание игры";
-    Layout = "_Layout";
 }
-<form id="searchForm" asp-controller="search" asp-action="index" method="get">
-    <p><input class="search" type="search" name="query" placeholder="Название или разработчик игры" value="" /></p>
-    <p><input class="go searh_submit" type="submit" value="" /><p>
-</form>
-
+@await Html.PartialAsync("SearchFormPartial")
 <h3 class="search_h3">Информация об игре</h3>
-<table class="table table-search" >
+<table class="table table-search">
     <thead>
         <tr>
             <th>Название игры </th>
@@ -22,7 +17,7 @@
     <tbody>
         <tr>
             <td>
-              @Html.DisplayFor(modelItem => modelItem.Name)
+                @Html.DisplayFor(modelItem => modelItem.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => modelItem.Publisher)

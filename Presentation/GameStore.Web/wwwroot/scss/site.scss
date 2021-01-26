@@ -1,13 +1,22 @@
 ﻿$base-color: #39647e;
-$font: Tahoma;
+$font: Tahoma,Geneva, sans-serif;
 $font_size: 15px;
 $gap: 1em;
-$font-item: $font_size+3 $font, Geneva, sans-serif;
+$font-item: $font_size+3 $font;
 $indent:30px;
 a {
     color:$base-color;
 }
-
+button{
+    border:none;
+}
+img{
+    border:none;
+}
+button:active,
+button:focus {
+    outline: none;
+}
 .searchFormclass {
     margin: $indent auto;
 }
@@ -16,8 +25,9 @@ a {
     margin-right:30px;
 }
 
-.cards{
-    padding-top:12px;
+.cards {
+    padding-top: 12px;
+
 }
 .searh_submit {
     background-image: url(/images/go_search.png);
@@ -48,52 +58,90 @@ a {
 
 .lSale_block, .rSale_block {
     height: 290px;
+    img{
+        border:none;
+    }
 
     & > p.descr {
         font-size: $font_size;
-        text-align:justify;
+        text-align: justify;
     }
-    img{
-        border:none;
+
+    & a > img {
+        width: 125px;
+        height: 150px;
+        transition: all 1s ease;
+        &:hover {
+            -webkit-transform: scale(1.05);
+            -ms-transform: scale(1.05);
+            transform: scale(1.05);
+        }
     }
 }
 
 .table-search {
     width: 775px;
+
     thead tr > th, h2 {
         font: $font-item;
         color: $base-color;
         margin-bottom: $gap;
     }
+
     tbody td {
-        font: $font_size+1 $font, Geneva, sans-serif;
-        & > form {
+        font: $font_size+1 $font;
+
+        & > a + form {
             margin-top: 20px;
         }
+
         &.price {
             font: $font-item;
         }
+
         a > img {
             width: 130px;
             height: 150px;
         }
+
+        & > img {
+            width: 90px;
+            height: 100px;
+        }
+
+        img.deleteimage {
+            width: 20px;
+            transition: all 1s ease;
+
+            &:hover {
+                -webkit-transform: rotate(360deg) scale(1.5);
+                -ms-transform: rotate(360deg) scale(1.5);
+                transform: rotate (360deg) scale(1.5);
+            }
+        }
+    }
+
+    tfoot td {
+        font: $font_size+1 $font;
+
+        &.result {
+            font: $font_size+5 $font;
+        }
     }
 }
 
+.table-order{
+    width:600px;
+    margin:0 auto;
+}
 .search_h3 {
-    font: $font_size+8 $font,Geneva,sans-serif;
+    font: $font_size+8 $font;
     color: $base-color;
     margin-bottom: $gap;
     margin-top: 10px;
     margin-left: $gap;
 }
 
-.rSale_block, .lSale_block {
-     & a > img {
-        width: 125px;
-        height: 150px;
-    }
-}
 
 .imagemodel {
     margin-right: $indent;
@@ -104,12 +152,13 @@ a {
         width: 220px;
     }
 }
+
 .description {
     .description__text {
         padding-top: $indent;
         padding-bottom: $indent;
         text-align: justify;
-        font: $font_size $font, Geneva, sans-serif;
-        line-height:1.5em;
+        font: $font_size $font;
+        line-height: 1.5em;
     }
 }

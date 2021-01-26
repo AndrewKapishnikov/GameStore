@@ -10,6 +10,7 @@
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
     <Content Remove="compilerconfig.json" />
+    <Content Remove="Views\Shared\CssPartial.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +32,15 @@
   <ItemGroup>
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
+    <None Include="Views\Shared\CssPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Shared\CssPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Shared\CssPartial.cshtml" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,16 @@
 ﻿a {
   color: #39647e; }
 
+button {
+  border: none; }
+
+img {
+  border: none; }
+
+button:active,
+button:focus {
+  outline: none; }
+
 .searchFormclass {
   margin: 30px auto; }
 
@@ -35,11 +45,19 @@
 
 .lSale_block, .rSale_block {
   height: 290px; }
+  .lSale_block img, .rSale_block img {
+    border: none; }
   .lSale_block > p.descr, .rSale_block > p.descr {
     font-size: 15px;
     text-align: justify; }
-  .lSale_block img, .rSale_block img {
-    border: none; }
+  .lSale_block a > img, .rSale_block a > img {
+    width: 125px;
+    height: 150px;
+    transition: all 1s ease; }
+    .lSale_block a > img:hover, .rSale_block a > img:hover {
+      -webkit-transform: scale(1.05);
+      -ms-transform: scale(1.05);
+      transform: scale(1.05); }
 
 .table-search {
   width: 775px; }
@@ -49,13 +67,31 @@
     margin-bottom: 1em; }
   .table-search tbody td {
     font: 16px Tahoma, Geneva, sans-serif; }
-    .table-search tbody td > form {
+    .table-search tbody td > a + form {
       margin-top: 20px; }
     .table-search tbody td.price {
       font: 18px Tahoma, Geneva, sans-serif; }
     .table-search tbody td a > img {
       width: 130px;
       height: 150px; }
+    .table-search tbody td > img {
+      width: 90px;
+      height: 100px; }
+    .table-search tbody td img.deleteimage {
+      width: 20px;
+      transition: all 1s ease; }
+      .table-search tbody td img.deleteimage:hover {
+        -webkit-transform: rotate(360deg) scale(1.5);
+        -ms-transform: rotate(360deg) scale(1.5);
+        transform: rotate 360deg scale(1.5); }
+  .table-search tfoot td {
+    font: 16px Tahoma, Geneva, sans-serif; }
+    .table-search tfoot td.result {
+      font: 20px Tahoma, Geneva, sans-serif; }
+
+.table-order {
+  width: 600px;
+  margin: 0 auto; }
 
 .search_h3 {
   font: 23px Tahoma, Geneva, sans-serif;
@@ -63,10 +99,6 @@
   margin-bottom: 1em;
   margin-top: 10px;
   margin-left: 1em; }
-
-.rSale_block a > img, .lSale_block a > img {
-  width: 125px;
-  height: 150px; }
 
 .imagemodel {
   margin-right: 30px;

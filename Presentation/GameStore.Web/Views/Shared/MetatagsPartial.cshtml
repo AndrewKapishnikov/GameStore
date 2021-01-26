@@ -1,0 +1,19 @@
+﻿<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+@if (ViewData["Title"] != null)
+{
+    <title>@ViewData["Title"]</title>
+}
+else
+{
+    ViewData["Title"] = "Game Store";
+    <title>@ViewData["Title"]</title>
+}
+@if (ViewBag.Description != null)
+{
+    <meta name="description" content="@ViewBag.Description" />
+}
+@if (ViewBag.Keywords != null)
+{
+    <meta name="keywords" content="@ViewBag.Keywords" />
+}
