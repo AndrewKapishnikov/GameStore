@@ -1,73 +1,22 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="~/bundle/css/bundle.min.css" rel="stylesheet" asp-append-version="true"/>
+    @await Html.PartialAsync("MetatagsPartial")
+    @await Html.PartialAsync("CssPartial")
 </head>
 <body>
     <div id="wrapper">
-        <div id="header">
-            <div id="logo"><a href="/"></a></div>
-            <div id="naviHeader">
-                <ul>
-                    <li><a href="#">О нас</a></li>
-                    <li><a href="#">Новости</a></li>
-                    <li><a href="#">Личный кабинет</a></li>
-                    <li>
-                        @{
-                            if (Context.Session.TryGetCart(out Cart cart) && cart.TotalCount > 0)
-                            {
-                                <a asp-controller="order" asp-action="index">
-                                    <div>Товаров @cart.TotalCount на Cумму @cart.TotalPrice &#8381; </div>
-                                    <img class="cart_image" src="~/images/cartnew.png" />
-                                </a>
-                            }
-                            else 
-                            {
-                                <a>
-                                    <div>Корзина пуста</div>
-                                    <img class="cart_image" src="~/images/cartnew.png" />
-                                </a>
-                            }
-                        }
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div id="slider">
-            <div id="slider_img"></div>
-        </div>
+        @await Html.PartialAsync("HeaderPartial")
+        @await Html.PartialAsync("SliderPartial")
         <div id="content">
-            <div id="lSidebar">
-                <ul id="cat">
-                    <li><a href="#">Скоро выйдут</a></li>
-                    <li><a href="#">Steam игры</a></li>
-                    <li><a href="#">Шутеры/Action</a></li>
-                    <li><a href="#">Стратегии</a></li>
-                    <li><a href="#">Симуляторы</a></li>
-                    <li><a href="#">Приключения</a></li>
-                    <li><a href="#">Ролевые (RPG)</a></li>
-                    <li><a href="#">Драки (Fighting)</a></li>
-                    <li><a href="#">Спортивные</a></li>
-                    <li><a href="#">Квесты</a></li>
-                </ul>
-                <div class="block">
-                    <h3>Реклама</h3>
-                    <div class="bannerLeft">
-                        <img src="/images/banner_left.jpg" alt="leftBanner">
-                    </div>
-                </div>
-            </div>
+            @await Html.PartialAsync("LeftSideBarPartial")
             <div id="sale">
                 @RenderBody()
             </div>
             <div id="rSidebar">
                 <div class="block">
                     <h3>Вход в систему</h3>
-                    <form id="loginForm" action="login.php" method="POST" name="loginForm">
+                    <form id="loginForm" action="/" method="POST" name="loginForm">
                         <p><input class="text" type="text" name="login" value="Логин" title="Введите логин"></p>
                         <p><input class="text" type="password" name="password" value="Пароль" title="Введите пароль"></p>
                         <p><label><input class="member" type="checkbox" name="memb">&ensp;Запомнить меня</label></p>
@@ -81,32 +30,13 @@
                         <img src="/images/mafia.jpg" alt="rightBanner">
                     </div>
                 </div>
-                <div class="block">
-                    <h3>Отзывы посетителей</h3>
-                    <div id="otz">
-                        <div class="otziv">
-                            <p class="date">24.03.12,<a href="/profile/">Alex</a></p>
-                            <p>Спасибо за сайт! Широкий выбор игр, адекватные цены. Обязательно посоветую своим друзьям</p>
-                        </div>
-                        <div class="otziv">
-                            <p class="date">24.03.12,<a href="/profile/">Денис</a></p>
-                            <p>Вчера впервые купил игру через интернет и остался очень доволен: быстро, удобно. Спасибо!</p>
-                        </div>
-                        <a class="otzv" href="#">Все отзывы</a>
-                    </div>
-                </div>
+                @await Html.PartialAsync("CustomerRiviewsPartial")
             </div>
         </div>
         <div class="clear"></div>
-        <div id="footer">
-            <div id="copyRight">
-                <p>Copyright @DateTime.Today.Year.ToString()  <u><a href="https://promautomation.somee.com">My Other site</a></u> &copy;</p>
-            </div>
-        </div>
+        @await Html.PartialAsync("FooterPartial")
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/bundle/js/site.min.js" asp-append-version="true"></script>
+    @await Html.PartialAsync("ScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

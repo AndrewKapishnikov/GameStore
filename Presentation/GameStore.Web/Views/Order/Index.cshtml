@@ -1,0 +1,49 @@
+﻿@model OrderModel
+@{
+    ViewData["Title"] = "Корзина";
+}
+@await Html.PartialAsync("SearchFormPartial")
+
+@if (Model.TotalCount != 0)
+{
+    <h3 class="search_h3">Ваша Корзина</h3>
+
+    <table class="table table-search table-order">
+        <tbody>
+            @for (int i = 0; i < Model.OrderItems.Length; i++)
+            {
+                <tr>
+                    <td>
+                        @if (Model.OrderItems[i].ImageData != null)
+                        {
+                            <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.OrderItems[i].ImageData))" />
+                        }
+                    </td>
+                    <td><strong>@Model.OrderItems[i].Name</strong></td>
+                    <td class="text-center">@Model.OrderItems[i].Count</td>
+                    <td class="text-right price ">@Math.Truncate(Model.OrderItems[i].Price) руб.</td>
+                    <td class="text text-left">
+                        <form asp-controller="order" asp-action="removeitem" method="post">
+                            <input type="hidden" name="gameId" value="@Model.OrderItems[i].GameId" />
+                            <button type="submit">
+                                <img class="deleteimage" src="/images/deleteimage.png" alt="" />
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" class="result text-right ">Итого:</td>
+                <td class="result text-center">@Model.TotalCount</td>
+                <td class="result text-right"> @Math.Truncate(Model.TotalPrice) руб.</td>
+            </tr>
+        </tfoot>
+    </table>
+
+}
+else
+{
+    <h3 class="search_h3">Ваша Корзина пуста. Выберите заинтересовавшую вас игру.</h3>
+}

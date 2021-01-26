@@ -2,11 +2,7 @@
 @{
     ViewData["Title"] = "Поиск по запросу";
 }
-<form id="searchForm" asp-controller="search" asp-action="index" method="get">
-    <p><input class="search" type="search" name="query" placeholder="Название или разработчик игры" value="" /></p>
-    <p><input class="go searh_submit" type="submit" value="" /><p>
-</form>
-
+@await Html.PartialAsync("SearchFormPartial")
 @if (Model.Count != 0)
 {
     <h3 class="search_h3">Игры по запросу поиска</h3>

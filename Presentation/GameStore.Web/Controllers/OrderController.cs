@@ -40,6 +40,8 @@ namespace GameStore.Web.Controllers
         [HttpPost]
         public IActionResult RemoveItem(int gameId)
         {
+            //TODO
+            //Exception if remove item when session ended
             var model = orderService.RemoveGame(gameId);
 
             return View("Index", model);
