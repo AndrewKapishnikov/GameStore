@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GameStore.Web.App;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace GameStore.Web.Controllers
 
         public IActionResult Index(string query)
         {
+        
             var games = gameService.GetAllGamesByNameOrPublisher(query);
 
             return View(games);

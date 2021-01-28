@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GameStore.Web.App
 {
-    public static class ExtensionsCartSession
+    public static class CartSessionExtensions
     {
         private const string key = "KeyCart";
 

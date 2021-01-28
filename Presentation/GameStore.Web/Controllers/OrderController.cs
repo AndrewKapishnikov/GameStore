@@ -10,9 +10,9 @@ namespace GameStore.Web.Controllers
 {
     public class OrderController: Controller
     {
-        private readonly OrderService orderService;
+        private readonly OrderMemoryService orderService;
    
-        public OrderController(OrderService orderService)
+        public OrderController(OrderMemoryService orderService)
         {
             this.orderService = orderService;
         }

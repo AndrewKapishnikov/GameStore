@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameStore.Web", "Presentati
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{8E71EE18-3034-4391-A4BB-6F994F7D5243}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStore.Web.App", "Application\GameStore.Web.App\GameStore.Web.App.csproj", "{E1F8DB76-21D2-4642-88BE-4C20E4C20050}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameStore.Web.App", "Application\GameStore.Web.App\GameStore.Web.App.csproj", "{E1F8DB76-21D2-4642-88BE-4C20E4C20050}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStore.Data.EF", "Infrastructure\GameStore.Data.EF\GameStore.Data.EF.csproj", "{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +79,18 @@ Global
 		{E1F8DB76-21D2-4642-88BE-4C20E4C20050}.Release|x64.Build.0 = Release|Any CPU
 		{E1F8DB76-21D2-4642-88BE-4C20E4C20050}.Release|x86.ActiveCfg = Release|Any CPU
 		{E1F8DB76-21D2-4642-88BE-4C20E4C20050}.Release|x86.Build.0 = Release|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Debug|x64.Build.0 = Debug|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Debug|x86.Build.0 = Debug|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Release|x64.ActiveCfg = Release|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Release|x64.Build.0 = Release|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Release|x86.ActiveCfg = Release|Any CPU
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +100,7 @@ Global
 		{E95D3423-35E8-4DCE-958F-BB51F55D4703} = {C4C1E2E7-D521-451A-B433-77106B9B8FB2}
 		{67CBB664-366D-460F-B942-3C90C1CFACF6} = {4424EFBE-B692-4A59-8F68-9CE6DA10AF78}
 		{E1F8DB76-21D2-4642-88BE-4C20E4C20050} = {8E71EE18-3034-4391-A4BB-6F994F7D5243}
+		{71A3FE6F-BAAF-4860-88F6-C4518DB0176A} = {C4C1E2E7-D521-451A-B433-77106B9B8FB2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D67042BC-8571-47E5-902D-D98CFBDB26CC}
