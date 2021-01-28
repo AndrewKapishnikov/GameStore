@@ -1,16 +1,17 @@
-﻿using System;
+﻿using GameStore.Web.App;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameStore.Web.App
+namespace GameStore
 {
-    public class GameService
+    public class GameMemoryService
     {
-        private readonly IGameRepository gameRepository;
+        private readonly IGameMemoryRepository gameRepository;
 
-        public GameService(IGameRepository gameRepository)
+        public GameMemoryService(IGameMemoryRepository gameRepository)
         {
             this.gameRepository = gameRepository;
         }
@@ -21,6 +22,7 @@ namespace GameStore.Web.App
 
             return Map(game);
         }
+
         public IReadOnlyCollection<GameModel> GetAllGamesByNameOrPublisher(string query)
         {
             var game = gameRepository.GetAllByNameOrPublisher(query);
@@ -42,13 +44,13 @@ namespace GameStore.Web.App
             return game.Select(Map).ToArray();
         }
 
-        private GameModel Map(Game game)
+        private GameModel Map(GameMemoryStorage game)
         {
             return new GameModel
             {
                 GameId = game.Id,
                 Publisher = game.Publisher,
-                Category = game.Category.Name,
+                Category = game.Category,
                 Name = game.Name,
                 ShortDescription = game.ShortDescription,
                 Description = game.Description,

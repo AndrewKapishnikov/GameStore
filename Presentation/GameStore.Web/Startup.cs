@@ -1,5 +1,6 @@
 using GameStore.MemoryStorage;
 using GameStore.Web.App;
+using GameStore.Data.EF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
+using GameStore.DataEF;
+using Microsoft.AspNetCore.Identity;
 
 namespace GameStore.Web
 {
@@ -39,10 +42,23 @@ namespace GameStore.Web
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
             });
 
-            services.AddSingleton<IGameRepository, GameRepository>();
-            services.AddSingleton<IOrderRepository, OrderRepository>();
+            services.AddMemoryStorageRepositories();
+
+            services.AddEntityFrameworkRepositories(Configuration.GetConnectionString("GameStore"));
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                //options.SignIn.RequireConfirmedEmail = true;
+                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            }).AddEntityFrameworkStores<GameStoreDbContext>();
+
+                       
+            services.AddSingleton<GameMemoryService>();
+            services.AddSingleton<OrderMemoryService>();
+
             services.AddSingleton<GameService>();
             services.AddSingleton<OrderService>();
+
             services.AddControllersWithViews();
         }
 
@@ -68,9 +84,10 @@ namespace GameStore.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
+                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
             });
         }
     }

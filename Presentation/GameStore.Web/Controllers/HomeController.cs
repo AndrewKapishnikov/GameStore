@@ -1,4 +1,5 @@
-﻿using GameStore.Web.Models;
+﻿using GameStore.Web.App;
+using GameStore.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;

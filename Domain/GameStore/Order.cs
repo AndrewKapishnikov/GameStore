@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameStore.DataEF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,74 +9,43 @@ namespace GameStore
 {
     public class Order
     {
-        public int Id { get; }
-
-        private List<OrderItem> items;
-
-        public Order(int id, IEnumerable<OrderItem> items)
+        private readonly OrderDTO dto; 
+        public int Id => dto.Id;
+        public OrderItemCollectionForOrder Items { get; }
+        public Order(OrderDTO dto)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
-            Id = id;
-            this.items = new List<OrderItem>(items);
+            this.dto = dto;
+            Items = new OrderItemCollectionForOrder(dto);
+           
         }
 
-        public IReadOnlyCollection<OrderItem> Items => items;
-      
-
-        public int TotalCount => items.Sum(item => item.Count);
-        public decimal TotalPrice => items.Sum(item => item.Price * item.Count);
-
-        public OrderItem GetItem(int gameId)
+        public User User
         {
-            int index = items.FindIndex(item => item.GameId == gameId);
-            if (index == -1)
-                ThrowGameException("Game not found!", gameId);
-            
-            return items[index];
-        }
-
-        public bool TryGetOrderItem(int gameId, out OrderItem orderItem)
-        {
-            int index = items.FindIndex(item => item.GameId == gameId);
-            if (index == -1)
+            get => dto.User;
+            set
             {
-                orderItem = null;
-                return false;
+                if (value == null)
+                    throw new ArgumentException(nameof(User));
+                dto.User = value;
             }
-            else
-            {
-                orderItem = items[index];
-                return true;
-            }
-                
         }
-        public void AddOrderItem(int gameId, decimal price,int count)
+        public int TotalCount => Items.Sum(item => item.Count);
+
+        public decimal TotalPrice => Items.Sum(item => item.Price * item.Count);
+
+        public static class DtoFactory
         {
-            if (TryGetOrderItem(gameId, out OrderItem orderItem))
-                throw new InvalidOperationException("Game already exists!");
-
-            items.Add(new OrderItem(gameId, count, price));
+            public static OrderDTO Create() => new OrderDTO();
         }
 
-        public void RemoveOrderItem(int gameId)
+        public static class Mapper
         {
-            int index = items.FindIndex(item => item.GameId == gameId);
+            public static Order Map(OrderDTO dto) => new Order(dto);
 
-            if (index == -1)
-                ThrowGameException("Order does not contain item with such Id.", gameId);
-
-            items.RemoveAt(index);
+            public static OrderDTO Map(Order domain) => domain.dto;
         }
 
-
-        private void ThrowGameException(string message, int gameId)
-        {
-            var exception = new InvalidOperationException(message);
-
-            exception.Data["GameId"] = gameId;
-
-            throw exception;
-        }
     }
+
+   
 }
