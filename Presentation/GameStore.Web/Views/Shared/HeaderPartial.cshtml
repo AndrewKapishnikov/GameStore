@@ -10,7 +10,7 @@
                   if (Context.Session.TryGetCart(out Cart cart) && cart.TotalCount > 0)
                   {
                       <a asp-controller="order" asp-action="index">
-                          <div>Товаров @cart.TotalCount на Cумму @cart.TotalPrice &#8381; </div>
+                          <div>Товаров @cart.TotalCount на Cумму @Math.Truncate(cart.TotalPrice) &#8381; </div>
                           <img class="cart_image" src="~/images/cartnew.png" />
                       </a>
                   }

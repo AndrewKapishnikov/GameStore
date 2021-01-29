@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace GameStore.Data.EF
 {
-    public static class InfrastructureEFExtensions
+    public static class EntityFrameworkExtensions
     {
         public static IServiceCollection AddEntityFrameworkRepositories(this IServiceCollection services, string connectionString)
         {

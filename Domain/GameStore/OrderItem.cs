@@ -48,7 +48,7 @@ namespace GameStore
 
         public static class DtoFactory
         {
-            public static OrderItemDTO Create(OrderDTO order, GameDTO game, decimal price, int count)
+            public static OrderItemDTO Create(OrderDTO order, GameDTO game, int count)
             {
                 if (order == null)
                     throw new ArgumentNullException(nameof(order));
@@ -59,7 +59,7 @@ namespace GameStore
                 {
                     Order = order,
                     Game = game,
-                    Price = price,
+                    Price = game.Price,
                     Count = count
                 };
             }

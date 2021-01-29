@@ -19,7 +19,6 @@ namespace GameStore.Web.Controllers
 
         public IActionResult Index(string query)
         {
-        
             var games = gameService.GetAllGamesByNameOrPublisher(query);
 
             return View(games);
