@@ -55,12 +55,12 @@ namespace GameStore
             return true;
         }
 
-        public OrderItem Add(Game game, decimal price, int count)
+        public OrderItem Add(Game game, int count)
         {
             if (TryGet(game, out OrderItem orderItem))
                 throw new InvalidOperationException("Game already exists.");
 
-            var orderItemDto = OrderItem.DtoFactory.Create(orderDto, Game.Mapper.Map(game), price, count);
+            var orderItemDto = OrderItem.DtoFactory.Create(orderDto, Game.Mapper.Map(game), count);
             orderDto.Items.Add(orderItemDto);  //Add in database
 
             orderItem = OrderItem.Mapper.Map(orderItemDto);
@@ -69,9 +69,9 @@ namespace GameStore
             return orderItem;
         }
 
-        public void Remove(Game game)
+        public void Remove(int gameId)
         {
-            var index = items.FindIndex(item => item.Game.Id == game.Id);
+            var index = items.FindIndex(item => item.Game.Id == gameId);
             if (index == -1)
                 throw new InvalidOperationException("Can't find such game to remove from order.");
 

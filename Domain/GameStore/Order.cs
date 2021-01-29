@@ -35,7 +35,7 @@ namespace GameStore
 
         public static class DtoFactory
         {
-            public static OrderDTO Create() => new OrderDTO();
+            public static OrderDTO Create() => new OrderDTO() { DateOfOrder = DateTime.UtcNow};
         }
 
         public static class Mapper

@@ -26,4 +26,8 @@
     <ProjectReference Include="..\GameStore.MemoryStorage\GameStore.MemoryStorage.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SQL Data Queries\" />
+  </ItemGroup>
+
 </Project>

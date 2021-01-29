@@ -84,7 +84,13 @@ namespace GameStore.Web
 
             app.UseEndpoints(endpoints =>
             {
-                 endpoints.MapControllerRoute(
+                //endpoints.MapControllerRoute(
+                //    name: "search",
+                //    pattern: "search/{query}",
+                //    defaults: new { controller = "Search", action = "SearchByName" }
+    
+                //);
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
