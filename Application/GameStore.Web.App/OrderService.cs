@@ -24,31 +24,28 @@ namespace GameStore.Web.App
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public bool TryGetModel(out OrderModel model)
+        public async Task<(bool hasValue, OrderModel model)> TryGetModelAsync()
         {
-            if (TryGetOrder(out Order order))
-            {
-                model = Map(order);
-                return true;
-            }
-            model = null;
-            return false;
+            var (hasValue, order) = await TryGetOrderAsync();
+            if (hasValue)
+                return (true, Map(order));
+            
+            return (false, null);
         }
 
-        internal bool TryGetOrder(out Order order)
+        internal async Task<(bool hasValue, Order order)> TryGetOrderAsync()
         {
             if (Session.TryGetCart(out Cart cart))
             {
-                order = orderRepository.GetById(cart.OrderId);
-                return true;
+                var order = await orderRepository.GetByIdAsync(cart.OrderId);
+                return (true, order);
             }
-            order = null;
-            return false;
+            return (false, null);
         }
 
         internal OrderModel Map(Order order)
         {
-            List<OrderItemModel> orderItemModel = new List<OrderItemModel>();
+            var orderItemModel = new List<OrderItemModel>();
             foreach (OrderItem orderItem in order.Items)
             {
                 orderItemModel.Add(new OrderItemModel()
@@ -73,44 +70,44 @@ namespace GameStore.Web.App
         }
 
 
-        internal IEnumerable<Game> GetGames(Order order)
+        internal async Task<IEnumerable<Game>> GetGamesAsync(Order order)
         {
             var gameIds = order.Items.Select(orderItem => orderItem.Game.Id);
 
-            return gameRepository.GetGamesByIds(gameIds);
+            return await gameRepository.GetGamesByIdsAsync(gameIds);
         }
 
-        public OrderModel AddGame(int gameId, int count)
+        public async Task<OrderModel> AddGameAsync(int gameId, int count)
         {
             if (count < 1)
                 throw new InvalidOperationException("The number of added books cannot be less than one!");
-
-            if (!TryGetOrder(out Order order))
+            var (hasValue, order) = await TryGetOrderAsync();
+            if (!hasValue)
                 order = orderRepository.Create();
 
-            AddOrUpdateGame(order, gameId, count);
+            await AddOrUpdateGameAsync(order, gameId, count);
             UpdateSession(order);
 
             return Map(order);
         }
 
-        internal void AddOrUpdateGame(Order order, int gameId, int count)
+        internal async Task AddOrUpdateGameAsync(Order order, int gameId, int count)
         {
-            var game = gameRepository.GetGameById(gameId);
+            var game = await gameRepository.GetGameByIdAsync(gameId);
             if (order.Items.TryGet(game, out OrderItem orderItem))
                 orderItem.Count += count;
             else
                 order.Items.Add(game, count);
 
-            orderRepository.Update(order);
+            await orderRepository.UpdateAsync(order);
         }
 
-        public OrderModel RemoveGame(int gameId)
+        public async Task<OrderModel> RemoveGameAsync(int gameId)
         {
-            var order = GetOrder();
+            var order = await GetOrderAsync();
             order.Items.Remove(gameId);
 
-            orderRepository.Update(order);
+            await orderRepository.UpdateAsync(order);
             UpdateSession(order);
 
             return Map(order);
@@ -123,21 +120,22 @@ namespace GameStore.Web.App
             Session.Set(cart);
         }
 
-        public Order GetOrder()
+        public async Task<Order> GetOrderAsync()
         {
-            if (TryGetOrder(out Order order))
+            var (hasValue, order) = await TryGetOrderAsync();
+            if (hasValue)
                 return order;
 
             throw new InvalidOperationException("Session is empty.");
         }
 
-        public OrderModel UpdateGame(int gameId, int count)
+        public async Task<OrderModel> UpdateGameAsync(int gameId, int count)
         {
-            var order = GetOrder();
-            var game = gameRepository.GetGameById(gameId);
+            var order = await GetOrderAsync();
+            var game = await gameRepository.GetGameByIdAsync(gameId);
             order.Items.Get(game).Count = count;
 
-            orderRepository.Update(order);
+            await orderRepository.UpdateAsync(order);
             UpdateSession(order);
 
             return Map(order);

@@ -15,29 +15,29 @@ namespace GameStore.Web.App
             this.gameRepository = gameRepository;
         }
 
-        public GameModel GetGameById(int id)
+        public async Task<GameModel> GetGameByIdAsync(int id)
         {
-            var game = gameRepository.GetGameById(id);
+            var game = await gameRepository.GetGameByIdAsync(id);
 
             return Map(game);
         }
-        public IReadOnlyCollection<GameModel> GetAllGamesByNameOrPublisher(string query)
+        public async Task<IReadOnlyCollection<GameModel>> GetAllGamesByNameOrPublisherAsync(string query)
         {
-            var game = gameRepository.GetAllByNameOrPublisher(query);
+            var game = await gameRepository.GetAllByNameOrPublisherAsync(query);
 
             return game.Select(Map).ToArray();
         }
 
-        public IReadOnlyCollection<GameModel> GetAllGamesByCategory(string query)
+        public async Task<IReadOnlyCollection<GameModel>> GetAllGamesByCategoryAsync(string query)
         {
-            var game = gameRepository.GetAllByCategory(query);
+            var game = await gameRepository.GetAllByCategoryAsync(query);
 
             return game.Select(Map).ToArray();
         }
 
-        public IReadOnlyCollection<GameModel> GetGamesByDescedingOrder()
+        public async Task<IReadOnlyCollection<GameModel>> GetGamesByDescedingOrderAsync()
         {
-            var game = gameRepository.GetLastSixGameByDataAdding();
+            var game = await gameRepository.GetLastSixGameByDataAddingAsync();
 
             return game.Select(Map).ToArray();
         }
