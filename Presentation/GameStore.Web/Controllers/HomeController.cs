@@ -21,15 +21,10 @@ namespace GameStore.Web.Controllers
             this.gameService = gameService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var games = gameService.GetGamesByDescedingOrder().ToList();
-            return View("Index", games);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            var games = await gameService.GetGamesByDescedingOrderAsync();
+            return View("Index", games.ToList());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

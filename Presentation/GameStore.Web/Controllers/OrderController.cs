@@ -20,18 +20,17 @@ namespace GameStore.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            if (orderService.TryGetModel(out OrderModel model))
-                return View(model);
-
+            var (hasValue, model) = await orderService.TryGetModelAsync();
+            if (hasValue) return View(model);
             return View("CartEmpty");
         }
 
         [HttpPost]
-        public IActionResult AddItem(int gameId, string returnUrl, int count = 1)
+        public async Task<IActionResult> AddItem(int gameId, string returnUrl, int count = 1)
         {
-            orderService.AddGame(gameId, count);
+            await orderService.AddGameAsync(gameId, count);
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
@@ -40,19 +39,19 @@ namespace GameStore.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult RemoveItem(int gameId)
+        public async Task<IActionResult> RemoveItem(int gameId)
         {
             //TODO
             //Exception if remove item when session ended
-            var model = orderService.RemoveGame(gameId);
+            var model = await orderService.RemoveGameAsync(gameId);
 
             return View("Index", model);
         }
 
         [HttpPost]
-        public IActionResult UpdateItem(int gameId, int count)
+        public async Task<IActionResult> UpdateItem(int gameId, int count)
         {
-            var model = orderService.UpdateGame(gameId, count);
+            var model = await orderService.UpdateGameAsync(gameId, count);
 
             return View("Index", model);
         }

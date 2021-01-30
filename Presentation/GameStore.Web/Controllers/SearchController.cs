@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GameStore.Web.Controllers
 {
-    public class SearchController:Controller
+    public class SearchController: Controller
     {
         private readonly GameService gameService;
 
@@ -17,9 +17,9 @@ namespace GameStore.Web.Controllers
             this.gameService = gameService;
         }
 
-        public IActionResult Index(string query)
+        public async Task<IActionResult> Index(string query)
         {
-            var games = gameService.GetAllGamesByNameOrPublisher(query);
+            var games = await gameService.GetAllGamesByNameOrPublisherAsync(query);
 
             return View(games);
         }
