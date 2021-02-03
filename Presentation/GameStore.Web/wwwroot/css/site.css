@@ -11,6 +11,9 @@ button:active,
 button:focus {
   outline: none; }
 
+#sale {
+  margin-bottom: 40px; }
+
 .searchFormclass {
   margin: 30px auto; }
 
@@ -113,3 +116,56 @@ button:focus {
   text-align: justify;
   font: 15px Tahoma, Geneva, sans-serif;
   line-height: 1.5em; }
+
+.form-location {
+  padding-left: 25px;
+  font-size: 1.1em;
+  font: 15px Tahoma, Geneva, sans-serif; }
+  .form-location .form-line {
+    display: flex;
+    width: 60%;
+    justify-content: space-between; }
+    .form-location .form-line input {
+      height: 1.4em; }
+  .form-location .form-group {
+    margin-bottom: 1px; }
+    .form-location .form-group .form-input {
+      width: 60%;
+      height: 1.4em;
+      font-size: 1em;
+      margin-bottom: 3px; }
+
+h3.smallersize {
+  font-size: 12px; }
+
+.offer {
+  float: right;
+  margin-right: 175px;
+  margin-top: 10px; }
+  .offer .offer__img {
+    width: 220px; }
+
+.regwarning {
+  text-decoration: none;
+  font: 15px Tahoma, Geneva, sans-serif;
+  color: #999;
+  padding: 0 15px;
+  margin-bottom: 20px;
+  margin-left: 10px; }
+
+.confirm {
+  width: 250px;
+  height: 25px; }
+
+.confirmtext {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font: 16px Tahoma,Geneva,sans-serif;
+  color: #39647e; }
+
+.confirmbutton {
+  font: 16px Tahoma,Geneva,sans-serif;
+  color: white; }
+
+.mt-10 {
+  margin-top: 5em; }

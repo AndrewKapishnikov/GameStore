@@ -46,7 +46,7 @@ namespace GameStore.Data.EF
             modelBuilder.Entity<OrderItemDTO>(action =>
             {
                 action.Property(dto => dto.Price)
-                      .HasColumnType("money")
+                      .HasColumnType("decimal")
                       .HasPrecision(15, 2);
 
                 action.HasOne(dto => dto.Order)
@@ -84,7 +84,7 @@ namespace GameStore.Data.EF
                        .IsRequired();
 
                 action.Property(dto => dto.Price)
-                      .HasColumnType("money")
+                      .HasColumnType("decimal")
                       .HasPrecision(15, 2);
 
                 action.Property(dto => dto.ShortDescription)
@@ -109,8 +109,20 @@ namespace GameStore.Data.EF
         {
             modelBuilder.Entity<User>(action =>
             {
+                action.Property(dto => dto.Name)
+                      .IsRequired()
+                      .HasMaxLength(30);
+
+                action.Property(dto => dto.Surname)
+                      .IsRequired()
+                      .HasMaxLength(30);
+
+                action.Property(dto => dto.Address)
+                     .IsRequired()
+                     .HasMaxLength(50);
+
                 action.Property(dto => dto.City)
-                 //     .IsRequired()   //?
+                      .IsRequired()  
                       .HasMaxLength(30);
             });
         }

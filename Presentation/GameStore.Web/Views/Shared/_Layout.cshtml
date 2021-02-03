@@ -13,28 +13,14 @@
                 @RenderBody()
             </div>
             <div id="rSidebar">
-                <div class="block">
-                    <h3>Вход в систему</h3>
-                    <form id="loginForm" action="/" method="POST" name="loginForm">
-                        <p><input class="text" type="text" name="login" value="Логин" title="Введите логин"></p>
-                        <p><input class="text" type="password" name="password" value="Пароль" title="Введите пароль"></p>
-                        <p><label><input class="member" type="checkbox" name="memb">&ensp;Запомнить меня</label></p>
-                        <p><input class="log_in" type="image" src="/images/ok.png" name="Log_in" title="Войти"></p>
-                        <a href="/">Регистрация</a><a class="lostP" href="/">Забыли пароль?</a>
-                    </form>
-                </div>
-                <div class="block">
-                    <h3>Реклама</h3>
-                    <div class="bannerLeft">
-                        <img src="/images/mafia.jpg" alt="rightBanner">
-                    </div>
-                </div>
+                @await Html.PartialAsync("RightSideBarPartial", new LoginViewModel())
             </div>
         </div>
         <div class="clear"></div>
         @await Html.PartialAsync("FooterPartial")
     </div>
     @await Html.PartialAsync("ScriptsPartial")
+    @await Html.PartialAsync("ValidationsScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

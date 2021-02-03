@@ -29,6 +29,16 @@ namespace GameStore
                 dto.User = value;
             }
         }
+        public string UserId
+        {
+            get => dto.UserId;
+            set
+            {
+                if (value == null)
+                    throw new ArgumentException(nameof(User));
+                dto.UserId = value;
+            }
+        }
         public int TotalCount => Items.Sum(item => item.Count);
 
         public decimal TotalPrice => Items.Sum(item => item.Price * item.Count);

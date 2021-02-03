@@ -16,5 +16,9 @@ namespace GameStore
 
         void Update(Order order);
         Task UpdateAsync(Order order);
+
+        Task RemoveAsync(Order order);
+        Task<Order[]> GetOrdersByUserIdAsync(string userId);
+
     }
 }

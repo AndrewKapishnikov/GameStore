@@ -41,6 +41,19 @@ namespace GameStore.Data.EF
             return Order.Mapper.Map(orderDto);
         }
 
+        public async Task<Order[]> GetOrdersByUserIdAsync(string userId)
+        {
+            var db = dbFactory.Create(typeof(OrderRepository));
+
+            var ordersDto = await db.Orders.Include(order => order.Items)
+                                    .ThenInclude(orderItem => orderItem.Game)
+                                    .ThenInclude(game => game.Category)
+                                    .Include(order => order.User)
+                                    .Where(order => order.UserId == userId)
+                                    .ToArrayAsync();
+            return ordersDto.Select(Order.Mapper.Map).ToArray();
+        }
+
 
         public Order Create()
         {
@@ -74,6 +87,17 @@ namespace GameStore.Data.EF
         {
             var db = dbFactory.Create(typeof(OrderRepository));
             await db.SaveChangesAsync();
+        }
+
+
+
+        public async Task RemoveAsync(Order order)
+        {
+            var db = dbFactory.Create(typeof(OrderRepository));
+
+            db.Orders.Remove(Order.Mapper.Map(order));
+            await db.SaveChangesAsync();
+            
         }
 
 

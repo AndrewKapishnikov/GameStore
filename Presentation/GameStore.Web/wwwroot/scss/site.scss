@@ -1,4 +1,5 @@
 ﻿$base-color: #39647e;
+$text-color: #999;
 $font: Tahoma,Geneva, sans-serif;
 $font_size: 15px;
 $gap: 1em;
@@ -13,9 +14,14 @@ button{
 img{
     border:none;
 }
+
 button:active,
 button:focus {
     outline: none;
+}
+
+#sale{
+    margin-bottom:40px;
 }
 .searchFormclass {
     margin: $indent auto;
@@ -161,4 +167,77 @@ button:focus {
         font: $font_size $font;
         line-height: 1.5em;
     }
+}
+
+.form-location {
+    padding-left: 25px;
+    font-size: 1.1em;
+    font: $font_size $font;
+
+    .form-line {
+        display: flex;
+        width: 60%;
+        justify-content: space-between;
+
+        input {
+            height: 1.4em;
+        }
+    }
+
+    .form-group {
+        margin-bottom: 1px;
+
+        .form-input {
+            width: 60%;
+            height: 1.4em;
+            font-size: 1em;
+            margin-bottom: 3px;
+        }
+    }
+}
+
+
+h3.smallersize {
+     font-size: 12px;
+}
+
+.offer {
+    float: right;
+    margin-right:175px;
+    margin-top:10px;
+    .offer__img {
+      width: 220px;
+
+    }
+
+}
+
+.regwarning {
+    text-decoration: none;
+    font: $font_size $font;
+    color: $text-color;
+    padding: 0 15px;
+    margin-bottom: 20px;
+    margin-left:10px;
+}
+.confirm
+{
+    width:250px;
+    height:25px;
+   
+}
+.confirmtext {
+    margin-top:10px;
+    margin-bottom:10px;
+    font: 16px Tahoma,Geneva,sans-serif;
+    color: #39647e;
+    
+}
+.confirmbutton {
+    font: 16px Tahoma,Geneva,sans-serif;
+    color: white;
+}
+
+.mt-10{
+    margin-top:5em;
 }
