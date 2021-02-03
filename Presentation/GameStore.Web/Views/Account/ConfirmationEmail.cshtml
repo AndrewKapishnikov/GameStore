@@ -1,0 +1,30 @@
+﻿@model ConfirmationViewModel
+@{
+    ViewData["Title"] = "Подтверждение Email";
+}
+<h3 class="search_h3"> Подтверждение Электронной почты</h3> 
+<p class="confirmtext ml-4">
+    Введите <em>код подтверждения,</em> пришедший на электронную почту.
+</p>
+<form asp-controller="account" asp-action="confirmemail" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <input type="hidden" name="OrderUrl" value="@Model.OrderUrl" />
+    <div class="form-group">
+         <input class="form-control confirm ml-4" type="text" name="confirmationCode" placeholder="00000" />
+        @if (Model.Errors.ContainsKey("confirmationCode"))
+        {
+            <small class="form-text text-danger ml-4">@Model.Errors["confirmationCode"]</small>
+        }
+    </div>
+    <button type="submit" class="confirmbutton btn btn-success ml-4">Подтвердить</button>
+</form>
+<p class="confirmtext mt-10 ml-4">
+    Если на ваш эмайл не пришло письмо в течение минуты, повторите отправку письма.
+</p>
+<form asp-controller="account" asp-action="sendmessage" method="post">
+    <div class="form-group">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <input type="hidden" name="orderUrl" value="@Model.OrderUrl" />
+    </div>
+    <button type="submit" class="confirmbutton btn btn-success ml-4">Отправить письмо</button>
+</form>

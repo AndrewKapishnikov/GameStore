@@ -1,0 +1,43 @@
+﻿@model LoginViewModel
+<div class="block">
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <h3>Вход в систему</h3>
+        <form id="loginForm" name="loginForm" action="/account/login" method="POST">
+            <input type="hidden" id="returnUrl" name="returnUrl" value="@Context.Request.GetCurrentUrl()" />
+            <p>
+                <div id="errors"  class="text-danger ml-3 mr-3 font-base"></div>
+            <p>
+                <input asp-for="@Model.Email" class="text" type="text"  title="Введите Email" />
+            </p>
+            <p>
+                <input asp-for="@Model.Password" class="text"  title="Введите пароль" placeholder="*********" />
+            </p>
+            <p>
+                <label>
+                    @*@Html.CheckBoxFor(model => model.RememberMe)Запомнить меня*@
+                    <input asp-for="@Model.RememberMe" class="member ml-3" value="false" type="checkbox" />
+                    Запомнить меня
+                </label>
+            </p>
+            <p>
+                <input id="loginSubmit" class="log_in" type="image" src="/images/ok.png" title="Войти">
+            </p>
+            <a asp-controller="account" asp-action="register">Регистрация</a>
+            <a class="lostP" href="/">Забыли пароль?</a>
+        </form>
+    }
+    else
+    { 
+        <h3 class="smallersize">@User.Identity.Name</h3>
+        <form id="logout" asp-controller="account" asp-action="logout" method="POST">
+            <input  class="log_in mt-4" type="submit" value="Выйти"  title="Выйти">
+        </form>
+    }
+</div>
+<div class="block">
+    <h3 >Реклама</h3>
+    <div class="bannerLeft">
+        <img src="/images/mafia.jpg" alt="rightBanner">
+    </div>
+</div>

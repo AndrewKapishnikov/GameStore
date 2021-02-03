@@ -1,0 +1,70 @@
+﻿@model RegisterViewModel
+@{
+    ViewBag.Title = "Регистрация";
+}
+<h2 class="regwarning">Если вы ранее регистрировались, заполните поля 'Email' и 'Пароль' формы ВХОД В СИСТЕМУ =></h2>
+<h3 class="search_h3">Регистрация</h3>
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="account" asp-action="register" class="form-location" asp-antiforgery="true">
+            <input id="orderUrl" type="hidden" name="orderUrl"  value="@ViewBag.orderUrl" />
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="form-line">
+                <div class="form-group">
+                    <label asp-for="Name" class="col-form-label"></label>
+                    <input asp-for="Name" class="form-control" title="Имя" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Surname" class="col-form-label"></label>
+                    <input asp-for="Surname" class="form-control" title="Фамилия" />
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-line">
+                <div class="form-group">
+                    <label asp-for="City" class="col-form-label"></label>
+                    <input asp-for="City" class="form-control" title="Город" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telephone" class="col-form-label"></label>
+                    <input id="phone" asp-for="Telephone" class="form-control" title="Телефон" />
+                    <span asp-validation-for="Telephone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="col-form-label"></label>
+                <input id="address" asp-for="Address" class="form-control form-input" value="Ул. _   Дом №    Кв. № " title="Улица  Дом №   Кв. №" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label id="EmailRegister" asp-for="Email" class="col-form-label"></label>
+                <input asp-for="Email" class="form-control form-input" title="Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-line">
+                <div class="form-group">
+                    <label id="PasswordRegister" asp-for="Password" class="col-form-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="col-form-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success col-form-label mt-3">Продолжить</button>
+        </form>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.maskedinput.min.js"></script>
+    <script>
+        $(function(){
+            $("#phone").mask("+7 (999) 999-99-99");
+
+        });
+    </script>
+}

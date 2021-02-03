@@ -11,6 +11,10 @@ using System;
 using System.IO;
 using GameStore.DataEF;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using GameStore.Web.ExtensionsMethods;
 
 namespace GameStore.Web
 {
@@ -47,17 +51,43 @@ namespace GameStore.Web
             services.AddEntityFrameworkRepositories(Configuration.GetConnectionString("GameStore"));
             services.AddIdentity<User, IdentityRole>(options =>
             {
-                //options.SignIn.RequireConfirmedEmail = true;
-                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
+                options.Lockout.MaxFailedAccessAttempts = 100;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-            }).AddEntityFrameworkStores<GameStoreDbContext>();
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
 
-                       
+            }).AddEntityFrameworkStores<GameStoreDbContext>()
+              .AddDefaultTokenProviders()
+              .AddErrorDescriber<CustomIdentityErrorDescriber>();
+ 
+
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.Cookie.HttpOnly = true;
+            //    // options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+            //    options.LoginPath = "/Account/Login";
+            //    options.AccessDeniedPath = "/Account/AccessDenied";
+            //  }
+            //);
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options => 
+            {
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
+
+
             services.AddSingleton<GameMemoryService>();
             services.AddSingleton<OrderMemoryService>();
 
             services.AddSingleton<GameService>();
             services.AddSingleton<OrderService>();
+            services.AddSingleton<EmailService>();
 
             services.AddControllersWithViews();
         }
@@ -78,6 +108,7 @@ namespace GameStore.Web
            
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSession();

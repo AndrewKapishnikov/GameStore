@@ -4,14 +4,16 @@ using GameStore.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GameStore.Data.EF.Migrations
 {
     [DbContext(typeof(GameStoreDbContext))]
-    partial class GameStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210130184949_Add_DisplayName")]
+    partial class Add_DisplayName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,11 +149,6 @@ namespace GameStore.Data.EF.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -160,6 +157,11 @@ namespace GameStore.Data.EF.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -173,11 +175,6 @@ namespace GameStore.Data.EF.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -198,11 +195,6 @@ namespace GameStore.Data.EF.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");

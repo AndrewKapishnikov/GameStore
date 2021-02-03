@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GameStore.DataEF;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace GameStore.Web.App
             var (hasValue, order) = await TryGetOrderAsync();
             if (hasValue)
                 return (true, Map(order));
-            
+
             return (false, null);
         }
 
@@ -59,7 +60,7 @@ namespace GameStore.Web.App
                     ImageData = orderItem.Game.ImageData
                 });
             }
-            
+
             return new OrderModel
             {
                 Id = order.Id,
@@ -109,7 +110,11 @@ namespace GameStore.Web.App
 
             await orderRepository.UpdateAsync(order);
             UpdateSession(order);
-
+            if (order.Items.Count == 0 && order.UserId == null)
+            {
+                await orderRepository.RemoveAsync(order);
+                Session.RemoveCart();
+            }
             return Map(order);
         }
 
@@ -139,6 +144,20 @@ namespace GameStore.Web.App
             UpdateSession(order);
 
             return Map(order);
+        }
+
+        public async Task SetUserForOrderAsync(User user, int orderId)
+        {
+            var order = await orderRepository.GetByIdAsync(orderId);
+            order.UserId = user.Id;
+            await orderRepository.UpdateAsync(order);
+
+        }
+
+
+        public async Task<Order[]> GetOrdersForUser(User user)
+        {
+            return await orderRepository.GetOrdersByUserIdAsync(user.Id);
         }
 
 

@@ -41,6 +41,10 @@
             </tr>
         </tfoot>
     </table>
+    <form asp-controller="order" asp-action="makeorder" method="post">
+        <input type="hidden" name="orderId" value="@Model.Id" />
+        <button class="offer"  type="submit"><img class="offer__img" src="/images/orderoffer.png" alt="In Cart"></button>
+    </form>
 
 }
 else
