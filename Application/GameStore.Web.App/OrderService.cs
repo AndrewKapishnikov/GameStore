@@ -110,7 +110,8 @@ namespace GameStore.Web.App
 
             await orderRepository.UpdateAsync(order);
             UpdateSession(order);
-            if (order.Items.Count == 0 && order.UserId == null)
+            if (order.Items.Count == 0)
+            // if (order.Items.Count == 0 && order.UserId == null)
             {
                 await orderRepository.RemoveAsync(order);
                 Session.RemoveCart();

@@ -116,11 +116,11 @@ namespace GameStore.Web.Controllers
 
         private async Task SendEmail(string userEmail)
         {
-            var confirmationCode = 5555;
-            //var confirmationCode = new Random().Next(10001, 99999);
+            //var confirmationCode = 5555;
+            var confirmationCode = new Random().Next(10001, 99999);
             Session.SetInt32(emailKey, confirmationCode);
-            await emailService.SendEmailAsync(userEmail, "Подтвердите свой аккаунт",
-                $"Подтвердите регистрацию, введя код подтверждения в форме: {confirmationCode}");
+            await emailService.SendEmailAsync(userEmail, "Сообщение от Games Store. Подтвердите свой аккаунт.",
+                $"<div>Подтвердите регистрацию, введя в форме следующий код подтверждения: {confirmationCode}</div>");
         }
 
         [AllowAnonymous]

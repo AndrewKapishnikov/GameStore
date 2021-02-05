@@ -56,9 +56,11 @@ button:focus {
 }
 .incor {
     border: none;
+    margin: 10px 0;
+    padding:0;
     img {
         width: 130px;
-        margin-top: 15px;
+        margin: 0;
     }
 }
 
@@ -214,7 +216,7 @@ h3.smallersize {
 
 .regwarning {
     text-decoration: none;
-    font: $font_size $font;
+    font: $font_size+1 $font;
     color: $text-color;
     padding: 0 15px;
     margin-bottom: 20px;
@@ -240,4 +242,8 @@ h3.smallersize {
 
 .mt-10{
     margin-top:5em;
+}
+.login
+{
+    width:50px;
 }

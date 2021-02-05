@@ -41,10 +41,12 @@ button:focus {
       width: 50px; }
 
 .incor {
-  border: none; }
+  border: none;
+  margin: 10px 0;
+  padding: 0; }
   .incor img {
     width: 130px;
-    margin-top: 15px; }
+    margin: 0; }
 
 .lSale_block, .rSale_block {
   height: 290px; }
@@ -147,7 +149,7 @@ h3.smallersize {
 
 .regwarning {
   text-decoration: none;
-  font: 15px Tahoma, Geneva, sans-serif;
+  font: 16px Tahoma, Geneva, sans-serif;
   color: #999;
   padding: 0 15px;
   margin-bottom: 20px;
@@ -169,3 +171,6 @@ h3.smallersize {
 
 .mt-10 {
   margin-top: 5em; }
+
+.login {
+  width: 50px; }

@@ -183,7 +183,7 @@ namespace GameStore.Data.EF.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict); //With Restrict I cannot delete User
                 });
 
             migrationBuilder.CreateTable(
@@ -211,7 +211,7 @@ namespace GameStore.Data.EF.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict); 
                 });
 
             migrationBuilder.CreateTable(

@@ -3,7 +3,7 @@
     @if (!User.Identity.IsAuthenticated)
     {
         <h3>Вход в систему</h3>
-        <form id="loginForm" name="loginForm" action="/account/login" method="POST">
+        <form id="loginForm" name="loginForm" action="/account/login" method="POST" asp-antiforgery="true">
             <input type="hidden" id="returnUrl" name="returnUrl" value="@Context.Request.GetCurrentUrl()" />
             <p>
                 <div id="errors"  class="text-danger ml-3 mr-3 font-base"></div>
@@ -15,13 +15,12 @@
             </p>
             <p>
                 <label>
-                    @*@Html.CheckBoxFor(model => model.RememberMe)Запомнить меня*@
                     <input asp-for="@Model.RememberMe" class="member ml-3" value="false" type="checkbox" />
                     Запомнить меня
                 </label>
             </p>
             <p>
-                <input id="loginSubmit" class="log_in" type="image" src="/images/ok.png" title="Войти">
+                <input id="loginSubmit" class="ml-3 mt-2 mb-3 login" type="image" src="/images/input.png" title="Войти">
             </p>
             <a asp-controller="account" asp-action="register">Регистрация</a>
             <a class="lostP" href="/">Забыли пароль?</a>
@@ -31,7 +30,7 @@
     { 
         <h3 class="smallersize">@User.Identity.Name</h3>
         <form id="logout" asp-controller="account" asp-action="logout" method="POST">
-            <input  class="log_in mt-4" type="submit" value="Выйти"  title="Выйти">
+            <input  class="login mt-4 ml-3" type="image" value="Выйти"  src="/images/output2.png"  title="Выйти">
         </form>
     }
 </div>

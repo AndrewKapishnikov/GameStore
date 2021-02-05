@@ -18,6 +18,13 @@ namespace GameStore.Web.Controllers
 
         }
 
+        public async Task<IActionResult> SearchGame(string query)
+        {
+            var games = await gameService.GetAllGamesByNameOrPublisherAsync(query);
+
+            return View(games);
+        }
+
         public async Task<IActionResult> Index(int id)
         {
             //  TODO  Exception if remove item when session ended
@@ -25,5 +32,6 @@ namespace GameStore.Web.Controllers
 
             return View(model);
         }
+
     }
 }

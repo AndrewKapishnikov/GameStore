@@ -23,9 +23,12 @@ namespace GameStore.Web.App
         }
         public async Task<IReadOnlyCollection<GameModel>> GetAllGamesByNameOrPublisherAsync(string query)
         {
-            var game = await gameRepository.GetAllByNameOrPublisherAsync(query);
-
-            return game.Select(Map).ToArray();
+            if (!string.IsNullOrEmpty(query))
+            {
+                var game = await gameRepository.GetAllByNameOrPublisherAsync(query);
+                return game.Select(Map).ToArray();
+            }
+            return new List<GameModel>();
         }
 
         public async Task<IReadOnlyCollection<GameModel>> GetAllGamesByCategoryAsync(string query)

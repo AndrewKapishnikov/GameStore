@@ -47,7 +47,6 @@ namespace GameStore.Web
             });
 
             services.AddMemoryStorageRepositories();
-
             services.AddEntityFrameworkRepositories(Configuration.GetConnectionString("GameStore"));
             services.AddIdentity<User, IdentityRole>(options =>
             {
@@ -63,30 +62,22 @@ namespace GameStore.Web
               .AddDefaultTokenProviders()
               .AddErrorDescriber<CustomIdentityErrorDescriber>();
  
-
-            //services.ConfigureApplicationCookie(options =>
-            //{
-            //    options.Cookie.HttpOnly = true;
-            //    // options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
-            //    options.LoginPath = "/Account/Login";
-            //    options.AccessDeniedPath = "/Account/AccessDenied";
-            //  }
-            //);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options => 
             {
                 options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.ExpireTimeSpan = TimeSpan.FromHours(24);
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
-
 
             services.AddSingleton<GameMemoryService>();
             services.AddSingleton<OrderMemoryService>();
 
             services.AddSingleton<GameService>();
             services.AddSingleton<OrderService>();
+            services.AddSingleton<EmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
             services.AddSingleton<EmailService>();
 
             services.AddControllersWithViews();
@@ -102,8 +93,11 @@ namespace GameStore.Web
             }
             else
             {
+                //app.UseHsts();
                 app.UseExceptionHandler("/Home/Error");
+               
             }
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
            
             app.UseRouting();

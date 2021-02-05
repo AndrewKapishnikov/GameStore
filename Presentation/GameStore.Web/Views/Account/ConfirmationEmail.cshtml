@@ -6,7 +6,7 @@
 <p class="confirmtext ml-4">
     Введите <em>код подтверждения,</em> пришедший на электронную почту.
 </p>
-<form asp-controller="account" asp-action="confirmemail" method="post">
+<form asp-controller="account" asp-action="confirmemail" method="post" asp-antiforgery="true">
     <input type="hidden" name="Id" value="@Model.Id" />
     <input type="hidden" name="OrderUrl" value="@Model.OrderUrl" />
     <div class="form-group">
@@ -21,7 +21,7 @@
 <p class="confirmtext mt-10 ml-4">
     Если на ваш эмайл не пришло письмо в течение минуты, повторите отправку письма.
 </p>
-<form asp-controller="account" asp-action="sendmessage" method="post">
+<form asp-controller="account" asp-action="sendmessage" method="post" asp-antiforgery="true">
     <div class="form-group">
         <input type="hidden" name="id" value="@Model.Id" />
         <input type="hidden" name="orderUrl" value="@Model.OrderUrl" />

@@ -22,7 +22,6 @@ if (loginButton) {
     });
 }
 
-
 async function SubmitLogin(email, password, remember, returnUrl, orderUrl) {
     
     const response = await fetch("/account/login", {
@@ -106,4 +105,13 @@ function addError(errors) {
         document.getElementById("errors").append(p);
     });
 };
+
+document.getElementById('searchForm').addEventListener("submit",
+    e => {
+        let input = document.getElementById('searchinput');
+        if (!input.value.trim())
+           e.preventDefault();
+    }    
+);
+   
 

@@ -1,5 +1,5 @@
-﻿<form id="searchForm" asp-controller="search" asp-action="index" method="get">
-    <p><input class="search" type="text" name="query" placeholder="Название или разработчик игры" value="" /></p>
+﻿<form id="searchForm" asp-controller="game" asp-action="searchgame" method="get">
+    <p><input id="searchinput" class="search" type="text" name="query" placeholder="Название или разработчик игры" value="" /></p>
     <p><input class="go searh_submit" type="submit" value="" /><p>
 </form>
 @*<a asp-controller="Search" asp-action="SearchByName" asp-route-query="wert">12345</a>*@

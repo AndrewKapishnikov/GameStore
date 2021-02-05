@@ -14,9 +14,9 @@
                 @RenderBody()
             </div>
             <div id="rSidebar">
-            @await Html.PartialAsync("RightSideBarPartial", new LoginViewModel())
-            @await Html.PartialAsync("CustomerReviewsPartial")
-        </div>
+                @await Html.PartialAsync("RightSideBarPartial", new LoginViewModel())
+                @await Html.PartialAsync("CustomerReviewsPartial")
+            </div>
         </div>
         <div class="clear"></div>
         @await Html.PartialAsync("FooterPartial")
