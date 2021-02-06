@@ -1,6 +1,7 @@
 ﻿using GameStore.DataEF;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -67,9 +68,34 @@ namespace GameStore.Data.EF
                 action.HasOne(dto => dto.User)
                       .WithMany(user => user.Orders)
                       .IsRequired(false);
+
+                //Delivery
+                action.Property(dto => dto.DeliveryName)
+                      .HasMaxLength(50);
+
+                action.Property(dto => dto.DeliveryDescription)
+                    .HasMaxLength(1000);
+
+                action.Property(dto => dto.DeliveryPrice)
+                      .HasColumnType("decimal")
+                      .HasPrecision(15, 2);
+
+                action.Property(dto => dto.DeliveryParameters)
+                      .HasConversion(
+                          value => JsonConvert.SerializeObject(value),
+                          value => JsonConvert.DeserializeObject<Dictionary<string, string>>(value))
+                      .Metadata.SetValueComparer(DictionaryComparer);
+                //Delivery
             });
         }
 
+        private static readonly ValueComparer DictionaryComparer =
+          new ValueComparer<Dictionary<string, string>>(
+              (value1, value2) => value1.SequenceEqual(value2),
+              dictionary => dictionary.Aggregate(
+                  0, (a, b) => HashCode.Combine(HashCode.Combine(a, b.Key.GetHashCode()), b.Value.GetHashCode())
+              )
+          );
 
         private static void BuildGames(ModelBuilder modelBuilder)
         {

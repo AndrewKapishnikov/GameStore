@@ -11,6 +11,7 @@
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
     <Content Remove="compilerconfig.json" />
+    <Content Remove="Views\Order\NextDeliveryChoice.cshtml" />
     <Content Remove="Views\Shared\CssPartial.cshtml" />
   </ItemGroup>
 
@@ -40,6 +41,7 @@
   <ItemGroup>
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
+    <None Include="Views\Order\NextDeliveryChoice.cshtml" />
     <None Include="Views\Shared\CssPartial.cshtml" />
   </ItemGroup>
 
@@ -48,7 +50,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Order\NextDeliveryChoice.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Shared\CssPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Order\NextDeliveryChoice.cshtml" />
   </ItemGroup>
 
 </Project>

@@ -43,6 +43,31 @@ namespace GameStore
 
         public decimal TotalPrice => Items.Sum(item => item.Price * item.Count);
 
+        public Delivery Delivery
+        {
+            get
+            {
+                if (dto.DeliveryName == null)
+                    return null;
+
+                return new Delivery(
+                    dto.DeliveryName,
+                    dto.DeliveryDescription,
+                    dto.DeliveryPrice,
+                    dto.DeliveryParameters);
+            }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentException(nameof(Delivery));
+
+                dto.DeliveryName = value.NameDelivery;
+                dto.DeliveryDescription = value.Description;
+                dto.DeliveryPrice = value.DeliveryPrice;
+                dto.DeliveryParameters = value.Parameters.ToDictionary(p => p.Key, p => p.Value);
+            }
+        }
+
         public static class DtoFactory
         {
             public static OrderDTO Create() => new OrderDTO() { DateOfOrder = DateTime.UtcNow};

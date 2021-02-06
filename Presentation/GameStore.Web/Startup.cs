@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using GameStore.Web.ExtensionsMethods;
+using GameStore.Contractors;
 
 namespace GameStore.Web
 {
@@ -79,6 +80,8 @@ namespace GameStore.Web
             services.AddSingleton<OrderService>();
             services.AddSingleton<EmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
             services.AddSingleton<EmailService>();
+
+            services.AddSingleton<IDeliveryService, PostamateDeliveryService>();
 
             services.AddControllersWithViews();
         }

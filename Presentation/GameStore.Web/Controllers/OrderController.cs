@@ -85,16 +85,37 @@ namespace GameStore.Web.Controllers
                 ViewBag.orderUrl = $"{Request.Path.ToString().ToLower()}?orderId={orderId}";
                 return View("../Account/Register", new RegisterViewModel());
             }
-
            
         }
 
+        [HttpPost]
+        public async Task<IActionResult> StartDelivery(string service, int orderId)
+        {
+            var deliveryService = deliveryServices.Single(p => p.Name == service);
+            var order = await orderService.GetOrderAsync(); 
+            if( order.Id == orderId)
+            {
+                var dataSteps = deliveryService.FirstForm(order);
+                return View("NextDeliveryChoice", dataSteps);
+            }
+            return View("CartEmpty");
+
+        }
 
         [HttpPost]
-        public async Task<IActionResult> StartDelivery(string serviceName)
+        public async Task<IActionResult> NextDeliveryStep(string service, int step, Dictionary<string, string> values)
         {
-            await Task.Yield();
-            return View("Home");
+            var deliveryService = deliveryServices.Single(p => p.Name == service);
+            var order = await orderService.GetOrderAsync();
+            var dataSteps = deliveryService.NextForm(step, values);
+            if (!dataSteps.IsFinal)
+                return View("NextDeliveryChoice", dataSteps);
+
+            var delivery = deliveryService.GetDelivery(dataSteps);
+            await orderService.SetDeliveryAsync(delivery);
+
+
+            return View("CartEmpty");
         }
 
 

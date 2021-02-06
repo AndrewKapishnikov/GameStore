@@ -21,5 +21,10 @@ namespace GameStore.DataEF
         public IList<OrderItemDTO> Items { get; set; } = new List<OrderItemDTO>();
         public string UserId { get; set; }   
         public User User { get; set; }
+
+        public string DeliveryName { get; set; }
+        public string DeliveryDescription { get; set; }
+        public decimal DeliveryPrice { get; set; }
+        public Dictionary<string, string> DeliveryParameters { get; set; }
     }
 }

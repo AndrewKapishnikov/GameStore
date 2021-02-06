@@ -12,7 +12,8 @@ namespace GameStore.Web.App
         public OrderItemModel[] OrderItems { get; set; } = new OrderItemModel[0];
         public int TotalCount { get; set; }
         public decimal TotalPrice { get; set; }
+        public string DeliveryDescription { get; set; }
+        public decimal? DeliveryPrice { get; set; }
 
-   
     }
 }

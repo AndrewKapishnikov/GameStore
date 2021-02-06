@@ -106,12 +106,16 @@ function addError(errors) {
     });
 };
 
-document.getElementById('searchForm').addEventListener("submit",
-    e => {
-        let input = document.getElementById('searchinput');
-        if (!input.value.trim())
-           e.preventDefault();
-    }    
-);
+let searchForm = document.getElementById('searchForm');
+if (searchForm) {
+    searchForm.addEventListener("submit",
+        e => {
+            let input = document.getElementById('searchinput');
+            if (!input.value.trim())
+                e.preventDefault();
+        }
+    );
+}
+
    
 

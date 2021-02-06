@@ -67,6 +67,8 @@ namespace GameStore.Web.App
                 OrderItems = orderItemModel.ToArray(),
                 TotalCount = order.TotalCount,
                 TotalPrice = order.TotalPrice,
+                DeliveryDescription = order.Delivery?.Description,
+                DeliveryPrice = order.Delivery?.DeliveryPrice
             };
         }
 
@@ -152,7 +154,6 @@ namespace GameStore.Web.App
             var order = await orderRepository.GetByIdAsync(orderId);
             order.UserId = user.Id;
             await orderRepository.UpdateAsync(order);
-
         }
 
 
@@ -161,6 +162,14 @@ namespace GameStore.Web.App
             return await orderRepository.GetOrdersByUserIdAsync(user.Id);
         }
 
+        public async Task<OrderModel> SetDeliveryAsync(Delivery delivery)
+        {
+            var order = await GetOrderAsync();
+            order.Delivery = delivery;
+            await orderRepository.UpdateAsync(order);
+
+            return Map(order);
+        }
 
     }
 }
