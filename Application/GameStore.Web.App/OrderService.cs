@@ -52,7 +52,7 @@ namespace GameStore.Web.App
                 orderItemModel.Add(new OrderItemModel()
                 {
                     GameId = orderItem.Game.Id,
-                    Name = orderItem.Game.Name,
+                    GameName = orderItem.Game.Name,
                     Publisher = orderItem.Game.Publisher,
                     Category = orderItem.Game.Category.Name,
                     Count = orderItem.Count,
@@ -67,8 +67,15 @@ namespace GameStore.Web.App
                 OrderItems = orderItemModel.ToArray(),
                 TotalCount = order.TotalCount,
                 TotalPrice = order.TotalPrice,
+                DeliveryName = order.Delivery?.NameDelivery,
                 DeliveryDescription = order.Delivery?.Description,
-                DeliveryPrice = order.Delivery?.DeliveryPrice
+                DeliveryPrice = order.Delivery?.DeliveryPrice ?? 0m,
+                PaymentDescription = order.Payment?.Description,
+                UserName = order.User?.UserName,
+                UserCity = order.User?.City,
+                UserAddress = order.User?.Address,
+                UserEmail = order.User?.Email,
+                                
             };
         }
 
@@ -167,9 +174,22 @@ namespace GameStore.Web.App
             var order = await GetOrderAsync();
             order.Delivery = delivery;
             await orderRepository.UpdateAsync(order);
+            UpdateSession(order);
 
             return Map(order);
         }
+
+
+        public async Task<OrderModel> SetPaymentAsync(Payment payment)
+        {
+            var order = await GetOrderAsync();
+            order.Payment = payment;
+            await orderRepository.UpdateAsync(order);
+            Session.RemoveCart();
+                       
+            return Map(order);
+        }
+
 
     }
 }

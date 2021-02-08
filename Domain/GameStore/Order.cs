@@ -41,7 +41,8 @@ namespace GameStore
         }
         public int TotalCount => Items.Sum(item => item.Count);
 
-        public decimal TotalPrice => Items.Sum(item => item.Price * item.Count);
+        public decimal TotalPrice => Items.Sum(item => item.Price * item.Count)
+                                    + (Delivery?.DeliveryPrice ?? 0m);
 
         public Delivery Delivery
         {
@@ -65,6 +66,30 @@ namespace GameStore
                 dto.DeliveryDescription = value.Description;
                 dto.DeliveryPrice = value.DeliveryPrice;
                 dto.DeliveryParameters = value.Parameters.ToDictionary(p => p.Key, p => p.Value);
+            }
+        }
+
+
+        public Payment Payment
+        {
+            get
+            {
+                if (dto.PaymentName == null)
+                    return null;
+
+                return new Payment(
+                    dto.PaymentName,
+                    dto.PaymentDescription,
+                    dto.PaymentParameters);
+            }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentException(nameof(Payment));
+
+                dto.PaymentName = value.NamePayment;
+                dto.PaymentDescription = value.Description;
+                dto.PaymentParameters = value.Parameters.ToDictionary(p => p.Key, p => p.Value);
             }
         }
 

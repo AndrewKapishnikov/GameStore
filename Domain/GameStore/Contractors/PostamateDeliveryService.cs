@@ -10,7 +10,7 @@ namespace GameStore.Contractors
     {
         public string Name => "Postamate";
         public string Title => "Доставка товаров через постаматы в Саратове и Москве";
-        public decimal DeliveryPrice => 300m;
+        public decimal DeliveryPrice => 150m;
 
         private static IReadOnlyDictionary<string, string> cities = new Dictionary<string, string>
         {
@@ -42,7 +42,7 @@ namespace GameStore.Contractors
             }
         };
 
-        public DataSteps FirstForm(Order order)
+        public DataSteps FirstStep(Order order)
         {
             return DataSteps.CreateFirst(Name)
                        .AddServicePrice(DeliveryPrice)
@@ -50,7 +50,7 @@ namespace GameStore.Contractors
                        .AddField(new ChoiceField("Город", "city", cities));
         }
 
-        public DataSteps NextForm(int step, IReadOnlyDictionary<string, string> values)
+        public DataSteps NextStep(int step, IReadOnlyDictionary<string, string> values)
         {
             if (step == 1)
             {

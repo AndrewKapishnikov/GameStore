@@ -11,6 +11,12 @@ button:active,
 button:focus {
   outline: none; }
 
+.text_color {
+  color: #999; }
+
+.bannerLeft {
+  padding: 20px 0 10px 12px; }
+
 #sale {
   margin-bottom: 40px; }
 
@@ -162,11 +168,11 @@ h3.smallersize {
 .confirmtext {
   margin-top: 10px;
   margin-bottom: 10px;
-  font: 16px Tahoma,Geneva,sans-serif;
+  font: 16px Tahoma, Geneva, sans-serif;
   color: #39647e; }
 
 .confirmbutton {
-  font: 16px Tahoma,Geneva,sans-serif;
+  font: 16px Tahoma, Geneva, sans-serif;
   color: white; }
 
 .mt-10 {
@@ -177,3 +183,6 @@ h3.smallersize {
 
 .labelChoice {
   font: 21px Tahoma, Geneva, sans-serif; }
+
+.finish_font {
+  font: 16px Tahoma, Geneva, sans-serif; }

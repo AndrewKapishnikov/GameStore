@@ -9,14 +9,12 @@ namespace GameStore.Contractors
     public abstract class Field
     {
         public string LabelName { get; }
-
         public string Name { get; }
-    
         protected Field(string label, string name)
         {
             LabelName = label;
             Name = name;
-         }
+        }
     }
 
     public class ChoiceField : Field

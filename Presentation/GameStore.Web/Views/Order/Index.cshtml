@@ -3,11 +3,9 @@
     ViewData["Title"] = "Корзина";
 }
 @await Html.PartialAsync("SearchFormPartial")
-
 @if (Model.TotalCount != 0)
 {
     <h3 class="search_h3">Ваша Корзина</h3>
-
     <table class="table table-search table-order">
         <tbody>
             @for (int i = 0; i < Model.OrderItems.Length; i++)
@@ -19,7 +17,7 @@
                             <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.OrderItems[i].ImageData))" />
                         }
                     </td>
-                    <td><strong>@Model.OrderItems[i].Name</strong></td>
+                    <td><strong>@Model.OrderItems[i].GameName</strong></td>
                     <td class="text-center">@Model.OrderItems[i].Count</td>
                     <td class="text-right price ">@Math.Truncate(Model.OrderItems[i].Price) руб.</td>
                     <td class="text text-left">
@@ -34,6 +32,14 @@
             }
         </tbody>
         <tfoot>
+            @if (Model.DeliveryPrice > 0)
+            {
+                <tr>
+                    <td colspan="2" class="result text-right ">Стоимость доставки:</td>
+                    <td class="result text-center"></td>
+                    <td class="result text-right"> @Math.Truncate(Model.DeliveryPrice) руб.</td>
+                </tr>
+            }
             <tr>
                 <td colspan="2" class="result text-right ">Итого:</td>
                 <td class="result text-center">@Model.TotalCount</td>
@@ -45,7 +51,6 @@
         <input type="hidden" name="orderId" value="@Model.Id" />
         <button class="offer"  type="submit"><img class="offer__img" src="/images/orderoffer.png" alt="In Cart"></button>
     </form>
-
 }
 else
 {

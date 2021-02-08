@@ -55,7 +55,7 @@ namespace GameStore.Web.App
                                                      GameId = game.Id,
                                                      Category = game.Category,
                                                      Count = orderItem.Count,
-                                                     Name = game.Name,
+                                                     GameName = game.Name,
                                                      Price = orderItem.Price,
                                                      Publisher = game.Publisher,
                                                      ImageData = game.ImageData
