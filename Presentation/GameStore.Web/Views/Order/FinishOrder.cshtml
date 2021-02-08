@@ -1,0 +1,65 @@
+﻿@model OrderModel
+@{
+    ViewData["Title"] = "Заказ оформлен";
+}
+<h3 class="search_h3">Заказ оформлен и будет передан в службу доставки</h3>
+<div class="finish_font mb-3 text_color">
+    На почту @Model.UserEmail отправлено письмо с параметрами заказа
+</div>
+<table class="table table-sm table-striped finish_font">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col">Название игры</th>
+            <th scope="col">Разработчик</th>
+            <th scope="col" class="text-right">Количество</th>
+            <th scope="col" class="text-right">Цена</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.OrderItems.Length; i++)
+        {
+            <tr>
+                <td class="text-left">@(i + 1)</td>
+                <td class="font-weight-bold">@Model.OrderItems[i].GameName</td>
+                <td>@Model.OrderItems[i].Publisher</td>
+                <td class="text-right">@Model.OrderItems[i].Count</td>
+                <td class="text-right">@Math.Truncate(Model.OrderItems[i].Price) руб.</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-right">Доставка</td>
+            <td class="text-right"></td>
+            <td class="text-right">@Math.Truncate(@Model.DeliveryPrice) руб.</td>
+        </tr>
+        <tr>
+            <td colspan="3" class="text-right font-weight-bold">Итого</td>
+            <td class="text-right font-weight-bold">@Model.TotalCount</td>
+            <td class="text-right font-weight-bold">@Math.Truncate(@Model.TotalPrice) руб.</td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="labelChoice mb-2">Доставка</div>
+<pre class="finish_font">
+@Model.DeliveryDescription
+</pre>
+@if (Model.DeliveryName == "Courier")
+{
+    <div class="mt-2 finish_font">
+        г. @Model.UserCity 
+        @Model.UserAddress
+    </div>
+}
+
+<div class="labelChoice mb-2 mt-4">Оплата</div>
+<pre class="finish_font">
+@Model.PaymentDescription
+</pre>
+
+<p class="mt-5 finish_font">
+    <a asp-controller="Home" asp-action="index">Вернутся в магазин за покупками...</a>.
+</p>
+

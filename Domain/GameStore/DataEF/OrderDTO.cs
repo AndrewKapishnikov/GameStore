@@ -18,7 +18,7 @@ namespace GameStore.DataEF
         public int Id { get; set; }
         public DateTime DateOfOrder { get; set; }
 
-        public IList<OrderItemDTO> Items { get; set; } = new List<OrderItemDTO>();
+   
         public string UserId { get; set; }   
         public User User { get; set; }
 
@@ -26,5 +26,13 @@ namespace GameStore.DataEF
         public string DeliveryDescription { get; set; }
         public decimal DeliveryPrice { get; set; }
         public Dictionary<string, string> DeliveryParameters { get; set; }
+
+
+        public string PaymentName { get; set; }
+        public string PaymentDescription { get; set; }
+        public Dictionary<string, string> PaymentParameters { get; set; }
+
+
+        public IList<OrderItemDTO> Items { get; set; } = new List<OrderItemDTO>();
     }
 }

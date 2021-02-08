@@ -2,6 +2,7 @@
 using GameStore.DataEF;
 using GameStore.Web.App;
 using GameStore.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,15 +20,22 @@ namespace GameStore.Web.Controllers
         //private readonly OrderMemoryService orderService;
         private readonly OrderService orderService;
         private readonly UserManager<User> userManager;
+        private readonly EmailService emailService;
         private readonly IEnumerable<IDeliveryService> deliveryServices;
+        private readonly IEnumerable<IPaymentService> paymentServices;
 
         public OrderController(OrderService orderService,
                                UserManager<User> userManager,
-                               IEnumerable<IDeliveryService> deliveryServices)
+                                EmailService emailService,
+                               IEnumerable<IDeliveryService> deliveryServices,
+                               IEnumerable<IPaymentService> paymentServices)
+                              
         {
             this.orderService = orderService;
             this.userManager = userManager;
+            this.emailService = emailService;
             this.deliveryServices = deliveryServices;
+            this.paymentServices = paymentServices;
         }
 
         [HttpGet]
@@ -74,11 +82,15 @@ namespace GameStore.Web.Controllers
             if(User.Identity.IsAuthenticated)
             {
                 var user = await userManager.FindByNameAsync(User.Identity.Name);
-                await orderService.SetUserForOrderAsync(user, orderId);
-                var deliveryMethods = deliveryServices.ToDictionary(service => service.Name,
-                                                                    service => service.Title);
-                ViewBag.OrderId = orderId;
-                return View("DeliveryChoice", deliveryMethods);
+                var order = await orderService.GetOrderAsync();
+                if(orderId == order.Id)
+                {
+                    await orderService.SetUserForOrderAsync(user, orderId);
+                    var deliveryChoice = deliveryServices.ToDictionary(service => service.Name, service => service.Title);
+                    ViewBag.OrderId = orderId;
+                    return View("DeliveryChoice", deliveryChoice);
+                }
+                return View("CartEmpty");
             }
             else
             {
@@ -88,35 +100,103 @@ namespace GameStore.Web.Controllers
            
         }
 
+    
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> StartDelivery(string service, int orderId)
         {
             var deliveryService = deliveryServices.Single(p => p.Name == service);
             var order = await orderService.GetOrderAsync(); 
             if( order.Id == orderId)
             {
-                var dataSteps = deliveryService.FirstForm(order);
+                if(deliveryService.Name == "Courier")
+                {
+                    var data = deliveryService.FirstStep(order);
+                    var delivery = deliveryService.GetDelivery(data);
+                    await orderService.SetDeliveryAsync(delivery);
+                    ViewBag.OrderId = order.Id;
+                    var paymentChoice = paymentServices.ToDictionary(service => service.Name, service => service.Title);
+                    return View("PaymentChoice", paymentChoice);
+                }
+                var dataSteps = deliveryService.FirstStep(order);
                 return View("NextDeliveryChoice", dataSteps);
             }
             return View("CartEmpty");
-
         }
 
+
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> NextDeliveryStep(string service, int step, Dictionary<string, string> values)
         {
             var deliveryService = deliveryServices.Single(p => p.Name == service);
-            var order = await orderService.GetOrderAsync();
-            var dataSteps = deliveryService.NextForm(step, values);
+            var dataSteps = deliveryService.NextStep(step, values);
             if (!dataSteps.IsFinal)
                 return View("NextDeliveryChoice", dataSteps);
 
             var delivery = deliveryService.GetDelivery(dataSteps);
             await orderService.SetDeliveryAsync(delivery);
 
+            var order = await orderService.GetOrderAsync();
+            ViewBag.OrderId = order.Id;
+            if (deliveryService.Name == "Postamate")
+            {
+                var payment = paymentServices.Where(p => p.Name != "Cash").ToDictionary(service => service.Name, service => service.Title);
+                return View("PaymentChoice", payment);
+            }
+            else
+            {
+                var paymentChoice = paymentServices.ToDictionary(service => service.Name, service => service.Title);
+                return View("PaymentChoice", paymentChoice);
+            }
+        }
+        
 
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> StartPayment(string service, int orderId)
+        {
+            var paymentService = paymentServices.Single(choice => choice.Name == service);
+            var order = await orderService.GetOrderAsync();
+            if(order.Id == orderId)
+            {
+                var dataStepsPayment = paymentService.FirstStep(order);
+                if (paymentService.Name == "Cash")
+                {
+                    var finishModel = await SetPaymentAndSendEmail(paymentService, dataStepsPayment);
+                    return View("FinishOrder", finishModel);
+                }
+                return View("NextPaymentChoice", dataStepsPayment);
+            }
             return View("CartEmpty");
         }
+
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> NextPaymentStep(string service, int step, Dictionary<string, string> values)
+        {
+            var paymentService = paymentServices.Single(choice => choice.Name == service);
+
+            var dataSteps = paymentService.NextStep(step, values);
+            if (!dataSteps.IsFinal)
+                return View("NextPaymentChoice", dataSteps);
+
+            var finishModel = await SetPaymentAndSendEmail(paymentService, dataSteps);
+
+            return View("FinishOrder", finishModel);
+            
+        }
+
+        private async Task<OrderModel> SetPaymentAndSendEmail(IPaymentService paymentService, DataSteps data)
+        {
+            var payment = paymentService.GetPayment(data);
+            var finishModel = await orderService.SetPaymentAsync(payment);
+            await emailService.SendOrderEmailAsync(finishModel);
+            return finishModel;
+        }
+
 
 
     }

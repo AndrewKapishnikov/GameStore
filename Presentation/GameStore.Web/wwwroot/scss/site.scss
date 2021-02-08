@@ -19,6 +19,13 @@ button:active,
 button:focus {
     outline: none;
 }
+.text_color{
+    color:$text-color;
+}
+
+.bannerLeft {
+   padding: 20px 0 10px 12px;
+}
 
 #sale{
     margin-bottom:40px;
@@ -229,14 +236,13 @@ h3.smallersize {
    
 }
 .confirmtext {
-    margin-top:10px;
-    margin-bottom:10px;
-    font: 16px Tahoma,Geneva,sans-serif;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font: 16px $font;
     color: #39647e;
-    
 }
 .confirmbutton {
-    font: 16px Tahoma,Geneva,sans-serif;
+    font: 16px $font;
     color: white;
 }
 
@@ -249,6 +255,10 @@ h3.smallersize {
 }
 
 .labelChoice {
-    font: 16px+5 Tahoma,Geneva,sans-serif;
+    font: $font_size+6 $font;
+}
+
+.finish_font {
+    font: $font_size+1 $font;
 }
 

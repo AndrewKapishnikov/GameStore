@@ -1,11 +1,8 @@
 ﻿@model OrderModel
-
 @{
     ViewData["Title"] = "Корзина";
 }
-
 <h2 class="ml-5 mb-3">Корзина</h2>
-
 <table class="table table-striped">
     <thead>
         <tr>
@@ -23,7 +20,7 @@
         {
         <tr>
             <td class="">@(i + 1)</td>
-            <td><strong>@Model.OrderItems[i].Name</strong></td>
+            <td><strong>@Model.OrderItems[i].GameName</strong></td>
             <td>@Model.OrderItems[i].Category</td>
             <td>
                 @if (Model.OrderItems[i].ImageData != null)

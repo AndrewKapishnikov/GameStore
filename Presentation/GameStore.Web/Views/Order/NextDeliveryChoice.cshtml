@@ -6,7 +6,7 @@
 <h3 class="search_h3">Параметры доставки</h3>
 @if (Model.ServicePrice > 0)
 {
-    <div class="confirmtext ml-4">Стоимость доставки фиксированна и составляет: @Math.Truncate(Model.ServicePrice) руб.</div>
+    <div class="confirmtext ml-4">Стоимость доставки через постаматы фиксированна и составляет: @Math.Truncate(Model.ServicePrice) руб.</div>
 }
 <form asp-controller="order" asp-action="nextdeliverystep" method="post"  class="form-location">
     <input type="hidden" name="service" value="@Model.ServiceName" />
