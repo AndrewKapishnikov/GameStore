@@ -1,0 +1,39 @@
+﻿@model DataSteps
+@{
+    ViewData["Title"] = "Параметры доставки";
+    bool check = false;
+}
+<h3 class="search_h3">Параметры оплаты</h3>
+<form asp-controller="order" asp-action="nextpaymentstep" method="post" class="form-location">
+    <input type="hidden" name="service" value="@Model.ServiceName" />
+    <input type="hidden" name="step" value="@Model.Step" />
+    @foreach (var parameter in Model.Parameters)
+    {
+        <input type="hidden" name="values[@parameter.Key]" value="@parameter.Value" />
+    }
+    @foreach (var field in Model.Fields)
+    {
+        if (field is ChoiceField choiceField)
+        {
+            <div class="form-group">
+                <label class="mb-3 labelChoice" for="values[@field.Name]">Выберите @field.LabelName</label>
+                @foreach (var item in choiceField.Items)
+                {
+                    <div class="mt-2 mb-2">
+                        @if (!check)
+                        {
+                            <input id="@item.Key" type="radio" name="values[@field.Name]" value="@item.Key" checked />
+                            check = true;
+                        }
+                        else
+                        {
+                            <input id="@item.Key" type="radio" name="values[@field.Name]" value="@item.Key" />
+                        }
+                        <label for="@item.Key">@item.Value</label>
+                    </div>
+                }
+            </div>
+        }
+    }
+    <button type="submit" class="mt-4 btn btn-success">Далее</button>
+</form>

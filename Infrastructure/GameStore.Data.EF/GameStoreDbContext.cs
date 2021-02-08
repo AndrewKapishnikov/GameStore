@@ -86,6 +86,19 @@ namespace GameStore.Data.EF
                           value => JsonConvert.DeserializeObject<Dictionary<string, string>>(value))
                       .Metadata.SetValueComparer(DictionaryComparer);
                 //Delivery
+
+                //Payment
+                action.Property(dto => dto.PaymentName)
+                      .HasMaxLength(40);
+
+                action.Property(dto => dto.PaymentDescription)
+                      .HasMaxLength(1000);
+
+                action.Property(dto => dto.PaymentParameters)
+                      .HasConversion(
+                          value => JsonConvert.SerializeObject(value),
+                          value => JsonConvert.DeserializeObject<Dictionary<string, string>>(value))
+                      .Metadata.SetValueComparer(DictionaryComparer);
             });
         }
 

@@ -82,6 +82,8 @@ namespace GameStore.Web
             services.AddSingleton<EmailService>();
 
             services.AddSingleton<IDeliveryService, PostamateDeliveryService>();
+            services.AddSingleton<IDeliveryService, CourierDeliveryService>();
+            services.AddSingleton<IPaymentService, CashPaymentService>();
 
             services.AddControllersWithViews();
         }

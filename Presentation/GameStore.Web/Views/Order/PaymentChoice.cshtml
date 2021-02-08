@@ -1,0 +1,19 @@
+﻿@model IReadOnlyDictionary<string, string>
+@{
+    ViewData["Title"] = "Способ оплаты";
+}
+<h3 class="search_h3">Способ оплаты</h3>
+<form asp-controller="order" asp-action="startpayment" method="post" class="form-location">
+    <input type="hidden" name="orderId" value="@ViewBag.OrderId" />
+    <div class="form-group">
+        @*<label for="code" class="mb-3 labelChoice">Способ оплаты:</label>*@
+        <select class="form-control form-input" name="service">
+            @foreach (var method in Model)
+            {
+                <option value="@method.Key">@method.Value</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class=" mt-4 btn btn-success">Далее</button>
+</form>
+
