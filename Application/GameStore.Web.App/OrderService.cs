@@ -64,6 +64,7 @@ namespace GameStore.Web.App
             return new OrderModel
             {
                 Id = order.Id,
+                OrderDateAndTime = order.DateOfOrder,
                 OrderItems = orderItemModel.ToArray(),
                 TotalCount = order.TotalCount,
                 TotalPrice = order.TotalPrice,
@@ -141,7 +142,7 @@ namespace GameStore.Web.App
             if (hasValue)
                 return order;
 
-            throw new InvalidOperationException("Session is empty.");
+            throw new InvalidOperationException("Session is empty");
         }
 
         public async Task<OrderModel> UpdateGameAsync(int gameId, int count)
@@ -175,7 +176,6 @@ namespace GameStore.Web.App
             order.Delivery = delivery;
             await orderRepository.UpdateAsync(order);
             UpdateSession(order);
-
             return Map(order);
         }
 
@@ -185,10 +185,10 @@ namespace GameStore.Web.App
             var order = await GetOrderAsync();
             order.Payment = payment;
             await orderRepository.UpdateAsync(order);
-            Session.RemoveCart();
-                       
+            Session.RemoveCart();   //
             return Map(order);
         }
+
 
 
     }

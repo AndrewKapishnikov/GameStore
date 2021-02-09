@@ -6,15 +6,15 @@ $gap: 1em;
 $font-item: $font_size+3 $font;
 $indent:30px;
 a {
-    color:$base-color;
+    color:$base-color; 
 }
 button{
     border:none;
 }
-img{
+/*img{
     border:none;
 }
-
+*/
 button:active,
 button:focus {
     outline: none;

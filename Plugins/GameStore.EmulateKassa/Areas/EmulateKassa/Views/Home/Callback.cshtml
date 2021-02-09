@@ -1,0 +1,14 @@
+﻿@model TestModel
+@{
+    ViewData["Title"] = "Заказ оплачен";
+}
+<h3 class="search_h3">Заказ оплачен</h3>
+<p class="ml-4 finish_font mt-5">
+    Чтобы завершить оформление, нажмите кнопку <em>Далее</em>
+</p>
+<form action="@Model.ReturnUri" method="post" class="form-location" asp-antiforgery="true">
+    @*<input type="hidden" name="service" value="EmulateKassa" />*@
+    <input type="hidden" name="step" value="1" />
+    <input type="hidden" name="values[orderId]" value="@Model.OrderId" />
+    <button type="submit" class="btn btn-success col-form-label mt-4">Далее</button>
+</form>
