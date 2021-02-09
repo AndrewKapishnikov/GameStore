@@ -11,6 +11,7 @@ namespace GameStore
     {
         private readonly OrderDTO dto; 
         public int Id => dto.Id;
+        public DateTime DateOfOrder => dto.DateOfOrder;
         public OrderItemCollectionForOrder Items { get; }
         public Order(OrderDTO dto)
         {
@@ -18,7 +19,7 @@ namespace GameStore
             Items = new OrderItemCollectionForOrder(dto);
            
         }
-
+          
         public User User
         {
             get => dto.User;
@@ -35,7 +36,7 @@ namespace GameStore
             set
             {
                 if (value == null)
-                    throw new ArgumentException(nameof(User));
+                    throw new ArgumentException(nameof(UserId));
                 dto.UserId = value;
             }
         }
@@ -50,7 +51,7 @@ namespace GameStore
             {
                 if (dto.DeliveryName == null)
                     return null;
-
+                
                 return new Delivery(
                     dto.DeliveryName,
                     dto.DeliveryDescription,
@@ -101,7 +102,7 @@ namespace GameStore
         public static class Mapper
         {
             public static Order Map(OrderDTO dto) => new Order(dto);
-
+            
             public static OrderDTO Map(Order domain) => domain.dto;
         }
 

@@ -9,10 +9,10 @@ namespace GameStore.Web.App
     public class OrderModel
     {
         public int Id { get; set; }
+        public DateTime OrderDateAndTime { get; set; }
         public OrderItemModel[] OrderItems { get; set; } = new OrderItemModel[0];
         public int TotalCount { get; set; }
         public decimal TotalPrice { get; set; }
-
 
         public string UserName { get; set; }
         public string UserCity { get; set; }

@@ -47,8 +47,7 @@ namespace GameStore.Web.App
         public async Task SendOrderEmailAsync(OrderModel model)
         {
             var message = new StringBuilder();
-            message.Append("<h2>Заказ передан в службу доставки</h2>");
-            message.Append("<div>");
+            message.Append("<h2>Заказ передан в службу доставки</h2><div>");
             foreach (var item in model.OrderItems)
             {
                 message.Append("<div style=\"margin-top:10px;margin-right:15px;float:left\">");
@@ -56,8 +55,7 @@ namespace GameStore.Web.App
                 message.Append("</div><div style=\"margin-top:10px;margin-right:15px;float:left\">");
                 message.Append(item.Count.ToString() + " шт.");
                 message.Append("</div><div style = \"margin-top:10px;float:left\">");
-                message.Append(Math.Truncate(item.Price) + " руб.</div>");
-                message.Append("<div style=\"clear: both\"></div>");
+                message.Append(Math.Truncate(item.Price) + " руб.</div><div style=\"clear: both\"></div>");
             }
             message.Append("</div><div style=\"clear:both\"></div><div style=\"margin-top: 30px;\">" +
                            "<div style=\"margin-top:10px\">Доставка:</div><div style=\"margin-top:10px;margin-right:15px;\">");

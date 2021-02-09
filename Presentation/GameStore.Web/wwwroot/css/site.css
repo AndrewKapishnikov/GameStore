@@ -4,9 +4,10 @@
 button {
   border: none; }
 
-img {
-  border: none; }
-
+/*img{
+    border:none;
+}
+*/
 button:active,
 button:focus {
   outline: none; }

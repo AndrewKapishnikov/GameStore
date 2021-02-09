@@ -1,0 +1,13 @@
+﻿@model TestModel
+@{
+    ViewData["Title"] = "Emulate Kassa";
+}
+<h3 class="search_h3">Emulate Kassa</h3>
+<div class="finish_font mt-5 ml-4">
+   Эмуляция редиректа на внешнюю службу оплаты в целях тестирования
+</div>
+<form asp-area="emulatekassa" asp-controller="home" asp-action="callback" method="post" class="form-location">
+    <input type="hidden" name="orderId" value="@Model.OrderId" />
+    <input type="hidden" name="returnUri" value="@Model.ReturnUri" />
+    <button type="submit" class="btn btn-success col-form-label mt-4">Оплатить</button>
+</form>

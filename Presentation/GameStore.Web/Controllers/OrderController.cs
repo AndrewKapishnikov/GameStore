@@ -1,8 +1,10 @@
 ﻿using GameStore.Contractors;
+using GameStore.Contractors.Interfaces;
 using GameStore.DataEF;
 using GameStore.Web.App;
 using GameStore.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,12 +25,14 @@ namespace GameStore.Web.Controllers
         private readonly EmailService emailService;
         private readonly IEnumerable<IDeliveryService> deliveryServices;
         private readonly IEnumerable<IPaymentService> paymentServices;
+        private readonly IEnumerable<IExternalWebService> webExternalService;
 
         public OrderController(OrderService orderService,
                                UserManager<User> userManager,
-                                EmailService emailService,
+                               EmailService emailService,
                                IEnumerable<IDeliveryService> deliveryServices,
-                               IEnumerable<IPaymentService> paymentServices)
+                               IEnumerable<IPaymentService> paymentServices,
+                               IEnumerable<IExternalWebService> webExternalService)
                               
         {
             this.orderService = orderService;
@@ -36,6 +40,7 @@ namespace GameStore.Web.Controllers
             this.emailService = emailService;
             this.deliveryServices = deliveryServices;
             this.paymentServices = paymentServices;
+            this.webExternalService = webExternalService;
         }
 
         [HttpGet]
@@ -109,7 +114,7 @@ namespace GameStore.Web.Controllers
             var order = await orderService.GetOrderAsync(); 
             if( order.Id == orderId)
             {
-                if(deliveryService.Name == "Courier")
+                if (deliveryService.Name == "Courier")
                 {
                     var data = deliveryService.FirstStep(order);
                     var delivery = deliveryService.GetDelivery(data);
@@ -119,11 +124,16 @@ namespace GameStore.Web.Controllers
                     return View("PaymentChoice", paymentChoice);
                 }
                 var dataSteps = deliveryService.FirstStep(order);
-                return View("NextDeliveryChoice", dataSteps);
+                var webService = webExternalService.SingleOrDefault(s => s.Name == service);
+                if (webService == null)
+                    return View("NextDeliveryChoice", dataSteps);
+
+                var returnUri = GetReturnUri(nameof(NextDeliveryStep), webService.Name);
+                var redirectUri = await webService.GetServiceUriAsync(dataSteps.Parameters, returnUri);
+                return Redirect(redirectUri.ToString());
             }
             return View("CartEmpty");
         }
-
 
         [HttpPost]
         [Authorize]
@@ -150,8 +160,6 @@ namespace GameStore.Web.Controllers
                 return View("PaymentChoice", paymentChoice);
             }
         }
-        
-
 
         [HttpPost]
         [Authorize]
@@ -167,7 +175,14 @@ namespace GameStore.Web.Controllers
                     var finishModel = await SetPaymentAndSendEmail(paymentService, dataStepsPayment);
                     return View("FinishOrder", finishModel);
                 }
-                return View("NextPaymentChoice", dataStepsPayment);
+                var webService = webExternalService.SingleOrDefault(s => s.Name == service);
+                if (webService == null)
+                    return View("NextPaymentChoice", dataStepsPayment);
+
+                var returnUri = GetReturnUri(nameof(NextPaymentStep), webService.Name);
+                var redirectUri = await webService.GetServiceUriAsync(dataStepsPayment.Parameters, returnUri);
+                return Redirect(redirectUri.ToString());
+
             }
             return View("CartEmpty");
         }
@@ -195,6 +210,19 @@ namespace GameStore.Web.Controllers
             var finishModel = await orderService.SetPaymentAsync(payment);
             await emailService.SendOrderEmailAsync(finishModel);
             return finishModel;
+        }
+
+        private Uri GetReturnUri(string action, string serviceName)
+        {
+            var query = QueryString.Create("service", serviceName);
+            var builder = new UriBuilder(Request.Scheme, Request.Host.Host)
+            {
+                Path = Url.Action(action),
+                Query = query.ToString(),
+            };
+            if (Request.Host.Port != null)
+                builder.Port = Request.Host.Port.Value;
+            return builder.Uri;
         }
 
 

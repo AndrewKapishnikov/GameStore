@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using GameStore.Web.ExtensionsMethods;
 using GameStore.Contractors;
+using GameStore.Contractors.Interfaces;
+using WebMarkupMin.AspNetCore5;
 
 namespace GameStore.Web
 {
@@ -35,7 +37,6 @@ namespace GameStore.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.Configure<GameImageData>(options => Configuration.GetSection("ImagesData").Bind(options));
 
             services.AddHttpContextAccessor();
@@ -84,6 +85,16 @@ namespace GameStore.Web
             services.AddSingleton<IDeliveryService, PostamateDeliveryService>();
             services.AddSingleton<IDeliveryService, CourierDeliveryService>();
             services.AddSingleton<IPaymentService, CashPaymentService>();
+            services.AddSingleton<IPaymentService, EmulateKassaPaymentService>();
+            services.AddSingleton<IExternalWebService, EmulateKassaPaymentService>();
+
+            services.AddWebMarkupMin(options =>
+                    {
+                        options.AllowMinificationInDevelopmentEnvironment = true;
+                        options.AllowCompressionInDevelopmentEnvironment = true;
+                    })
+                    .AddHtmlMinification()
+                    .AddHttpCompression();              
 
             services.AddControllersWithViews();
         }
@@ -112,14 +123,21 @@ namespace GameStore.Web
 
             app.UseSession();
 
+            //When use this middleware BrowserLink don't work.Uncomment in Production mode
+            //app.UseWebMarkupMin();
+
             app.UseEndpoints(endpoints =>
             {
                 //endpoints.MapControllerRoute(
                 //    name: "search",
                 //    pattern: "search/{query}",
                 //    defaults: new { controller = "Search", action = "SearchByName" }
-    
+
                 //);
+                endpoints.MapControllerRoute(
+                   name: "areas",
+                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
