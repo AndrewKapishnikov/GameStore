@@ -22,5 +22,7 @@ namespace GameStore
 
         Game[] GetLastSixGameByDataAdding();
         Task<Game[]> GetLastSixGameByDataAddingAsync();
+
+        Task<Game[]> GetAllGamesNotOnSaleAsync();
     }
 }

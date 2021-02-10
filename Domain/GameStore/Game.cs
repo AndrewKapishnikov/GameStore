@@ -133,9 +133,7 @@ namespace GameStore
                     string.IsNullOrWhiteSpace(releaseDate))      
                     throw new ArgumentException("One or more arguments has null value");
                 
-                if (dateOfAdding == null)
-                    throw new ArgumentException(nameof(dateOfAdding));
-
+                 
                 return new GameDTO
                 {
                     Name = name,

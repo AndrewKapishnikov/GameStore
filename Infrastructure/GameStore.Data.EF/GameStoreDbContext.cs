@@ -23,7 +23,6 @@ namespace GameStore.Data.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
             BuildCategories(modelBuilder);
             BuildOrderItems(modelBuilder);
             BuildOrders(modelBuilder);
@@ -39,6 +38,10 @@ namespace GameStore.Data.EF
                 action.Property(dto => dto.Name)
                       .IsRequired()
                       .HasMaxLength(50);
+
+                action.Property(dto => dto.UrlSlug)
+                      .IsRequired()
+                      .HasMaxLength(20);
             });
         }
 

@@ -1,0 +1,12 @@
+﻿@model IReadOnlyCollection<CategoryModel>
+<ul id="cat">
+   @foreach (var item in Model)
+   {
+       <li>
+           <a asp-controller="game" asp-action="categorygames" asp-route-category="@item.CategoryUrlSlug">
+               @item.Name
+           </a>
+       </li>
+   }
+</ul>
+   

@@ -1,0 +1,29 @@
+﻿@if (ViewBag.ErrorTitle == null)
+{
+<h3 class="search_h3"> Произошла ошибка при обработке вашего запроса.</h3>
+<h5 class="finish_font">Свяжитесь с нами по адресу kapishnikovaa@yandex.ru</h5>
+<hr />
+<h3 class="mb-3">Exception Details:</h3>
+<div class="alert alert-danger">
+    <h5>Exception Path</h5>
+    <hr />
+    <p>@ViewBag.ExceptionPath</p>
+</div>
+
+<div class="alert alert-danger">
+    <h5>Exception Message</h5>
+    <hr />
+    <p>@ViewBag.ExceptionMessage</p>
+</div>
+
+<div class="alert alert-danger">
+    <h5>Exception Stack Trace</h5>
+    <hr />
+    <p>@ViewBag.StackTrace</p>
+</div>
+}
+else
+{
+    <h1 class="text-danger">@ViewBag.ErrorTitle</h1>
+    <h6 class="text-danger">@ViewBag.ErrorMessage</h6>
+}

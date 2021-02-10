@@ -1,14 +1,9 @@
-﻿using GameStore.DataEF;
-using GameStore.MemoryStorage;
-using Microsoft.AspNetCore.Identity;
+﻿using GameStore.Data.EF.Repositories;
+using GameStore.EntityInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 
 namespace GameStore.Data.EF
@@ -29,6 +24,8 @@ namespace GameStore.Data.EF
             services.AddSingleton<ContextDBFactory>();
             services.AddSingleton<IGameRepository, GameRepository>();
             services.AddSingleton<IOrderRepository, OrderRepository>();
+            services.AddSingleton<ICategoryRepository, CategoryRepository>();
+
             return services;
         }
 

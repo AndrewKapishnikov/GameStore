@@ -31,9 +31,9 @@ namespace GameStore.Web.App
             return new List<GameModel>();
         }
 
-        public async Task<IReadOnlyCollection<GameModel>> GetAllGamesByCategoryAsync(string query)
+        public async Task<IReadOnlyCollection<GameModel>> GetAllGamesByCategoryAsync(string categoryUrlSlug)
         {
-            var game = await gameRepository.GetAllByCategoryAsync(query);
+            var game = await gameRepository.GetAllByCategoryAsync(categoryUrlSlug);
 
             return game.Select(Map).ToArray();
         }

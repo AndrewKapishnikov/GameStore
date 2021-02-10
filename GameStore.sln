@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameStore.Data.EF", "Infras
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{A1334D67-E156-4A65-A347-D04A0EEAF57D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStore.EmulateKassa", "Plugins\GameStore.EmulateKassa\GameStore.EmulateKassa.csproj", "{A02D89EE-FFDD-479A-B607-8C19D20554EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameStore.EmulateKassa", "Plugins\GameStore.EmulateKassa\GameStore.EmulateKassa.csproj", "{A02D89EE-FFDD-479A-B607-8C19D20554EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

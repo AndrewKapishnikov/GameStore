@@ -19,6 +19,7 @@ namespace GameStore
         }
 
         public int Id => dto.Id;
+        public string UrlSlug => dto.UrlSlug;
         public string Name
         {
             get => dto.Name;
@@ -33,12 +34,13 @@ namespace GameStore
       
         public static class DtoFactory
         {
-            public static CategoryDTO Create(string name)
+            public static CategoryDTO Create(string name, string urlSlug)
             {
-                if (string.IsNullOrWhiteSpace(name))
+                if (string.IsNullOrWhiteSpace(name) ||
+                    string.IsNullOrWhiteSpace(name))
                     throw new ArgumentException(nameof(Name));
 
-                return new CategoryDTO() { Name = name };
+                return new CategoryDTO() { Name = name, UrlSlug = urlSlug };
             }
         }
 

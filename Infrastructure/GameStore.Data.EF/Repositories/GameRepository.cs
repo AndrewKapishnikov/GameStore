@@ -16,17 +16,17 @@ namespace GameStore.Data.EF
             this.dbContextFactory = dbContextFactory;
         }
 
-        public Game[] GetAllByCategory(string category)
+        public Game[] GetAllByCategory(string categoryUrlSlug)
         {
             var db = dbContextFactory.Create(typeof(GameRepository));
-            var gamesDto = db.Games.Include(p => p.Category).Where(p => p.Category.Name == category);
+            var gamesDto = db.Games.Include(p => p.Category).Where(p => p.Category.UrlSlug == categoryUrlSlug && p.OnSale);
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
-        public async Task<Game[]> GetAllByCategoryAsync(string category)
+        public async Task<Game[]> GetAllByCategoryAsync(string categoryUrlSlug)
         {
             var db = dbContextFactory.Create(typeof(GameRepository));
             var gamesDto = await db.Games.Include(p => p.Category)
-                                   .Where(p => p.Category.Name == category)
+                                   .Where(p => p.Category.UrlSlug == categoryUrlSlug && p.OnSale)
                                    .ToArrayAsync();
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
@@ -38,7 +38,7 @@ namespace GameStore.Data.EF
             var db = dbContextFactory.Create(typeof(GameRepository));
             var sqlParameter = new SqlParameter("@nameOrPublisher", strSearch);
             var gamesDto = db.Games.FromSqlRaw("SELECT * FROM Games WHERE CONTAINS((Name, Publisher), @nameOrPublisher)",
-                                                  sqlParameter).Include(p => p.Category);
+                                                  sqlParameter).Where(p => p.OnSale).Include(p => p.Category);
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
         public async Task<Game[]> GetAllByNameOrPublisherAsync(string nameOrPublisher)
@@ -47,6 +47,7 @@ namespace GameStore.Data.EF
             var db = dbContextFactory.Create(typeof(GameRepository));
             var sqlParameter = new SqlParameter("@nameOrPublisher", strSearch);
             var gamesDto = await db.Games.FromSqlRaw("SELECT * FROM Games WHERE CONTAINS((Name, Publisher), @nameOrPublisher)", sqlParameter)
+                                         .Where(p => p.OnSale)
                                          .Include(p => p.Category)
                                          .ToArrayAsync();
             return gamesDto.Select(Game.Mapper.Map).ToArray();
@@ -90,13 +91,14 @@ namespace GameStore.Data.EF
         public Game[] GetLastSixGameByDataAdding()
         {
             var db = dbContextFactory.Create(typeof(GameRepository));
-            var gamesDto = db.Games.Include(p => p.Category).OrderByDescending(p => p.DateOfAdding).Take(6);
+            var gamesDto = db.Games.Where(p => p.OnSale).Include(p => p.Category).OrderByDescending(p => p.DateOfAdding).Take(6);
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
         public async Task<Game[]> GetLastSixGameByDataAddingAsync()
         {
             var db = dbContextFactory.Create(typeof(GameRepository));
-            var gamesDto = await db.Games.Include(p => p.Category)
+            var gamesDto = await db.Games.Where(p => p.OnSale)
+                                         .Include(p => p.Category)
                                          .OrderByDescending(p => p.DateOfAdding)
                                          .Take(6)
                                          .ToArrayAsync();
@@ -104,6 +106,14 @@ namespace GameStore.Data.EF
         }
 
 
+        public async Task<Game[]> GetAllGamesNotOnSaleAsync()
+        {
+            var db = dbContextFactory.Create(typeof(GameRepository));
+            var gamesDto = await db.Games.Include(p => p.Category)
+                                   .Where(p => !p.OnSale)
+                                   .ToArrayAsync();
+            return gamesDto.Select(Game.Mapper.Map).ToArray();
+        }
 
     }
 }

@@ -79,7 +79,8 @@ namespace GameStore.Web
 
             services.AddSingleton<GameService>();
             services.AddSingleton<OrderService>();
-            services.AddSingleton<EmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            services.AddSingleton<CategoryService>();
+            services.AddSingleton(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
             services.AddSingleton<EmailService>();
 
             services.AddSingleton<IDeliveryService, PostamateDeliveryService>();
@@ -110,8 +111,9 @@ namespace GameStore.Web
             else
             {
                 //app.UseHsts();
-                app.UseExceptionHandler("/Home/Error");
-               
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
             }
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -123,17 +125,19 @@ namespace GameStore.Web
 
             app.UseSession();
 
-            //When use this middleware BrowserLink don't work.Uncomment in Production mode
+            //When use this middleware BrowserLink don't work. Uncomment in Production mode
             //app.UseWebMarkupMin();
+
+            //For testing purposes
+            //app.Use(async (context, next) =>
+            //{
+            //    var endPoint = context.GetEndpoint();
+            //    var routes = context.Request.RouteValues;
+            //    await next.Invoke();
+            //});
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapControllerRoute(
-                //    name: "search",
-                //    pattern: "search/{query}",
-                //    defaults: new { controller = "Search", action = "SearchByName" }
-
-                //);
                 endpoints.MapControllerRoute(
                    name: "areas",
                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -144,5 +148,7 @@ namespace GameStore.Web
 
             });
         }
+
+
     }
 }
