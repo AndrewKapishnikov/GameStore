@@ -59,7 +59,7 @@ namespace GameStore.Data.EF
 
                 action.HasOne(dto => dto.Game)
                       .WithMany(dto => dto.OrderItems)
-                      .IsRequired(false);
+                      .IsRequired(false).OnDelete(DeleteBehavior.SetNull);
             });
 
         }
@@ -118,7 +118,7 @@ namespace GameStore.Data.EF
             modelBuilder.Entity<GameDTO>(action =>
             {
                 action.Property(dto => dto.Name)
-                      .HasMaxLength(30)
+                      .HasMaxLength(40)
                       .IsRequired();
 
                 action.Property(dto => dto.Publisher)
@@ -137,8 +137,10 @@ namespace GameStore.Data.EF
                       .IsRequired();
 
                 action.Property(dto => dto.ReleaseDate)
-                      .HasMaxLength(50)
-                      .IsRequired();
+                       .IsRequired();
+
+                action.Property(dto => dto.DateOfAdding)
+                       .IsRequired();
 
                 action.HasOne(dto => dto.Category)
                        .WithMany(dto => dto.Games)

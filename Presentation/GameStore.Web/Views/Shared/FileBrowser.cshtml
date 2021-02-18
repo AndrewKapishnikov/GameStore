@@ -1,0 +1,93 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Файлы на Сервере</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <style type="text/css">
+        body {
+            font-family: 'Segoe UI', Verdana, Arial, Helvetica, sans-serif;
+            font: 80%;
+        }
+
+        #font {
+            width: 600px;
+        }
+
+        #folderExplorer {
+            float: left;
+            width: 100px;
+        }
+
+        #fileExplorer {
+            float: left;
+            /* width: 680px;*/
+            border-left: 1px solid #dff0ff;
+        }
+
+        .thumbnail {
+            float: left;
+            margin: 3px;
+            padding: 3px;
+            border: 1px solid #dff0ff;
+            width: 145px;
+            overflow: hidden;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            padding: 0;
+        }
+    </style>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var funcNum = @(Context.Request.Query["CKEditorFuncNum"] + ";")
+                $('#fileExplorer').on('click', 'img', function () {
+                    var fileUrl = '/images/uploads/' + $(this).attr('title');
+                   window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
+                   window.close();
+                }).hover(function () {
+                    $(this).css('cursor', 'pointer');
+                })
+        });
+    </script>
+    <script src="~/bundle/js/minfilebrowser.min.js"></script>
+</head>
+<body>
+    <div class="mb-5">
+        <form id="formAdd" asp-controller="admin" asp-action="uploadpicturefilebrowser" class="form-location pl-0" method="post" enctype="multipart/form-data">
+            <div class="form-group mt-3">
+                <label for="uploadPicture" class="col-form-label ml-4">Добавить картинку на сервер</label>
+                <input type="file" id="uploadPicture" name="uploadPicture" class="btn" title="Добавить картинку" />
+            </div>
+            @*<button id="buttonadd" lass="btn btn-success col-form-label ml-4">Добавить</button>*@
+            <input style="margin-left:30px;" type="submit" value="Добавить"/>
+        </form>
+    </div>
+    <div id="fileExplorer">
+        @foreach (var fileInfo in ViewBag.fileInfos)
+        {
+            <div class="thumbnail">
+                <img class="ml-2" src="~/images/uploads/@fileInfo.Name" alt="thumb" title="@fileInfo.Name"
+                     width="120" height="100" />
+                <br />
+                @fileInfo.Name
+               <form action="/admin/deleteimage" method="post">
+                    <input type="hidden" name="name" value="@fileInfo.Name"/>
+                    <input style="margin-left:30px;" type="submit" value="Удалить"/>
+                </form>
+            </div>
+        }
+    </div>
+
+</body>
+</html>

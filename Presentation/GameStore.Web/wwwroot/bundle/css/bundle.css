@@ -478,16 +478,41 @@ a {
 button {
   border: none; }
 
-/*img{
-    border:none;
-}
-*/
 button:active,
 button:focus {
   outline: none; }
 
 .text_color {
   color: #999; }
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2") format("woff2"), url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff") format("woff"), url("https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/fonts/fontawesome-webfont.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal; }
+
+.glyphicon {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.glyphicon-chevron-down:before {
+  content: "\f078"; }
+
+.glyphicon-chevron-up:before {
+  content: "\f077"; }
+
+.glyphicon-chevron-right:before {
+  content: "\f054"; }
+
+.glyphicon-chevron-left:before {
+  content: "\f053"; }
+
+.glyphicon-chevron-padding {
+  padding: .5rem .65rem; }
 
 .bannerLeft {
   padding: 20px 0 10px 12px; }
@@ -512,13 +537,13 @@ button:focus {
 
 #naviHeader ul {
   display: flex; }
-  #naviHeader ul > li:nth-child(4) {
+  #naviHeader ul > li:last-child {
     margin-left: auto;
     margin-right: 10px; }
-    #naviHeader ul > li:nth-child(4) a > div {
+    #naviHeader ul > li:last-child a > div {
       float: left;
       padding-right: 10px; }
-    #naviHeader ul > li:nth-child(4) a > img {
+    #naviHeader ul > li:last-child a > img {
       width: 50px; }
 
 .incor {
@@ -530,20 +555,32 @@ button:focus {
     margin: 0; }
 
 .lSale_block, .rSale_block {
-  height: 290px; }
+  height: 297px; }
   .lSale_block img, .rSale_block img {
     border: none; }
   .lSale_block > p.descr, .rSale_block > p.descr {
     font-size: 15px;
-    text-align: justify; }
-  .lSale_block a > img, .rSale_block a > img {
-    width: 125px;
-    height: 150px;
-    transition: all 1s ease; }
-    .lSale_block a > img:hover, .rSale_block a > img:hover {
-      -webkit-transform: scale(1.05);
-      -ms-transform: scale(1.05);
-      transform: scale(1.05); }
+    text-align: justify;
+    padding-top: 10px; }
+  .lSale_block .flexblock, .rSale_block .flexblock {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1.2em; }
+    .lSale_block .flexblock .flexblock__leftitem, .rSale_block .flexblock .flexblock__leftitem {
+      width: 125px;
+      height: 150px;
+      overflow: hidden; }
+      .lSale_block .flexblock .flexblock__leftitem img, .rSale_block .flexblock .flexblock__leftitem img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 1s ease; }
+        .lSale_block .flexblock .flexblock__leftitem img:hover, .rSale_block .flexblock .flexblock__leftitem img:hover {
+          -webkit-transform: scale(1.1);
+          -ms-transform: scale(1.1);
+          transform: scale(1.1); }
+    .lSale_block .flexblock .flexblock__rightitem, .rSale_block .flexblock .flexblock__rightitem {
+      margin-left: 1.2em; }
 
 .table-search {
   width: 775px; }
@@ -591,14 +628,22 @@ button:focus {
   margin-bottom: 10px;
   float: left; }
   .imagemodel img {
-    width: 220px; }
+    width: 200px; }
 
-.description .description__text {
-  padding-top: 30px;
-  padding-bottom: 30px;
+.description {
+  clear: both; }
+  .description .textdescription {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    text-align: justify;
+    font: 15px Tahoma, Geneva, sans-serif;
+    line-height: 1.5em; }
+
+.shortdescription {
   text-align: justify;
   font: 15px Tahoma, Geneva, sans-serif;
-  line-height: 1.5em; }
+  line-height: 1.5em;
+  width: 85%; }
 
 .form-location {
   padding-left: 25px;
@@ -612,11 +657,21 @@ button:focus {
       height: 1.4em; }
   .form-location .form-group {
     margin-bottom: 1px; }
-    .form-location .form-group .form-input {
-      width: 60%;
-      height: 1.4em;
-      font-size: 1em;
-      margin-bottom: 3px; }
+  .form-location .form-input {
+    width: 60%;
+    height: 1.4em;
+    font-size: 1em;
+    margin-bottom: 3px; }
+  .form-location .form-inline .form-input {
+    width: 20%;
+    height: 1.4em;
+    font-size: 1em;
+    margin-bottom: 3px; }
+  .form-location .form-inline .form-input-small {
+    width: 5%;
+    height: 1.4em;
+    font-size: 1em;
+    margin-bottom: 3px; }
 
 h3.smallersize {
   font-size: 12px; }
@@ -661,3 +716,18 @@ h3.smallersize {
 
 .finish_font {
   font: 16px Tahoma, Geneva, sans-serif; }
+
+.page-item.active .page-link {
+  background-color: #39647e;
+  border-color: #39647e; }
+
+.page-link {
+  color: #39647e; }
+
+#ShortDescription {
+  resize: none;
+  height: 90px; }
+
+.updateimage {
+  width: 160px;
+  margin-top: 7px; }

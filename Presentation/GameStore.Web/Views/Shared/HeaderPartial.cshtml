@@ -5,23 +5,27 @@
             <li><a href="#">О нас</a></li>
             <li><a href="#">Новости</a></li>
             <li><a href="#">Личный кабинет</a></li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li><a asp-controller="admin" asp-action="games" asp-route-page="1">Панель Администратора</a></li>
+            }
             <li>
-              @{
-                  if (Context.Session.TryGetCart(out Cart cart) && cart.TotalCount > 0)
-                  {
-                      <a asp-controller="order" asp-action="index">
-                          <div>Товаров @cart.TotalCount на Cумму @Math.Truncate(cart.TotalPrice) &#8381; </div>
-                          <img class="cart_image" src="~/images/incartnew.png" />
-                      </a>
-                  }
-                  else
-                  {
-                      <a>
-                          <div>Корзина пуста</div>
-                          <img class="cart_image" src="~/images/cartnew.png" />
-                      </a>
-                  }
-              }
+                @{
+                    if (Context.Session.TryGetCart(out Cart cart) && cart.TotalCount > 0)
+                    {
+                        <a asp-controller="order" asp-action="index">
+                            <div>Товаров @cart.TotalCount на Cумму @Math.Truncate(cart.TotalPrice) &#8381; </div>
+                            <img class="cart_image" src="~/images/incartnew.png" />
+                        </a>
+                    }
+                    else
+                    {
+                        <a>
+                            <div>Корзина пуста</div>
+                            <img class="cart_image" src="~/images/cartnew.png" />
+                        </a>
+                    }
+                }
             </li>
         </ul>
     </div>

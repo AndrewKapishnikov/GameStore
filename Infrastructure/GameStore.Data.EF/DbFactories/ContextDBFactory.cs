@@ -25,5 +25,14 @@ namespace GameStore.Data.EF
 
             return dbContexts[repositoryType];
         }
+        public void Remove(Type repositoryType)
+        {
+            var services = httpContextAccessor.HttpContext.RequestServices;
+
+            var dbContexts = services.GetService<Dictionary<Type, GameStoreDbContext>>();
+
+            if (dbContexts.ContainsKey(repositoryType))
+                dbContexts.Remove(repositoryType);
+        }
     }
 }

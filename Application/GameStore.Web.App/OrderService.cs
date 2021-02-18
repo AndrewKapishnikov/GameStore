@@ -51,13 +51,13 @@ namespace GameStore.Web.App
             {
                 orderItemModel.Add(new OrderItemModel()
                 {
-                    GameId = orderItem.Game.Id,
-                    GameName = orderItem.Game.Name,
-                    Publisher = orderItem.Game.Publisher,
-                    Category = orderItem.Game.Category.Name,
+                    GameId = orderItem.Game?.Id??0,
+                    GameName = orderItem.Game?.Name,
+                    Publisher = orderItem.Game?.Publisher,
+                    Category = orderItem.Game?.Category?.Name,
                     Count = orderItem.Count,
                     Price = orderItem.Price,
-                    ImageData = orderItem.Game.ImageData
+                    ImageData = orderItem.Game?.ImageData
                 });
             }
 
@@ -104,7 +104,8 @@ namespace GameStore.Web.App
 
         internal async Task AddOrUpdateGameAsync(Order order, int gameId, int count)
         {
-            var game = await gameRepository.GetGameByIdAsync(gameId);
+            
+            var game = await gameRepository.GetGameByIdAsync(gameId, false);
             if (order.Items.TryGet(game, out OrderItem orderItem))
                 orderItem.Count += count;
             else
@@ -148,7 +149,7 @@ namespace GameStore.Web.App
         public async Task<OrderModel> UpdateGameAsync(int gameId, int count)
         {
             var order = await GetOrderAsync();
-            var game = await gameRepository.GetGameByIdAsync(gameId);
+            var game = await gameRepository.GetGameByIdAsync(gameId, false);
             order.Items.Get(game).Count = count;
 
             await orderRepository.UpdateAsync(order);

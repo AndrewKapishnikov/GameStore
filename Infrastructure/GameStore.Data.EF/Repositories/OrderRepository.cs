@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GameStore.DataEF;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace GameStore.Data.EF
                                     .ThenInclude(game => game.Category)
                                     .Include(order => order.User)
                                     .SingleAsync(order => order.Id == id);
-
+            
             return Order.Mapper.Map(orderDto);
         }
 
@@ -81,6 +82,7 @@ namespace GameStore.Data.EF
         public void Update(Order order)
         {
             var db = dbFactory.Create(typeof(OrderRepository));
+            
             db.SaveChanges();
         }
         public async Task UpdateAsync(Order order)

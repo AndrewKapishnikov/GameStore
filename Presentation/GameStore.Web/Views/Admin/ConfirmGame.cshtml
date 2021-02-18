@@ -1,0 +1,9 @@
+﻿<h3 class="search_h3">Удаление игры</h3>
+<p class="finish_font ml-4 mb-2">Вы действительно хотите удалить эту игру из списка товаров?</p>
+<form asp-controller="admin" asp-action="deletegame" method="post" class="form-location" asp-antiforgery="true">
+    <input type="hidden" name="gameId" value="@ViewBag.GameId"/>
+    <a asp-controller="admin" asp-action="games" asp-route-page="1">
+        <input type="button" class="btn btn-info col-form-label mt-3" value="Назад">
+    </a>
+ <button type="submit" class="btn btn-danger col-form-label mt-3 ml-2">Удалить</button>
+</form>

@@ -56,7 +56,7 @@ namespace GameStore
                 Description = game.Description,
                 Price = game.Price,
                 ImageData = game.ImageData,
-                ReleaseDate = game.ReleaseDate,
+                ReleaseDate = DateTime.Now,       //Stub here
                 DateOfAdding = game.DateOfAdding
             };
         }

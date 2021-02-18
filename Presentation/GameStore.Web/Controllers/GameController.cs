@@ -28,8 +28,6 @@ namespace GameStore.Web.Controllers
 
         public async Task<IActionResult> Index(int id)
         {
-         
-            //  TODO  Exception if remove item when session ended
             var model = await gameService.GetGameByIdAsync(id);
 
             return View(model);

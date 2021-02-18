@@ -1,0 +1,112 @@
+﻿@model AdminGamesViewModel
+@{
+    ViewData["Title"] = "Список игр";
+    Layout = "_LayoutAdmin";
+}
+<div class="finish_font text-danger ml-4">@TempData["TempDataMessage"]</div>
+<h3 class="search_h3">Список игр</h3>
+<form asp-controller="admin" asp-action="games" asp-route-page="1" method="get" class="form-location pl-0 mb-3">
+    <div class="form-inline">
+        <label class="mr-1">Название: </label>
+        <input name="name" value="@Model.FilterViewModel.SelectedGameName" class="mr-3 form-control form-input" />
+
+        <label class="mr-1">Категория: </label>
+        <select name="category" asp-items="Model.FilterViewModel.Categories" class="mr-3 form-control form-input"></select>
+
+        <label class="mr-1">Строк: </label>
+        <select name="pagesize" asp-items="Model.FilterViewModel.CountPages" class="mr-4 form-control form-input-small"></select>
+
+        <input type="submit" value="Фильтр" class="btn btn-outline-dark" />
+    </div>
+</form>
+
+@if (Model.Games.Count > 0)
+{
+    <table class="table table-search">
+        <thead>
+            <tr>
+                <th>
+                    <sort action="games" controller="admin" up="@Model.SortViewModel.Up"
+                         current="@Model.SortViewModel.Current" 
+                         page-url-page="@Model.PageViewModel.PageNumber"
+                         page-url-pagesize="@Model.FilterViewModel.SelectedPageSize"
+                         page-url-sortgame="@Model.SortViewModel.NameSort.ToString().ToLower()"
+                         page-url-name="@(Model.FilterViewModel.SelectedGameName?.ToString().ToLower())"
+                         page-url-category="@(Model.FilterViewModel.SelectedCategory.ToString().ToLower())">
+                        Название
+                    </sort>
+                </th>
+                <th>
+                    <sort action="games" controller="admin" up="@Model.SortViewModel.Up"
+                          current="@Model.SortViewModel.Current"
+                          page-url-page="@Model.PageViewModel.PageNumber"
+                          page-url-pagesize="@Model.FilterViewModel.SelectedPageSize"
+                          page-url-sortgame="@Model.SortViewModel.PublisherSort.ToString().ToLower()"
+                          page-url-name="@(Model.FilterViewModel.SelectedGameName?.ToString().ToLower())"
+                          page-url-category="@(Model.FilterViewModel.SelectedCategory.ToString().ToLower())">
+                        Разработчик
+                    </sort>
+                </th>
+                <th>
+                    <sort action="games" controller="admin" up="@Model.SortViewModel.Up"
+                          current="@Model.SortViewModel.Current" 
+                          page-url-page="@Model.PageViewModel.PageNumber"
+                          page-url-pagesize="@Model.FilterViewModel.SelectedPageSize"
+                          page-url-sortgame="@Model.SortViewModel.DateOfAddingSort.ToString().ToLower()"
+                          page-url-name="@(Model.FilterViewModel.SelectedGameName?.ToString().ToLower())"
+                          page-url-category="@(Model.FilterViewModel.SelectedCategory.ToString().ToLower())">
+                        Добавлена
+                    </sort>
+                </th>
+                <th class="text-right">
+                    <sort action="games" controller="admin" up="@Model.SortViewModel.Up"
+                          current="@Model.SortViewModel.Current" 
+                          page-url-page="@Model.PageViewModel.PageNumber"
+                          page-url-pagesize="@Model.FilterViewModel.SelectedPageSize"
+                          page-url-sortgame="@Model.SortViewModel.PriceSort.ToString().ToLower()"
+                          page-url-name="@(Model.FilterViewModel.SelectedGameName?.ToString().ToLower())"
+                          page-url-category="@(Model.FilterViewModel.SelectedCategory.ToString().ToLower())">
+                        Цена
+                    </sort>
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        @foreach (GameModel game in Model.Games)
+        {
+            <tr>
+                <td>@game.Name</td>
+                <td>@game.Publisher</td>
+                <td>@game.DateOfAdding.Date.ToShortDateString()</td>
+                <td class="text-right">@Math.Truncate(@game.Price) руб.</td>
+                <td class="text-right" style="width:130px;">
+                    <a asp-controller="admin" asp-action="updategame" asp-route-gameId="@game.GameId">
+                        Редакт
+                    </a> /
+                    <a asp-controller="admin" asp-action="confirmgame" asp-route-gameId="@game.GameId">
+                        Удалить
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+    @if (Model.PageViewModel.TotalPages > 1 && Model.PageViewModel.PageNumber > 0
+            && Model.PageViewModel.PageNumber < Model.PageViewModel.TotalPages + 1)
+    {
+        <div class="finish_font mt-5 mb-2 ml-2" >Страница @Model.PageViewModel.PageNumber из @Model.PageViewModel.TotalPages</div>
+         <pagination class="ml-2" page-controller="admin" page-action="games" page-model="Model.PageViewModel"
+                    page-url-pagesize="@Model.FilterViewModel.SelectedPageSize"
+                    page-url-name="@(Model.FilterViewModel.SelectedGameName?.ToString().ToLower())"
+                    page-url-category="@(Model.FilterViewModel.SelectedCategory.ToString().ToLower())"
+                    page-url-sortgame="@(Model.SortViewModel.CurrentForPagination.ToString().ToLower())">
+
+         </pagination>
+    }
+}
+else
+{
+    <div class="finish_font mt-5 mb-2 ml-4">По заданному критерию фильтра ничего не найдено</div>
+}
+
