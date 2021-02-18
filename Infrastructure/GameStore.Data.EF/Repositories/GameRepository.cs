@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using GameStore.DataEF;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -58,13 +59,23 @@ namespace GameStore.Data.EF
         public Game GetGameById(int id)
         {
             var db = dbContextFactory.Create(typeof(GameRepository));
-            var gameDto = db.Games.Include(p => p.Category).Single(p => p.Id == id); 
+            var gameDto = db.Games.Include(p => p.Category).Single(p => p.Id == id);
+      
             return Game.Mapper.Map(gameDto);
         }
-        public async Task<Game> GetGameByIdAsync(int id)
+        public async Task<Game> GetGameByIdAsync(int id, bool withCategory)
         {
             var db = dbContextFactory.Create(typeof(GameRepository));
-            var gameDto = await db.Games.Include(p => p.Category).SingleAsync(p => p.Id == id);
+            GameDTO gameDto;
+            if(withCategory)
+            {
+                gameDto = await db.Games.Include(p => p.Category).SingleAsync(p => p.Id == id);
+            }
+            else
+            {
+                gameDto = await db.Games.SingleAsync(p => p.Id == id);
+            }
+       
             return Game.Mapper.Map(gameDto);
         }
 
@@ -88,19 +99,19 @@ namespace GameStore.Data.EF
 
 
 
-        public Game[] GetLastSixGameByDataAdding()
+        public Game[] GetLastEightGameByDataAdding()
         {
             var db = dbContextFactory.Create(typeof(GameRepository));
-            var gamesDto = db.Games.Where(p => p.OnSale).Include(p => p.Category).OrderByDescending(p => p.DateOfAdding).Take(6);
+            var gamesDto = db.Games.Where(p => p.OnSale).Include(p => p.Category).OrderByDescending(p => p.DateOfAdding).Take(8);
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
-        public async Task<Game[]> GetLastSixGameByDataAddingAsync()
+        public async Task<Game[]> GetLastEightGameByDataAddingAsync()
         {
             var db = dbContextFactory.Create(typeof(GameRepository));
             var gamesDto = await db.Games.Where(p => p.OnSale)
                                          .Include(p => p.Category)
                                          .OrderByDescending(p => p.DateOfAdding)
-                                         .Take(6)
+                                         .Take(8)
                                          .ToArrayAsync();
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
@@ -115,5 +126,134 @@ namespace GameStore.Data.EF
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
 
+        public async Task<int> TotalItems()
+        {
+            var db = dbContextFactory.Create(typeof(GameRepository));
+            return await db.Games.CountAsync<GameDTO>();
+        }
+
+        public async Task<Game[]> GetGamesForAdminPanel(int pageNo, int pageSize, string sortColumn, bool sortByAscending)
+        {
+            var db = dbContextFactory.Create(typeof(GameRepository));
+            GameDTO[] games = null;
+            switch (sortColumn)
+            {
+                case nameof(Game.Name):
+                    if (sortByAscending)
+                    {
+                        games = await db.Games.OrderBy(p => p.Name)
+                                        .Include(p => p.Category)
+                                        .Skip(pageNo * pageSize)
+                                        .Take(pageSize)
+                                        .ToArrayAsync();
+                    }
+                    else
+                    {
+                        games = await db.Games.OrderByDescending(p => p.Name)
+                                        .Include(p => p.Category)
+                                        .Skip(pageNo * pageSize)
+                                        .Take(pageSize)
+                                        .ToArrayAsync();
+                    }
+                    break;
+                case nameof(Game.Publisher):
+                    if (sortByAscending)
+                    {
+                        games = await db.Games.OrderBy(p => p.Publisher)
+                                        .Include(p => p.Category)
+                                        .Skip(pageNo * pageSize)
+                                        .Take(pageSize)
+                                        .ToArrayAsync();
+                    }
+                    else
+                    {
+                        games = await db.Games.OrderByDescending(p => p.Publisher)
+                                        .Include(p => p.Category)
+                                        .Skip(pageNo * pageSize)
+                                        .Take(pageSize)
+                                        .ToArrayAsync();
+                    }
+                    break;
+                case nameof(Game.Price):
+                    if (sortByAscending)
+                    {
+                        games = await db.Games.OrderBy(p => p.Price)
+                                        .Include(p => p.Category)
+                                        .Skip(pageNo * pageSize)
+                                        .Take(pageSize)
+                                        .ToArrayAsync();
+                    }
+                    else
+                    {
+                        games = await db.Games.OrderByDescending(p => p.Price)
+                                        .Include(p => p.Category)
+                                        .Skip(pageNo * pageSize)
+                                        .Take(pageSize)
+                                        .ToArrayAsync();
+                    }
+                    break;
+                case nameof(Game.DateOfAdding):
+                    if (sortByAscending)
+                    {
+                        games = await db.Games.OrderBy(p => p.DateOfAdding)
+                                        .Include(p => p.Category)
+                                        .Skip(pageNo * pageSize)
+                                        .Take(pageSize)
+                                        .ToArrayAsync();
+                    }
+                    else
+                    {
+                        games = await db.Games.OrderByDescending(p => p.DateOfAdding)
+                                        .Include(p => p.Category)
+                                        .Skip(pageNo * pageSize)
+                                        .Take(pageSize)
+                                        .ToArrayAsync();
+                    }
+                    break;
+
+                default:
+                    games = await db.Games.OrderBy(p => p.Name)
+                                    .Include(p => p.Category)
+                                    .Skip(pageNo * pageSize)
+                                    .Take(pageSize)
+                                    .ToArrayAsync();
+                    break;
+            }
+
+            return games.Select(Game.Mapper.Map).ToArray();
+        }
+
+
+        public IQueryable<GameDTO> GetAllGames()
+        {
+            var db = dbContextFactory.Create(typeof(GameRepository));
+            IQueryable<GameDTO> games = db.Games.Include(p => p.Category);
+            return games;
+        }
+
+
+        public async Task AddGame(Game game)
+        {
+            var db = dbContextFactory.Create(typeof(GameRepository));
+            var gameDto = Game.Mapper.Map(game);
+            await db.Games.AddAsync(gameDto);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task RemoveGame(Game game)
+        {
+            var db = dbContextFactory.Create(typeof(GameRepository));
+            var gameDto = Game.Mapper.Map(game);
+            db.Games.Remove(gameDto);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task UpdateGame(Game game)
+        {
+            var db = dbContextFactory.Create(typeof(GameRepository));
+            var gameDto = Game.Mapper.Map(game);
+            db.Entry(gameDto).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+        }
     }
 }

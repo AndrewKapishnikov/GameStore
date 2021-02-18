@@ -70,8 +70,18 @@ namespace GameStore.Web
                 options.Cookie.HttpOnly = true;
                 options.Cookie.SameSite = SameSiteMode.Lax;
                 options.ExpireTimeSpan = TimeSpan.FromHours(24);
-                options.LoginPath = "/Account/Login";
-                options.AccessDeniedPath = "/Account/AccessDenied";
+           
+            });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/account/register";
+                options.AccessDeniedPath = "/account/accessdenied";
+         
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));
             });
 
             services.AddSingleton<GameMemoryService>();
@@ -90,12 +100,11 @@ namespace GameStore.Web
             services.AddSingleton<IExternalWebService, EmulateKassaPaymentService>();
 
             services.AddWebMarkupMin(options =>
-                    {
-                        options.AllowMinificationInDevelopmentEnvironment = true;
-                        options.AllowCompressionInDevelopmentEnvironment = true;
-                    })
-                    .AddHtmlMinification()
-                    .AddHttpCompression();              
+            {
+                options.AllowMinificationInDevelopmentEnvironment = true;
+                options.AllowCompressionInDevelopmentEnvironment = true;
+            }).AddHtmlMinification()
+              .AddHttpCompression();              
 
             services.AddControllersWithViews();
         }
@@ -106,7 +115,10 @@ namespace GameStore.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                //app.UseExceptionHandler("/Error");
+                //app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
+                //app.UseBrowserLink();
             }
             else
             {

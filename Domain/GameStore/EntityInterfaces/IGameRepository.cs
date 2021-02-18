@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameStore.DataEF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +19,20 @@ namespace GameStore
         Task<Game[]> GetGamesByIdsAsync(IEnumerable<int> gamesId);
 
         Game GetGameById(int id);
-        Task<Game> GetGameByIdAsync(int id);
+        Task<Game> GetGameByIdAsync(int id, bool withCategory);
 
-        Game[] GetLastSixGameByDataAdding();
-        Task<Game[]> GetLastSixGameByDataAddingAsync();
+        Game[] GetLastEightGameByDataAdding();
+        Task<Game[]> GetLastEightGameByDataAddingAsync();
 
         Task<Game[]> GetAllGamesNotOnSaleAsync();
+        
+        Task<Game[]> GetGamesForAdminPanel(int pageNo, int pageSize, string sortColumn, bool sortByAscending);
+        Task<int> TotalItems();
+
+        IQueryable<GameDTO> GetAllGames();
+        Task AddGame(Game game);
+        Task RemoveGame(Game game);
+        Task UpdateGame(Game game);
+
     }
 }

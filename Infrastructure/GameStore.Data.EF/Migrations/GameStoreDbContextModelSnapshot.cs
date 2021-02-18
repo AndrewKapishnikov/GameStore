@@ -63,8 +63,8 @@ namespace GameStore.Data.EF.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<bool>("OnSale")
                         .HasColumnType("bit");
@@ -78,10 +78,8 @@ namespace GameStore.Data.EF.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
-                    b.Property<string>("ReleaseDate")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ShortDescription")
                         .IsRequired()
@@ -151,7 +149,7 @@ namespace GameStore.Data.EF.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<int>("GameId")
+                    b.Property<int?>("GameId")
                         .HasColumnType("int");
 
                     b.Property<int>("OrderId")
@@ -408,7 +406,8 @@ namespace GameStore.Data.EF.Migrations
                 {
                     b.HasOne("GameStore.DataEF.GameDTO", "Game")
                         .WithMany("OrderItems")
-                        .HasForeignKey("GameId");
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("GameStore.DataEF.OrderDTO", "Order")
                         .WithMany("Items")

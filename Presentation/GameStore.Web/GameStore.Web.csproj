@@ -11,6 +11,7 @@
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
     <Content Remove="compilerconfig.json" />
+    <Content Remove="Views\Admin\ConfirmGame.cshtml" />
     <Content Remove="Views\Order\NextDeliveryChoice.cshtml" />
     <Content Remove="Views\Shared\CssPartial.cshtml" />
   </ItemGroup>
@@ -40,11 +41,13 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\bundle\js\" />
+    <Folder Include="wwwroot\images\uploads\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
+    <None Include="Views\Admin\ConfirmGame.cshtml" />
     <None Include="Views\Order\NextDeliveryChoice.cshtml" />
     <None Include="Views\Shared\CssPartial.cshtml" />
   </ItemGroup>

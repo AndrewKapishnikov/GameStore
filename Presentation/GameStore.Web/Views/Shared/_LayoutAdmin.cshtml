@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    @await Html.PartialAsync("MetatagsPartial")
+    @await Html.PartialAsync("CssPartial")
+ </head>
+<body>
+    <div id="wrapper">
+        @await Html.PartialAsync("HeaderPartial")
+        <div id="content">
+            @await Html.PartialAsync("LeftSideBarAdminPartial")
+            <div id="sale" class="sale_padding">
+                @RenderBody()
+            </div>
+            <div id="rSidebar">
+                @await Html.PartialAsync("RightSideBarPartial", new LoginViewModel())
+            </div>
+        </div>
+        <div class="clear"></div>
+        @await Html.PartialAsync("FooterPartial")
+    </div>
+    @await Html.PartialAsync("ScriptsPartial")
+    @await Html.PartialAsync("ValidationsScriptsPartial")
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

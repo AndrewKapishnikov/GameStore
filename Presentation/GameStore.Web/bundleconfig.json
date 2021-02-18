@@ -17,5 +17,11 @@
     "inputFiles": [
       "wwwroot/js/site.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/bundle/js/minfilebrowser.min.js",
+    "inputFiles": [
+      "wwwroot/js/filebrowser.js"
+    ]
   }
 ]

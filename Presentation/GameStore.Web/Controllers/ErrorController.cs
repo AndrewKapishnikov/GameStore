@@ -11,7 +11,7 @@ namespace GameStore.Web.Controllers
 {
     public class ErrorController : Controller
     {
-        
+      
         [Route("Error/{statusCode}")]
         public IActionResult HttpStatusCodeHandler(int statusCode)
         {
@@ -27,7 +27,6 @@ namespace GameStore.Web.Controllers
             return View("NotFound");
         }
 
-
         [AllowAnonymous]
         [Route("Error")]
         public IActionResult Error()
@@ -36,10 +35,14 @@ namespace GameStore.Web.Controllers
             var exceptionMessage = exceptionHandlerPathFeature.Error.Message;
             var exceptionPath = exceptionHandlerPathFeature.Path;
   
-            if (exceptionMessage =="Sequence contains no elements.")
+            switch (exceptionMessage)
             {
-                ViewBag.ErrorMessage = "Страница не найдена";
-                return View("NotFound");
+                case "Sequence contains no elements.":
+                    ViewBag.ErrorMessage = "Страница не найдена";
+                    return View("NotFound");
+                case "Session is empty":
+                    ViewBag.ErrorMessage = "Выберите новый товар";
+                    return View("NotFound");
             }
 
             ViewBag.ExceptionMessage = exceptionMessage;

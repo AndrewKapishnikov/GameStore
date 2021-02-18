@@ -8,7 +8,7 @@
     <thead>
         <tr>
             <th>Название игры </th>
-            <th>Производитель</th>
+            <th>Разработчик</th>
             <th>Жанр</th>
             <th class="text-right">Дата выхода</th>
             <th class="text-right">Цена</th>
@@ -26,7 +26,7 @@
                 @Html.DisplayFor(modelItem => modelItem.Category)
             </td>
             <td class="text-right">
-                @Html.DisplayFor(modelItem => modelItem.ReleaseDate)
+                @Model.ReleaseDate.ToString("MMMM yyyy ", CultureInfo.GetCultureInfo("ru-RU"))
             </td>
             <td class="price text-right">
                 @Math.Truncate(Model.Price) руб.
@@ -41,10 +41,17 @@
         <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" />
     }
 </div>
-<div class="description">
-    <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
+<div class="mt-4 pl-5">
+    <form  asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
         <input type="hidden" name="gameId" value="@Model.GameId" />
         <button class="incor" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
     </form>
-    <div class="description__text">@Model.Description</div>
+    <p class="shortdescription">
+        @Html.Raw(@Model.ShortDescription)
+    </p>
+</div>
+<div class="description">
+    <div class="textdescription">
+        @Html.Raw(@Model.Description)
+    </div>
 </div>

@@ -11,7 +11,7 @@ namespace GameStore
     {
         private readonly GameDTO dto;
         public IReadOnlyCollection<OrderItem> GameOrders { get; }
-        internal Game(GameDTO dto)
+        public Game(GameDTO dto)
         {
             this.dto = dto;
             GameOrders = new OrderItemCollectionForGame(dto.OrderItems);
@@ -78,14 +78,12 @@ namespace GameStore
             }
         }
 
-        public string ReleaseDate
+        public DateTime ReleaseDate
         {
             get => dto.ReleaseDate;
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException(nameof(ReleaseDate));
-                dto.ReleaseDate = value.Trim();
+                dto.ReleaseDate = value;
             }
         }
         public DateTime DateOfAdding
@@ -93,9 +91,6 @@ namespace GameStore
             get => dto.DateOfAdding;
             set
             {
-
-                if (value == null)
-                    throw new ArgumentException(nameof(DateOfAdding));
                 dto.DateOfAdding = value;
             }
         }
@@ -115,24 +110,26 @@ namespace GameStore
 
         public static class DTOFactory
         {
+            private static int a = 0;
             public static GameDTO Create(string name,
                                          string publisher,
                                          string shortDescription,
                                          string description,
                                          decimal price,
                                          byte[] imageData,
-                                         string releaseDate,
+                                         DateTime releaseDate,
                                          DateTime dateOfAdding,
                                          bool onSale,
-                                         CategoryDTO category)
+                                         int categoryId)
             {
                 if (string.IsNullOrWhiteSpace(name)             ||
                     string.IsNullOrWhiteSpace(publisher)        ||
                     string.IsNullOrWhiteSpace(shortDescription) ||
-                    string.IsNullOrWhiteSpace(description)      ||
-                    string.IsNullOrWhiteSpace(releaseDate))      
+                    string.IsNullOrWhiteSpace(description))
                     throw new ArgumentException("One or more arguments has null value");
-                
+
+                if (price > 100000 || price < 0)
+                    throw new ArgumentOutOfRangeException("Price out of range");
                  
                 return new GameDTO
                 {
@@ -145,7 +142,7 @@ namespace GameStore
                     ReleaseDate = releaseDate,
                     DateOfAdding = dateOfAdding,
                     OnSale = onSale,
-                    Category = category 
+                    CategoryId = categoryId 
                 };
             }
         }

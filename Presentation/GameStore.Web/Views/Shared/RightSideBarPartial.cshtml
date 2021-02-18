@@ -1,10 +1,22 @@
 ﻿@model LoginViewModel
+@{ 
+    string url = Context.Request.GetCurrentUrl();
+    string returnUrl = null;
+    if(url.Contains("ReturnUrl"))
+    {
+        returnUrl = url.Split("=")[1];
+    }
+    else
+    {
+        returnUrl = url;
+    }
+}
 <div class="block">
     @if (!User.Identity.IsAuthenticated)
     {
         <h3>Вход в систему</h3>
         <form id="loginForm" name="loginForm" action="/account/login" method="POST" asp-antiforgery="true">
-            <input type="hidden" id="returnUrl" name="returnUrl" value="@Context.Request.GetCurrentUrl()" />
+            <input type="hidden" id="returnUrl" name="returnUrl" value="@returnUrl" />
             <p>
                 <div id="errors"  class="text-danger ml-3 mr-3 font-base"></div>
             <p>
@@ -15,7 +27,7 @@
             </p>
             <p>
                 <label>
-                    <input asp-for="@Model.RememberMe" class="member ml-3" value="false" type="checkbox" />
+                    <input asp-for="@Model.RememberMe" class="member ml-3" value="" type="checkbox" />
                     Запомнить меня
                 </label>
             </p>

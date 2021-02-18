@@ -15,7 +15,7 @@ namespace GameStore.DataEF
         public string Description { get; set; }
         public decimal Price { get; set; }
         public byte[] ImageData { get; set; }
-        public string ReleaseDate { get; set; }
+        public DateTime ReleaseDate { get; set; }
         public DateTime DateOfAdding { get; set; }
         public bool OnSale { get; set; }
 

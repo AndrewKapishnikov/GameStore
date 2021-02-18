@@ -18,21 +18,21 @@ namespace GameStore.Data.EF.Repositories
 
         public async Task<Category> GetCategoryByIdAsync(int id)
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = dbContextFactory.Create(typeof(CategoryRepository));
             var categoryDto = await db.Categories.SingleAsync(p => p.Id == id);
             return Category.Mapper.Map(categoryDto);
         }
 
         public async Task<Category> GetCategoryByNameAsync(string name)
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = dbContextFactory.Create(typeof(CategoryRepository));
             var categoryDto = await db.Categories.SingleAsync(p => p.Name == name);
             return Category.Mapper.Map(categoryDto);
         }
 
         public async Task<Category[]> GetAllCategoriesAsync()
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = dbContextFactory.Create(typeof(CategoryRepository));
             var categoriesDto = await db.Categories.ToArrayAsync();
             return categoriesDto.Select(Category.Mapper.Map).ToArray();
         }

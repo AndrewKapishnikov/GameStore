@@ -12,7 +12,7 @@ namespace GameStore.DataEF
         public decimal Price { get; set; }
         public int Count { get; set; }
 
-        public int GameId { get; set; }
+        public int? GameId { get; set; }
         public GameDTO Game { get; set; }
 
         public int OrderId { get; set; }
