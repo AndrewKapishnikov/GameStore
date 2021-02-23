@@ -1,10 +1,12 @@
 ﻿ using GameStore.DataEF;
+using GameStore.Web.App.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.Web.App
 {
@@ -51,7 +53,7 @@ namespace GameStore.Web.App
             {
                 orderItemModel.Add(new OrderItemModel()
                 {
-                    GameId = orderItem.Game?.Id??0,
+                    GameId = orderItem.Game?.Id ?? 0,
                     GameName = orderItem.Game?.Name,
                     Publisher = orderItem.Game?.Publisher,
                     Category = orderItem.Game?.Category?.Name,
@@ -65,6 +67,7 @@ namespace GameStore.Web.App
             {
                 Id = order.Id,
                 OrderDateAndTime = order.DateOfOrder,
+                OrderReviewed = order.OrderReviewed,
                 OrderItems = orderItemModel.ToArray(),
                 TotalCount = order.TotalCount,
                 TotalPrice = order.TotalPrice,
@@ -72,11 +75,11 @@ namespace GameStore.Web.App
                 DeliveryDescription = order.Delivery?.Description,
                 DeliveryPrice = order.Delivery?.DeliveryPrice ?? 0m,
                 PaymentDescription = order.Payment?.Description,
-                UserName = order.User?.UserName,
+                UserName = string.Concat(order.User?.Name," ",order.User?.Surname),
                 UserCity = order.User?.City,
                 UserAddress = order.User?.Address,
                 UserEmail = order.User?.Email,
-                                
+                UserPhone = order.User?.PhoneNumber                                
             };
         }
 
@@ -104,7 +107,6 @@ namespace GameStore.Web.App
 
         internal async Task AddOrUpdateGameAsync(Order order, int gameId, int count)
         {
-            
             var game = await gameRepository.GetGameByIdAsync(gameId, false);
             if (order.Items.TryGet(game, out OrderItem orderItem))
                 orderItem.Count += count;
@@ -191,6 +193,86 @@ namespace GameStore.Web.App
         }
 
 
+        public async Task<(IReadOnlyCollection<ShortOrderModel>, int)> GetOrdersForAdminByUserAsync(int pageNo, int pageSize, SortOrderStates sortOrder,
+                                                                                                    string userName, string userEmail, bool makeOrder)
+        {
+            IQueryable<OrderDTO> orders = orderRepository.GetAllOrders();
+            if (!String.IsNullOrEmpty(userName))
+            {
+                orders = orders.Where(p => p.User.Name.Contains(userName) || p.User.Surname.Contains(userName));
+            }
+            if (!String.IsNullOrEmpty(userEmail))
+            {
+                orders = orders.Where(p => p.User.UserName.Contains(userEmail));
+            }
+            if (makeOrder)
+                orders = orders.Where(p => p.UserId != null && p.DeliveryName != null && p.PaymentName != null);
+            else
+            {
+                orders = orders.Where(p => p.UserId == null || p.DeliveryName == null || p.PaymentName == null);
+            }
+
+            switch (sortOrder)
+            {
+                case SortOrderStates.OrderDateDesc:
+                    orders = orders.OrderByDescending(p => p.DateOfOrder);
+                    break;
+                case SortOrderStates.UserEmailAsc:
+                    orders = orders.OrderBy(p => p.User.UserName);
+                    break;
+                case SortOrderStates.UserEmailDesc:
+                    orders = orders.OrderByDescending(p => p.User.UserName);
+                    break;
+                case SortOrderStates.UserNameAsc:
+                    orders = orders.OrderBy(p => p.User.Name);
+                    break;
+                case SortOrderStates.UserNameDesc:
+                    orders = orders.OrderByDescending(p => p.User.Name);
+                    break;
+                default:
+                    orders = orders.OrderBy(p => p.DateOfOrder);
+                    break;
+            }
+
+            var count = await orders.CountAsync();
+            var ordersFinal = await orders.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var ordersModel = ordersFinal.Select(Order.Mapper.Map).Select(ShortOrderMap).ToArray();
+
+            return (ordersModel, count);
+
+        }
+
+        public async Task<OrderModel> GetOrderForAdminAsync(int orderId)
+        {
+            var order = await orderRepository.GetByIdAsync(orderId);
+            if (!order.OrderReviewed)
+            {
+                order.OrderReviewed = true;
+                await orderRepository.UpdateAsync(order);
+            }
+            return Map(order);
+        }
+
+        public async Task RemoveOrderAsync(int orderId)
+        {
+            var order = await orderRepository.GetByIdAsync(orderId);
+            await orderRepository.RemoveAsync(order);
+        }
+
+        internal ShortOrderModel ShortOrderMap(Order order)
+        {
+            return new ShortOrderModel
+            {
+                Id = order.Id,
+                OrderDateAndTime = order.DateOfOrder,
+                TotalCount = order.TotalCount,
+                TotalPrice = order.TotalPrice,
+                UserEmail = order.User?.UserName,
+                UserName = order.User?.Name,
+                UserSurname = order.User?.Surname,
+                OrderReviewed = order.OrderReviewed
+            };
+        }
 
     }
 }

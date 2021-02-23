@@ -91,8 +91,6 @@ namespace GameStore.Data.EF
             await db.SaveChangesAsync();
         }
 
-
-
         public async Task RemoveAsync(Order order)
         {
             var db = dbFactory.Create(typeof(OrderRepository));
@@ -102,7 +100,13 @@ namespace GameStore.Data.EF
             
         }
 
-
+        public IQueryable<OrderDTO> GetAllOrders()
+        {
+            var db = dbFactory.Create(typeof(OrderRepository));
+            IQueryable<OrderDTO> orders = db.Orders.Include(order => order.User)
+                                                   .Include(order => order.Items);
+            return orders;
+        }
 
     }
 }

@@ -53,7 +53,7 @@ namespace GameStore.Web.App
             return game.Select(Map).ToArray();
         }
 
-        public async Task<(IReadOnlyCollection<GameModel>, int)> GetGamesForAdminByPageAsync(int pageNo, int pageSize, SortGameState sortGame)
+        public async Task<(IReadOnlyCollection<GameModel>, int)> GetGamesForAdminByPageAsync(int pageNo, int pageSize, SortGameStates sortGame)
         {
             string sortColumn = null;
             bool sortByAscending = true;
@@ -65,7 +65,7 @@ namespace GameStore.Web.App
             return (gameModel, countGames);
         }
 
-        public async Task<(IReadOnlyCollection<GameModel>, int)> GetGamesForAdminByCategoryAndNameAsync(int pageNo, int pageSize, SortGameState sortGame, string gameName, int categoryId)
+        public async Task<(IReadOnlyCollection<GameModel>, int)> GetGamesForAdminByCategoryAndNameAsync(int pageNo, int pageSize, SortGameStates sortGame, string gameName, int categoryId)
         {
             IQueryable<GameDTO> games = gameRepository.GetAllGames();
 
@@ -80,25 +80,25 @@ namespace GameStore.Web.App
 
             switch (sortGame)
             {
-                case SortGameState.NameDesc:
+                case SortGameStates.NameDesc:
                     games = games.OrderByDescending(p => p.Name);
                     break;
-                case SortGameState.PublisherAsc:
+                case SortGameStates.PublisherAsc:
                     games = games.OrderBy(p => p.Publisher);
                     break;
-                case SortGameState.PublisherDesc:
+                case SortGameStates.PublisherDesc:
                     games = games.OrderByDescending(p => p.Publisher);
                     break;
-                case SortGameState.DateOfAddingAsc:
+                case SortGameStates.DateOfAddingAsc:
                     games = games.OrderBy(p => p.DateOfAdding);
                     break;
-                case SortGameState.DateOfAddingDesc:
+                case SortGameStates.DateOfAddingDesc:
                     games = games.OrderByDescending(p => p.DateOfAdding);
                     break;
-                case SortGameState.PriceAsc:
+                case SortGameStates.PriceAsc:
                     games = games.OrderBy(p => p.Price);
                     break;
-                case SortGameState.PriceDesc:
+                case SortGameStates.PriceDesc:
                     games = games.OrderByDescending(p => p.Price);
                     break;
                 default:
@@ -114,34 +114,34 @@ namespace GameStore.Web.App
 
         }
 
-        private (string, bool) ParseSortGameState(SortGameState sortGame)
+        private (string, bool) ParseSortGameState(SortGameStates sortGame)
         {
             string sortColumn = null;
             bool sortByAscending = true;
             switch (sortGame)
             {
-                case SortGameState.NameAsc:
+                case SortGameStates.NameAsc:
                     sortColumn = nameof(Game.Name); sortByAscending = true;
                     break;
-                case SortGameState.NameDesc:
+                case SortGameStates.NameDesc:
                     sortColumn = nameof(Game.Name); sortByAscending = false;
                     break;
-                case SortGameState.PublisherAsc:
+                case SortGameStates.PublisherAsc:
                     sortColumn = nameof(Game.Publisher); sortByAscending = true;
                     break;
-                case SortGameState.PublisherDesc:
+                case SortGameStates.PublisherDesc:
                     sortColumn = nameof(Game.Publisher); sortByAscending = false;
                     break;
-                case SortGameState.PriceAsc:
+                case SortGameStates.PriceAsc:
                     sortColumn = nameof(Game.Price); sortByAscending = true;
                     break;
-                case SortGameState.PriceDesc:
+                case SortGameStates.PriceDesc:
                     sortColumn = nameof(Game.Price); sortByAscending = false;
                     break;
-                case SortGameState.DateOfAddingAsc:
+                case SortGameStates.DateOfAddingAsc:
                     sortColumn = nameof(Game.DateOfAdding); sortByAscending = true;
                     break;
-                case SortGameState.DateOfAddingDesc:
+                case SortGameStates.DateOfAddingDesc:
                     sortColumn = nameof(Game.Price); sortByAscending = false;
                     break;
             }

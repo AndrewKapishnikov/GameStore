@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GameStore.Web.Controllers
@@ -21,13 +20,13 @@ namespace GameStore.Web.Controllers
     [Authorize(Policy = "AdminRolePolicy")]
     public class AdminController : Controller
     {
-
         private IWebHostEnvironment hostingEnvironment;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<User> userManager;
         private readonly CategoryService categoryService;
         private readonly GameService gameService;
         private readonly OrderService orderService;
+
         public AdminController(IWebHostEnvironment hostingEnvironment,
                                RoleManager<IdentityRole> roleManager,
                                UserManager<User> userManager,
@@ -47,7 +46,7 @@ namespace GameStore.Web.Controllers
         [HttpGet]
         [Route("{controller}/{action}/{page:int}")]
         public async Task<IActionResult> Games(int? page, int? pagesize, int? category, string name = "",
-                                               SortGameState sortGame = SortGameState.NameAsc)
+                                               SortGameStates sort = SortGameStates.NameAsc)
         {
             int pageNumber = (page ?? 1);
             if (pageNumber > 100) pageNumber = 100;
@@ -56,26 +55,26 @@ namespace GameStore.Web.Controllers
             int categoryId = (category ?? 0);
 
             int pageSize = (pagesize ?? 5), count;
-            if (pageSize < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 1;
             if (pageSize > 100) pageSize = 100;
 
             IReadOnlyCollection<GameModel> gameModels;
 
             if (name == "" && categoryId == 0)
             {
-                (gameModels, count) = await gameService.GetGamesForAdminByPageAsync(pageNumber, pageSize, sortGame);
+                (gameModels, count) = await gameService.GetGamesForAdminByPageAsync(pageNumber, pageSize, sort);
             }
             else
             {
-                (gameModels, count) = await gameService.GetGamesForAdminByCategoryAndNameAsync(pageNumber, pageSize, sortGame, name, categoryId);
+                (gameModels, count) = await gameService.GetGamesForAdminByCategoryAndNameAsync(pageNumber, pageSize, sort, name, categoryId);
             }
 
             var categoryModelList = await categoryService.GetAllAsync();
             AdminGamesViewModel viewModel = new AdminGamesViewModel
             {
                 PageViewModel = new PaginationViewModel(count, pageNumber, pageSize),
-                SortViewModel = new SortViewModel(sortGame),
-                FilterViewModel = new FilterViewModel(categoryModelList.ToList(), category, pageSize, name),
+                SortViewModel = new SortGamesViewModel(sort),
+                FilterViewModel = new FilterGamesViewModel(categoryModelList.ToList(), category, pageSize, name),
                 Games = gameModels
             };
 
@@ -257,5 +256,99 @@ namespace GameStore.Web.Controllers
                                        hostingEnvironment.WebRootPath, path));
             return dir.GetFiles();
         }
+
+
+
+        public async Task<IActionResult> Categories()
+        {
+            var categoriesModels = await categoryService.GetAllAsync();
+            return View(categoriesModels);
+        }
+        [HttpGet]
+        public IActionResult AddCategory()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCategory(CategoryModel categoryModel)
+        {
+            if(ModelState.IsValid)
+            {
+                await categoryService.CreateCategory(categoryModel);
+                TempData["TempDataMessage"] = "Новая категория успешно добавлена. Можете продолжить добавление категорий";
+                return RedirectToAction("addcategory", "admin");
+            }
+            return View(categoryModel);
+        }
+
+        [HttpGet]
+        [Route("{controller}/{action}/{categoryId:int}")]
+        public IActionResult ConfirmDeleteCategory(int categoryId)
+        {
+            ViewBag.CategoryId = categoryId;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCategory(int categoryId)
+        {
+            await categoryService.DeleteCategory(categoryId);
+            TempData["TempDataMessage"] = "Категория успешно удалена!";
+            return RedirectToAction("categories", "admin");
+        }
+
+
+        [HttpGet]
+        [Route("{controller}/{action}/{page:int}")]
+        public async Task<IActionResult> Orders(int? page, int? pagesize, string useremail = "", string username = "", bool makeOrder = true,
+                                               SortOrderStates sort = SortOrderStates.OrderDateDesc)
+        {
+            int pageNumber = (page ?? 1);
+            if (pageNumber > 1000) pageNumber = 1000;
+            if (pageNumber < 1) pageNumber = 1;
+
+            int pageSize = (pagesize ?? 10), count;
+            if (pageSize < 1) pageSize = 1;
+            if (pageSize > 100) pageSize = 100;
+
+            IReadOnlyCollection<ShortOrderModel> orderModels;
+            (orderModels, count) = await orderService.GetOrdersForAdminByUserAsync(pageNumber, pageSize, sort, username, useremail, makeOrder);
+           
+            AdminOrdersViewModel viewModel = new AdminOrdersViewModel
+            {
+                PageViewModel = new PaginationViewModel(count, pageNumber, pageSize),
+                SortViewModel = new SortOrdersViewModel(sort),
+                FilterViewModel = new FilterOrdersViewModel(username, useremail, pageSize, makeOrder),
+                Orders = orderModels
+            };
+
+            return View(viewModel);
+        }
+
+
+        [HttpGet]
+        [Route("{controller}/{action}/{orderId:int}")]
+        public IActionResult ConfirmDeleteOrder(int orderId)
+        {
+            ViewBag.OrderId = orderId;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteOrder(int orderId)
+        {
+            await orderService.RemoveOrderAsync(orderId);
+            TempData["TempDataMessage"] = "Заказ успешно удалён!";
+            return RedirectToAction("orders", "admin", new { page = 1, makeorder = false});
+        }
+
+        [HttpGet]
+        [Route("{controller}/{action}/{orderId:int}")]
+        public async Task<IActionResult> OrderInfo(int orderId)
+        {
+            var orderModel = await orderService.GetOrderForAdminAsync(orderId);
+            return View(orderModel);
+        }
+
     }
 }

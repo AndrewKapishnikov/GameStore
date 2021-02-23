@@ -1,0 +1,23 @@
+﻿@model CategoryModel
+@{
+    ViewData["Title"] = "Добавить новую категорию для игр";
+    Layout = "_LayoutAdmin";
+}
+<div class="finish_font text-danger ml-4">@TempData["TempDataMessage"]</div>
+<h3 class="search_h3">Добавить новую категорию для игр</h3>
+<div class="ml-3">
+   <form asp-controller="admin" asp-action="addcategory" class="form-location pl-0" method="post" enctype="multipart/form-data" asp-antiforgery="true">
+      <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+      <div class="form-group mr-5">
+          <label asp-for="Name" class="col-form-label"></label>
+          <input asp-for="Name" class="form-control input-width"  title="Название" />
+          <span asp-validation-for="Name" class="text-danger"></span>
+       </div>
+      <div class="form-group mr-5">
+          <label asp-for="CategoryUrlSlug" class="col-form-label"></label>
+          <input asp-for="CategoryUrlSlug" class="form-control input-width" title="Название" />
+          <span asp-validation-for="CategoryUrlSlug" class="text-danger"></span>
+      </div>
+     <button type="submit" class="btn btn-success col-form-label mt-3">Добавить</button>
+   </form>
+</div>

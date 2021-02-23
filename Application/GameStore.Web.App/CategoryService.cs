@@ -1,9 +1,8 @@
-﻿using GameStore.EntityInterfaces;
+﻿using GameStore.DataEF;
+using GameStore.EntityInterfaces;
 using GameStore.Web.App.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GameStore.Web.App
@@ -35,6 +34,17 @@ namespace GameStore.Web.App
             return categories.Select(Map).ToArray();
         }
 
+        public async Task CreateCategory(CategoryModel categoryModel)
+        {
+            var categoryDto = CreateCategoryDTO(categoryModel);
+            await categoryRepository.AddCategory(Category.Mapper.Map(categoryDto));
+        }
+
+        public async Task DeleteCategory(int categoryId)
+        {
+            var category = await categoryRepository.GetCategoryByIdAsync(categoryId);
+            await categoryRepository.RemoveCategory(category);
+        }
 
         private CategoryModel Map(Category category)
         {
@@ -44,6 +54,10 @@ namespace GameStore.Web.App
                 Name = category.Name,
                 CategoryUrlSlug = category.UrlSlug
             };
+        }
+        private CategoryDTO CreateCategoryDTO(CategoryModel category)
+        {
+            return Category.DtoFactory.Create(category.Name, category.CategoryUrlSlug);
         }
     }
 }

@@ -37,7 +37,20 @@ namespace GameStore.Data.EF.Repositories
             return categoriesDto.Select(Category.Mapper.Map).ToArray();
         }
 
+        public async Task AddCategory(Category category)
+        {
+            var db = dbContextFactory.Create(typeof(CategoryRepository));
+            await db.Categories.AddAsync(Category.Mapper.Map(category));
+            await db.SaveChangesAsync();
+        }
 
+        public async Task RemoveCategory(Category category)
+        {
+            var db = dbContextFactory.Create(typeof(CategoryRepository));
+            var categoryDto = Category.Mapper.Map(category);
+            db.Categories.Remove(categoryDto);
+            await db.SaveChangesAsync();
+        }
 
     }
 }

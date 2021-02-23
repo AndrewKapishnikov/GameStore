@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace GameStore.Web.Models.AdminPanelModels
 {
-    class PagePair
+    public class PagePair
     {
         public int Number { get; set; }
         public string NumberName { get; set; }
     }
-    public class FilterViewModel
+    public class FilterGamesViewModel
     {
         private List<PagePair> pagePair = new List<PagePair>()
         {
@@ -23,7 +23,7 @@ namespace GameStore.Web.Models.AdminPanelModels
             new PagePair() { Number = 50, NumberName = "50"},
             new PagePair() { Number = 100, NumberName = "100"}
         };
-        public FilterViewModel(List<CategoryModel> categories, int? categoryId, int pageCount, string nameGame)
+        public FilterGamesViewModel(List<CategoryModel> categories, int? categoryId, int pageCount, string nameGame)
         {
             categories.Insert(0, new CategoryModel { Name = "Все", CategoryId = 0, CategoryUrlSlug = "all" });
             Categories = new SelectList(categories, "CategoryId", "Name", categoryId);

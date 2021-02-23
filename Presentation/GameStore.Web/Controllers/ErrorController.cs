@@ -43,6 +43,11 @@ namespace GameStore.Web.Controllers
                 case "Session is empty":
                     ViewBag.ErrorMessage = "Выберите новый товар";
                     return View("NotFound");
+                case "An error occurred while updating the entries. See the inner exception for details.":
+                    if(exceptionPath == "/admin/deletecategory")
+                        return View("DeleteCategoryWarning");
+                    else
+                        return View("NotFound");
             }
 
             ViewBag.ExceptionMessage = exceptionMessage;

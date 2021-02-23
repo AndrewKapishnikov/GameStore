@@ -18,7 +18,14 @@ namespace GameStore
         public int Id => dto.Id;
         public Game Game
         {
-            get => Game.Mapper.Map(dto.Game);
+            get
+            {
+                if (dto.Game != null)
+                    return Game.Mapper.Map(dto.Game);
+                else
+                    return null;
+            }
+            
         }
         public Order Order
         {

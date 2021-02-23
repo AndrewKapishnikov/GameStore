@@ -27,10 +27,10 @@
             <tr>
                 <th>
                     <sort action="games" controller="admin" up="@Model.SortViewModel.Up"
-                         current="@Model.SortViewModel.Current" 
+                         current-sort-game="@Model.SortViewModel.Current" 
                          page-url-page="@Model.PageViewModel.PageNumber"
                          page-url-pagesize="@Model.FilterViewModel.SelectedPageSize"
-                         page-url-sortgame="@Model.SortViewModel.NameSort.ToString().ToLower()"
+                         page-url-sort="@Model.SortViewModel.NameSort.ToString().ToLower()"
                          page-url-name="@(Model.FilterViewModel.SelectedGameName?.ToString().ToLower())"
                          page-url-category="@(Model.FilterViewModel.SelectedCategory.ToString().ToLower())">
                         Название
@@ -38,10 +38,10 @@
                 </th>
                 <th>
                     <sort action="games" controller="admin" up="@Model.SortViewModel.Up"
-                          current="@Model.SortViewModel.Current"
+                          current-sort-game="@Model.SortViewModel.Current"
                           page-url-page="@Model.PageViewModel.PageNumber"
                           page-url-pagesize="@Model.FilterViewModel.SelectedPageSize"
-                          page-url-sortgame="@Model.SortViewModel.PublisherSort.ToString().ToLower()"
+                          page-url-sort="@Model.SortViewModel.PublisherSort.ToString().ToLower()"
                           page-url-name="@(Model.FilterViewModel.SelectedGameName?.ToString().ToLower())"
                           page-url-category="@(Model.FilterViewModel.SelectedCategory.ToString().ToLower())">
                         Разработчик
@@ -49,10 +49,10 @@
                 </th>
                 <th>
                     <sort action="games" controller="admin" up="@Model.SortViewModel.Up"
-                          current="@Model.SortViewModel.Current" 
+                          current-sort-game="@Model.SortViewModel.Current" 
                           page-url-page="@Model.PageViewModel.PageNumber"
                           page-url-pagesize="@Model.FilterViewModel.SelectedPageSize"
-                          page-url-sortgame="@Model.SortViewModel.DateOfAddingSort.ToString().ToLower()"
+                          page-url-sort="@Model.SortViewModel.DateOfAddingSort.ToString().ToLower()"
                           page-url-name="@(Model.FilterViewModel.SelectedGameName?.ToString().ToLower())"
                           page-url-category="@(Model.FilterViewModel.SelectedCategory.ToString().ToLower())">
                         Добавлена
@@ -60,10 +60,10 @@
                 </th>
                 <th class="text-right">
                     <sort action="games" controller="admin" up="@Model.SortViewModel.Up"
-                          current="@Model.SortViewModel.Current" 
+                          current-sort-game="@Model.SortViewModel.Current" 
                           page-url-page="@Model.PageViewModel.PageNumber"
                           page-url-pagesize="@Model.FilterViewModel.SelectedPageSize"
-                          page-url-sortgame="@Model.SortViewModel.PriceSort.ToString().ToLower()"
+                          page-url-sort="@Model.SortViewModel.PriceSort.ToString().ToLower()"
                           page-url-name="@(Model.FilterViewModel.SelectedGameName?.ToString().ToLower())"
                           page-url-category="@(Model.FilterViewModel.SelectedCategory.ToString().ToLower())">
                         Цена
@@ -100,7 +100,7 @@
                     page-url-pagesize="@Model.FilterViewModel.SelectedPageSize"
                     page-url-name="@(Model.FilterViewModel.SelectedGameName?.ToString().ToLower())"
                     page-url-category="@(Model.FilterViewModel.SelectedCategory.ToString().ToLower())"
-                    page-url-sortgame="@(Model.SortViewModel.CurrentForPagination.ToString().ToLower())">
+                    page-url-sort="@(Model.SortViewModel.CurrentForPagination.ToString().ToLower())">
 
          </pagination>
     }

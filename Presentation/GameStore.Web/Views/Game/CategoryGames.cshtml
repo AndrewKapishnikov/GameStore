@@ -32,9 +32,11 @@
                     <td>
                         @if (item.ImageData != null)
                         {
-                            <a asp-controller="game" asp-action="index" asp-route-id="@item.GameId">
-                                <img src="data:image/jpeg;base64,@(Convert.ToBase64String(item.ImageData))" />
-                            </a>
+                            <div>
+                                <a asp-controller="game" asp-action="index" asp-route-id="@item.GameId">
+                                    <img src="data:image/jpeg;base64,@(Convert.ToBase64String(item.ImageData))" />
+                                </a>
+                            </div>
                         }
                     </td>
                     <td class="price">

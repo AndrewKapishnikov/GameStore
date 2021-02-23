@@ -6,6 +6,7 @@ namespace GameStore.Web.App
     {
         public int Id { get; set; }
         public DateTime OrderDateAndTime { get; set; }
+        public bool OrderReviewed {get;set;}
         public OrderItemModel[] OrderItems { get; set; } = new OrderItemModel[0];
         public int TotalCount { get; set; }
         public decimal TotalPrice { get; set; }
@@ -14,6 +15,7 @@ namespace GameStore.Web.App
         public string UserCity { get; set; }
         public string UserAddress { get; set; }
         public string UserEmail { get; set; }
+        public string UserPhone { get; set; }
 
         public string DeliveryName { get; set; }
         public string DeliveryDescription { get; set; }

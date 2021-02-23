@@ -14,7 +14,9 @@
                     <td>
                         @if (Model.OrderItems[i].ImageData != null)
                         {
-                            <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.OrderItems[i].ImageData))" />
+                            <div class="orderimage">
+                                <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.OrderItems[i].ImageData))" />
+                            </div>
                         }
                     </td>
                     <td><strong>@Model.OrderItems[i].GameName</strong></td>

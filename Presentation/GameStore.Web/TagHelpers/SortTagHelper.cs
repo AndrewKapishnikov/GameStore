@@ -11,7 +11,8 @@ namespace GameStore.Web.TagHelpers
 {
     public class SortTagHelper : TagHelper
     {
-        public SortGameState Current { get; set; } 
+        public SortGameStates CurrentSortGame { get; set; } 
+        public SortOrderStates CurrentSortOrder { get; set; }
         public string Action { get; set; }  
         public string Controller { get; set; }
         public bool Up { get; set; }   
@@ -34,19 +35,43 @@ namespace GameStore.Web.TagHelpers
             output.TagName = "a";
             string url = urlHelper.Action(Action, Controller, PageUrlValues);
             output.Attributes.SetAttribute("href", url);
-        
-            if (Current.ToString().ToLower() == PageUrlValues["sortgame"].ToString())
+
+            if (Action == "games")
             {
-                TagBuilder tag = new TagBuilder("i");
-                tag.AddCssClass("glyphicon");
+                if (CurrentSortGame.ToString().ToLower() == PageUrlValues["sort"].ToString())
+                {
+                    TagBuilder tag = new TagBuilder("i");
+                    tag.AddCssClass("glyphicon");
 
-                if (Up == true)  
-                    tag.AddCssClass("glyphicon-chevron-up");
-                else   
-                    tag.AddCssClass("glyphicon-chevron-down");
+                    if (Up == true)
+                        tag.AddCssClass("glyphicon-chevron-up");
+                    else
+                        tag.AddCssClass("glyphicon-chevron-down");
 
-                output.PreContent.AppendHtml(tag);
+                    output.PreContent.AppendHtml(tag);
+                }
+            }
+            else
+            {
+                if (CurrentSortOrder.ToString().ToLower() == PageUrlValues["sort"].ToString())
+                {
+                    TagBuilder tag = new TagBuilder("i");
+                    tag.AddCssClass("glyphicon");
+
+                    if (Up == true)
+                        tag.AddCssClass("glyphicon-chevron-up");
+                    else
+                        tag.AddCssClass("glyphicon-chevron-down");
+
+                    output.PreContent.AppendHtml(tag);
+                }
             }
         }
+
+
+
+
+
+
     }
 }

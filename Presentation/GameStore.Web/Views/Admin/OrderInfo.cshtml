@@ -1,0 +1,113 @@
+﻿@model OrderModel
+@{
+    ViewData["Title"] = "Информация о заказе";
+    Layout = "_LayoutAdmin";
+}
+<h3 class="search_h3">Информация о заказе</h3>
+<div class="finish_font">Номер заказа: №@Model.Id</div>
+@if (Model.PaymentDescription == null)
+{
+    <div class="finish_font mt-2 mb-2">Пользователь отправил товар в корзину: @Model.OrderDateAndTime.ToLocalTime()</div>
+}
+else
+{
+    <div class="finish_font mt-2 mb-2">Дата и время оформления заказа: @Model.OrderDateAndTime.ToLocalTime()</div>
+}
+<table class="table table-sm table-striped finish_font">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col">Название игры</th>
+            <th scope="col">Разработчик</th>
+            <th scope="col" class="text-right">Количество</th>
+            <th scope="col" class="text-right">Цена</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.OrderItems.Length; i++)
+        {
+            <tr>
+                <td class="text-left">@(i + 1)</td>
+                <td class="font-weight-bold">
+                    @if (@Model.OrderItems[i].GameName != null)
+                        @Model.OrderItems[i].GameName
+                        else
+                        {
+                            <p>Товар удалён</p>
+                        }
+                </td>
+                <td>@Model.OrderItems[i].Publisher</td>
+                <td class="text-right">@Model.OrderItems[i].Count</td>
+                <td class="text-right">@Math.Truncate(Model.OrderItems[i].Price) руб.</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-right">Доставка</td>
+            <td class="text-right"></td>
+            <td class="text-right">@Math.Truncate(@Model.DeliveryPrice) руб.</td>
+        </tr>
+        <tr>
+            <td colspan="3" class="text-right font-weight-bold">Итого</td>
+            <td class="text-right font-weight-bold">@Model.TotalCount</td>
+            <td class="text-right font-weight-bold">@Math.Truncate(@Model.TotalPrice) руб.</td>
+        </tr>
+    </tfoot>
+</table>
+@if (Model.UserEmail != null)
+{
+    <div class="labelChoice mb-2">Покупатель</div>
+    <table class="mb-3">
+        <tr>
+            <td class="finish_font pb-1">Имя Фамилия:</td>
+            <td class="finish_font pl-3 pb-1">@Model.UserName</td>
+        </tr>
+        <tr>
+            <td class="finish_font pb-1"> Email:</td>
+            <td class="finish_font pl-3 pb-1">@Model.UserEmail</td>
+        </tr>
+        <tr>
+            <td class="finish_font pb-1">Телефон:</td>
+            <td class="finish_font  pl-3 pb-1">@Model.UserPhone</td>
+        </tr>
+    </table>
+}
+@if (Model.DeliveryDescription != null)
+{
+    <div class="labelChoice mb-2">Доставка</div>
+    <div class="finish_font">
+        <pre>@Model.DeliveryDescription</pre>
+    </div>
+    @if (Model.DeliveryName == "Courier")
+    {
+        <div class="mt-2 finish_font">
+            г. @Model.UserCity
+            @Model.UserAddress
+        </div>
+    }
+}
+@if (Model.PaymentDescription == null && Model.DeliveryDescription == null)
+{
+    <div class="finish_font mt-4" style="color:red">
+        Пользователь добавил товар в корзину и не стал дальше оформлять заказ!
+    </div>
+}
+@if (Model.PaymentDescription != null)
+{
+    <div class="labelChoice mb-2 mt-4">Оплата</div>
+    <div class="finish_font">
+        <pre>@Model.PaymentDescription</pre>
+    </div>
+}
+else
+{
+    <div class="finish_font mt-4" style="color:red">
+        Пользователь не выбирал форму оплаты и не оплачивал заказ!
+    </div>
+    <div class="finish_font mt-1">(Этот заказ можно при необходимости удалить.)</div>
+}
+
+<a asp-controller="admin" asp-action="orders" asp-route-makeorder="false" asp-route-page="1">
+    <input type="button" class="btn btn-info col-form-label mt-5 finish_font" value="Назад">
+</a>

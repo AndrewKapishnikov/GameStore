@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GameStore.DataEF;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GameStore
@@ -19,6 +17,8 @@ namespace GameStore
 
         Task RemoveAsync(Order order);
         Task<Order[]> GetOrdersByUserIdAsync(string userId);
+
+        IQueryable<OrderDTO> GetAllOrders();
 
     }
 }

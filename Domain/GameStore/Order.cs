@@ -1,9 +1,7 @@
 ﻿using GameStore.DataEF;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GameStore
 {
@@ -12,6 +10,11 @@ namespace GameStore
         private readonly OrderDTO dto; 
         public int Id => dto.Id;
         public DateTime DateOfOrder => dto.DateOfOrder;
+        public bool OrderReviewed 
+        {
+            get => dto.OrderReviewed;
+            set => dto.OrderReviewed = value;
+        }
         public OrderItemCollectionForOrder Items { get; }
         public Order(OrderDTO dto)
         {
@@ -69,7 +72,6 @@ namespace GameStore
                 dto.DeliveryParameters = value.Parameters.ToDictionary(p => p.Key, p => p.Value);
             }
         }
-
 
         public Payment Payment
         {

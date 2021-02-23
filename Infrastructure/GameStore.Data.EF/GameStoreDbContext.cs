@@ -171,11 +171,5 @@ namespace GameStore.Data.EF
             });
         }
 
-
-
     }
-
-
-
-
 }

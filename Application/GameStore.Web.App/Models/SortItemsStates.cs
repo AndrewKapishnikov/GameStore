@@ -1,7 +1,7 @@
 ﻿
 namespace GameStore.Web.App.Models
 {
-    public enum SortGameState
+    public enum SortGameStates
     {
         NameAsc,
         NameDesc,
@@ -11,5 +11,15 @@ namespace GameStore.Web.App.Models
         PriceDesc,
         DateOfAddingAsc,
         DateOfAddingDesc
+    }
+
+    public enum SortOrderStates
+    {
+        OrderDateAsc,
+        OrderDateDesc,
+        UserEmailAsc,
+        UserEmailDesc,
+        UserNameAsc,
+        UserNameDesc
     }
 }

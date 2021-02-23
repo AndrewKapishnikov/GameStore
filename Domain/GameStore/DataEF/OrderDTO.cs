@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GameStore.DataEF
 {
@@ -17,8 +13,9 @@ namespace GameStore.DataEF
 
         public int Id { get; set; }
         public DateTime DateOfOrder { get; set; }
+        public bool OrderReviewed { get; set; }
 
-   
+
         public string UserId { get; set; }   
         public User User { get; set; }
 
