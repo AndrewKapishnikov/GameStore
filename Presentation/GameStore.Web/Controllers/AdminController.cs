@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.Web.Controllers
 {
@@ -349,6 +350,114 @@ namespace GameStore.Web.Controllers
             var orderModel = await orderService.GetOrderForAdminAsync(orderId);
             return View(orderModel);
         }
+
+
+        [HttpGet]
+        [Route("{controller}/{action}/{page:int}")]
+        public async Task<IActionResult> Users(int? page, int? pagesize, string userEmail = "", string userName = "", bool userConfirmed = true,
+                                               SortUserStates sort = SortUserStates.UserNameDesc)
+        {
+            int pageNumber = (page ?? 1);
+            if (pageNumber > 100) pageNumber = 100;
+            if (pageNumber < 1) pageNumber = 1;
+
+            int pageSize = (pagesize ?? 5), count;
+            if (pageSize < 1) pageSize = 1;
+            if (pageSize > 100) pageSize = 100;
+
+            IQueryable<User> users = userManager.Users;
+
+            if (!String.IsNullOrEmpty(userName))
+            {
+                users = users.Where(p => p.Name.Contains(userName) || p.Surname.Contains(userName));
+            }
+            if (!String.IsNullOrEmpty(userEmail))
+            {
+                users = users.Where(p => p.UserName.Contains(userEmail));
+            }
+            if (userConfirmed)
+                users = users.Where(p => p.EmailConfirmed);
+            else
+                users = users.Where(p => !p.EmailConfirmed);
+                        
+            switch (sort)
+            {
+                case SortUserStates.UserEmailAsc:
+                    users = users.OrderByDescending(p => p.Email);
+                    break;
+                case SortUserStates.UserNameAsc:
+                    users = users.OrderBy(p => p.Name);
+                    break;
+                case SortUserStates.UserNameDesc:
+                    users = users.OrderByDescending(p => p.Name);
+                    break;
+                default:
+                    users = users.OrderBy(p => p.Email);
+                    break;
+            }
+
+            count = await users.CountAsync();
+            var usersArray = await users.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            UserModel[] usersModel = usersArray.Select(MapUser).ToArray();
+
+            AdminUsersViewModel viewModel = new AdminUsersViewModel
+            {
+                PageViewModel = new PaginationViewModel(count, pageNumber, pageSize),
+                SortViewModel = new SortUsersViewModel(sort),
+                FilterViewModel = new FilterUsersViewModel(userName, userEmail, pageSize, userConfirmed),
+                Users = usersModel
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("{controller}/{action}/{userId}")]
+        public IActionResult ConfirmDeleteUser(string userId)
+        {
+            ViewBag.UserId = userId;
+            return View();
+        }
+
+        [HttpPost]
+        public async  Task<IActionResult> DeleteUser(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                TempData["TempDataMessage"] = $"Пользователь с Id = {userId} не найден!";
+                return RedirectToAction("users", "admin", new { page = 1, userconfirmed = false });
+            }
+            else
+            {
+                var result = await userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    TempData["TempDataMessage"] = "Пользователь успешно удалён!";
+                    return RedirectToAction("users", "admin", new { page = 1, userconfirmed = false });
+                }
+            }
+            TempData["TempDataMessage"] = "При удалении пользователя произошла ошибка!";
+            return RedirectToAction("users", "admin", new { page = 1, userconfirmed = false });
+        }
+
+
+        private UserModel MapUser(User user)
+        {
+            return new UserModel()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Surname = user.Surname,
+                Email = user.Email,
+                Phone = user.PhoneNumber,
+                EmailConfirmed = user.EmailConfirmed,
+                City = user.City
+            };
+        }
+
 
     }
 }

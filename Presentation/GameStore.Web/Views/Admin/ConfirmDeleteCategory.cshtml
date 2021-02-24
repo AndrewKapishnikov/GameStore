@@ -1,8 +1,12 @@
-﻿<h3 class="search_h3">Удаление категории</h3>
+﻿@{
+    ViewData["Title"] = "Удаление категории";
+    Layout = "_LayoutAdmin";
+}
+<h3 class="search_h3">Удаление категории</h3>
 <p class="finish_font ml-4 mb-2">Вы действительно хотите удалить эту категорию?</p>
-<form asp-controller="admin" asp-action="deleteorder" method="post" class="form-location" asp-antiforgery="true">
-    <input type="hidden" name="orderId" value="@ViewBag.OrderId" />
-    <a asp-controller="admin" asp-action="orders" asp-route-page="1">
+<form asp-controller="admin" asp-action="deletecategory" method="post" class="form-location" asp-antiforgery="true">
+    <input type="hidden" name="categoryId" value="@ViewBag.CategoryId" />
+    <a asp-controller="admin" asp-action="categories">
         <input type="button" class="btn btn-info col-form-label mt-3" value="Назад">
     </a>
     <button type="submit" class="btn btn-danger col-form-label mt-3 ml-2">Удалить</button>

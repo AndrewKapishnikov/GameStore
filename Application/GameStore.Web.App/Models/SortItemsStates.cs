@@ -22,4 +22,12 @@ namespace GameStore.Web.App.Models
         UserNameAsc,
         UserNameDesc
     }
+
+    public enum SortUserStates
+    {
+        UserEmailAsc,
+        UserEmailDesc,
+        UserNameAsc,
+        UserNameDesc
+    }
 }

@@ -44,8 +44,10 @@ namespace GameStore.Web.Controllers
                     ViewBag.ErrorMessage = "Выберите новый товар";
                     return View("NotFound");
                 case "An error occurred while updating the entries. See the inner exception for details.":
-                    if(exceptionPath == "/admin/deletecategory")
+                    if (exceptionPath == "/admin/deletecategory")
                         return View("DeleteCategoryWarning");
+                    else if (exceptionPath == "/admin/deleteuser")
+                        return View("DeleteUserWarning");
                     else
                         return View("NotFound");
             }

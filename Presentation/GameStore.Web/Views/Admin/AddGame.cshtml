@@ -7,62 +7,63 @@
 <h3 class="search_h3">Добавить новую игру в список товаров</h3>
 <div>
     <form asp-controller="admin" asp-action="addgame" class="form-location pl-0" method="post" enctype="multipart/form-data" asp-antiforgery="true">
-         <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-         <div class="form-line">
-             <div class="form-group mr-5">
-                 <label asp-for="Name" class="col-form-label"></label>
-                 <input asp-for="Name" class="form-control" title="Название" />
-                 <span asp-validation-for="Name" class="text-danger"></span>
-             </div>
-             <div class="form-group">
-                 <label asp-for="Publisher" class="col-form-label"></label>
-                 <input asp-for="Publisher" class="form-control" title="Разработчик" />
-                 <span asp-validation-for="Publisher" class="text-danger"></span>
-             </div>
-         </div>
-         <div class="form-group mt-4 mb-2">
-             <select asp-for="CategoryId" asp-items=" ViewBag.Categories" class="form-control form-input">
-                 <option selected="selected" disabled="disabled">Выберите категорию игры из выпадающего списка</option>
-             </select>
-         </div>
-         <div class="form-group">
-             <label asp-for="ShortDescription" class="col-form-label"></label>
-             <textarea asp-for="ShortDescription" title="Краткое описание" class="form-control form-input" rows="3" maxlength="170"></textarea>
-             <span asp-validation-for="ShortDescription" class="text-danger"></span>
-         </div>
-         <div class="form-group">
-             <label asp-for="Description" class="col-form-label"></label>
-             <textarea asp-for="Description" title="Более подробное описание игры"></textarea>
-             <span asp-validation-for="Description" class="text-danger"></span>
-         </div>
-         <div class="form-line mt-2">
-             <div class="form-group">
-                 <label asp-for="Price" class="col-form-label">Цена (Без копеек)</label>
-                 <input asp-for="Price" class="form-control" style="max-width:180px;" title="Цена" />
-                 <span asp-validation-for="Price" class="text-danger"></span>
-             </div>
-             <div class="form-group">
-                 <label asp-for="ReleaseDate" class="col-form-label"></label>
-                 <input asp-for="ReleaseDate" type="month" class="form-control" title="Дата выхода" />
-                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
-             </div>
-         </div>
-         <div class="form-group mt-4 mb-2">
-             <input asp-for="OnSale" class="member" type="checkbox" />
-             <label asp-for="OnSale" class="mr-1"></label>
-             @*<input id="onSale" type="checkbox" value="true" name="onSale" />
-                 <input type="hidden" value="false" name="onSale" />*@
-         </div>
-         <div class="form-group mt-3">
-             <label for="titleImageFile" class="col-form-label mr-1">Главная картинка</label>
-             <input type="file" id="titleImageFile" name="titleImageFile" class="btn" title="Главная картинка" />
-         </div>
-         <button type="submit" class="btn btn-success col-form-label mt-3">Добавить</button>
-     </form>
- </div>
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+        <div class="form-line">
+            <div class="form-group mr-5">
+                <label asp-for="Name" class="col-form-label"></label>
+                <input asp-for="Name" class="form-control" title="Название" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Publisher" class="col-form-label"></label>
+                <input asp-for="Publisher" class="form-control" title="Разработчик" />
+                <span asp-validation-for="Publisher" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group mt-4 mb-2">
+            <select asp-for="CategoryId" asp-items=" ViewBag.Categories" class="form-control form-input">
+                <option selected="selected" disabled="disabled">Выберите категорию игры из выпадающего списка</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="ShortDescription" class="col-form-label"></label>
+            <textarea asp-for="ShortDescription" title="Краткое описание" class="form-control form-input" rows="3" maxlength="170"></textarea>
+            <span asp-validation-for="ShortDescription" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="col-form-label"></label>
+            <textarea asp-for="Description" title="Более подробное описание игры"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-line mt-2">
+            <div class="form-group">
+                <label asp-for="Price" class="col-form-label">Цена (Без копеек)</label>
+                <input asp-for="Price" class="form-control" style="max-width:180px;" title="Цена" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleaseDate" class="col-form-label"></label>
+                <input asp-for="ReleaseDate" type="month" class="form-control" title="Дата выхода" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group mt-4 mb-2">
+            <input asp-for="OnSale" class="member" type="checkbox" />
+            <label asp-for="OnSale" class="mr-1"></label>
+            @*<input id="onSale" type="checkbox" value="true" name="onSale" />
+                <input type="hidden" value="false" name="onSale" />*@
+        </div>
+        <div class="form-group mt-3">
+            <label for="titleImageFile" class="col-form-label mr-1">Главная картинка</label>
+            <input type="file" id="titleImageFile" name="titleImageFile" class="btn" title="Главная картинка" />
+        </div>
+        <button type="submit" class="btn btn-success col-form-label mt-3">Добавить</button>
+    </form>
+</div>
 @section Scripts{
-    <script src="~/js/ckeditor/ckeditor.js"></script>
-    @*<script src="https://cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>*@
+
+    @*<script src="~/js/ckeditor/ckeditor.js"></script>*@
+    <script src="https://cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
     <script>
         $(document).ready(function () {
             CKEDITOR.replace('Description', {

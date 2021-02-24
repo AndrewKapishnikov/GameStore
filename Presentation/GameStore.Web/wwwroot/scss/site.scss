@@ -143,24 +143,19 @@ button:focus {
 
 .table-search {
     width: 775px;
-
     thead tr > th, h2 {
         font: $font-item;
         color: $base-color;
         margin-bottom: $gap;
     }
-
     tbody td {
         font: $font_size+1 $font;
-
         & > a + form {
             margin-top: 20px;
         }
-
         &.price {
             font: $font-item;
         }
-
         div {
             width: 130px;
             height: 140px;
@@ -177,7 +172,6 @@ button:focus {
                 }
             }
         }
-
         .orderimage {
             width: 100px;
             height: 110px;
@@ -194,16 +188,13 @@ button:focus {
                 }
             }
         }
-
         & > img {
             width: 90px;
             height: 100px;
         }
-
         img.deleteimage {
             width: 20px;
             transition: all 1s ease;
-
             &:hover {
                 -webkit-transform: rotate(360deg) scale(1.5);
                 -ms-transform: rotate(360deg) scale(1.5);
@@ -211,10 +202,8 @@ button:focus {
             }
         }
     }
-
     tfoot td {
         font: $font_size+1 $font;
-
         &.result {
             font: $font_size+5 $font;
         }
@@ -403,4 +392,9 @@ h3.smallersize {
         color: red;
        
     }
+}
+
+.textwarning {
+    line-height: 1.7;
+    width: 95%;
 }

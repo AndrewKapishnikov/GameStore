@@ -1,10 +1,9 @@
-﻿ using GameStore.DataEF;
+﻿using GameStore.DataEF;
 using GameStore.Web.App.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -83,7 +82,6 @@ namespace GameStore.Web.App
             };
         }
 
-
         internal async Task<IEnumerable<Game>> GetGamesAsync(Order order)
         {
             var gameIds = order.Items.Select(orderItem => orderItem.Game.Id);
@@ -131,7 +129,6 @@ namespace GameStore.Web.App
             }
             return Map(order);
         }
-
 
         internal void UpdateSession(Order order)
         {
@@ -182,7 +179,6 @@ namespace GameStore.Web.App
             return Map(order);
         }
 
-
         public async Task<OrderModel> SetPaymentAsync(Payment payment)
         {
             var order = await GetOrderAsync();
@@ -191,7 +187,6 @@ namespace GameStore.Web.App
             Session.RemoveCart();   //
             return Map(order);
         }
-
 
         public async Task<(IReadOnlyCollection<ShortOrderModel>, int)> GetOrdersForAdminByUserAsync(int pageNo, int pageSize, SortOrderStates sortOrder,
                                                                                                     string userName, string userEmail, bool makeOrder)

@@ -1,4 +1,8 @@
-﻿<h3 class="search_h3">Удаление выбранного заказа</h3>
+﻿@{
+    ViewData["Title"] = "Удаление заказа";
+    Layout = "_LayoutAdmin";
+}
+<h3 class="search_h3">Удаление выбранного заказа</h3>
 <p class="finish_font ml-4 mb-2">Вы действительно хотите удалить этот заказ?</p>
 <form asp-controller="admin" asp-action="deleteorder" method="post" class="form-location" asp-antiforgery="true">
     <input type="hidden" name="orderId" value="@ViewBag.OrderId" />

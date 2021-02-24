@@ -298,3 +298,7 @@ h3.smallersize {
     width: 50px;
     height: 40px;
     color: red; }
+
+.textwarning {
+  line-height: 1.7;
+  width: 95%; }

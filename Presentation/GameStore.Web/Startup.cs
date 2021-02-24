@@ -69,6 +69,7 @@ namespace GameStore.Web
             {
                 options.Cookie.HttpOnly = true;
                 options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.None; //comment with https
                 options.ExpireTimeSpan = TimeSpan.FromHours(24);
            
             });
@@ -114,14 +115,14 @@ namespace GameStore.Web
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                //app.UseExceptionHandler("/Error");
-               // app.UseStatusCodePagesWithReExecute("/Error/{0}");
+                //app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 app.UseBrowserLink();
             }
             else
             {
-                //app.UseHsts();
+                app.UseHsts();
                 app.UseExceptionHandler("/Error");
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
