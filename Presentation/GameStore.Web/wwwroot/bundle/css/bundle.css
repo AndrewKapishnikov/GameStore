@@ -514,6 +514,12 @@ button:focus {
 .glyphicon-chevron-padding {
   padding: .5rem .65rem; }
 
+#loginForm input.text {
+  color: #5c5c5c; }
+
+#loginForm a {
+  color: #353535; }
+
 .bannerLeft {
   padding: 20px 0 10px 12px; }
 
@@ -636,8 +642,23 @@ button:focus {
       font: 20px Tahoma, Geneva, sans-serif; }
 
 .table-order {
-  width: 600px;
+  max-width: 600px;
   margin: 0 auto; }
+  .table-order .tdnumbers > .changenumber {
+    display: flex;
+    flex-direction: row;
+    width: 90px; }
+    .table-order .tdnumbers > .changenumber .changenumber__additem {
+      max-width: 30px; }
+      .table-order .tdnumbers > .changenumber .changenumber__additem .changenumber__plus {
+        width: 10px; }
+    .table-order .tdnumbers > .changenumber .changenumber__count {
+      max-width: 20px;
+      padding-left: 8px; }
+    .table-order .tdnumbers > .changenumber .changenumber__removeitem {
+      max-width: 30px; }
+      .table-order .tdnumbers > .changenumber .changenumber__removeitem .changenumber__minus {
+        width: 10px; }
 
 .search_h3 {
   font: 23px Tahoma, Geneva, sans-serif;
@@ -768,7 +789,7 @@ h3.smallersize {
     /* top: -2px;
         left: 11px;*/
     top: 12px;
-    left: 160px;
+    left: 155px;
     width: 50px;
     height: 40px;
     color: red; }
@@ -776,3 +797,26 @@ h3.smallersize {
 .textwarning {
   line-height: 1.7;
   width: 95%; }
+
+.checkboxsize {
+  width: 16px;
+  height: 16px;
+  margin-top: 0.1rem; }
+
+.accountinput {
+  display: flex;
+  flex-direction: row;
+  margin-left: 40px; }
+  .accountinput .accountinput__privateoffice {
+    font: 17px Tahoma, Geneva, sans-serif;
+    margin-top: 1.3em;
+    margin-left: 25px; }
+
+.clickbutton:active {
+  position: relative;
+  left: 2px;
+  top: 2px; }
+
+.tablewidth {
+  width: 95%;
+  margin: 0 auto; }

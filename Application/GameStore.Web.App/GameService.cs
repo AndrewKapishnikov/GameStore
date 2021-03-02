@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GameStore.Web.App
@@ -39,11 +38,13 @@ namespace GameStore.Web.App
             return new List<GameModel>();
         }
 
-        public async Task<IReadOnlyCollection<GameModel>> GetAllGamesByCategoryAsync(string categoryUrlSlug)
+        public async Task<(IReadOnlyCollection<GameModel>, int)> GetAllGamesByCategoryAsync(string categoryUrlSlug, int pageNumber, int pageSize)
         {
-            var game = await gameRepository.GetAllByCategoryAsync(categoryUrlSlug);
-
-            return game.Select(Map).ToArray();
+            var gameArray = await gameRepository.GetAllByCategoryAsync(categoryUrlSlug);
+            var count = gameArray.Count();
+            var games = gameArray.Select(Map);
+            var gamesList = games.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            return (gamesList, count);
         }
 
         public async Task<IReadOnlyCollection<GameModel>> GetGamesByDescedingOrderAsync()

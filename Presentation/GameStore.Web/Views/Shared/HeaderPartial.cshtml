@@ -4,8 +4,10 @@
         <ul>
             <li><a href="#">О нас</a></li>
             <li><a href="#">Новости</a></li>
-            <li><a href="#">Личный кабинет</a></li>
-            @if (User.IsInRole("Admin"))
+            <li>
+                 <a asp-controller="account" asp-action="privateoffice">Личный кабинет</a>
+            </li>
+            @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
             {
                 <li><a asp-controller="admin" asp-action="games" asp-route-page="1">Панель Администратора</a></li>
             }

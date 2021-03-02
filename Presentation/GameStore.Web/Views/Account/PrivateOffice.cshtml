@@ -1,0 +1,86 @@
+﻿@model UserWithOrderModel
+@{
+    ViewData["Title"] = "Личный кабинет";
+}
+<div class="finish_font text-danger ml-4">@TempData["TempDataMessage"]</div>
+<h3 class="search_h3">Личный кабинет</h3>
+<hr />
+<div class="labelChoice mb-3 ml-3">Данные пользователя</div>
+<table class="mb-3 ml-3">
+    <tr>
+        <td class="finish_font pb-1">Имя Фамилия:</td>
+        <td class="finish_font pl-3 pb-1">@Model.UserModel.Name @Model.UserModel.Surname</td>
+    </tr>
+    <tr>
+        <td class="finish_font pb-1"> Email:</td>
+        <td class="finish_font pl-3 pb-1">@Model.UserModel.Email</td>
+    </tr>
+    <tr>
+        <td class="finish_font pb-1">Статус Email:</td>
+        <td class="finish_font pl-3 pb-1">
+            @if (Model.UserModel.EmailConfirmed)
+            {
+                <span>Электронная почта подтверждена</span>
+            }
+            else
+            {
+                <span>Электронная почта не подтверждена</span>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="finish_font pb-1">Телефон:</td>
+        <td class="finish_font  pl-3 pb-1">@Model.UserModel.Phone</td>
+    </tr>
+    <tr>
+        <td class="finish_font pb-1">Населённый пункт:</td>
+        <td class="finish_font pl-3 pb-1">@Model.UserModel.City</td>
+    </tr>
+    <tr>
+        <td class="finish_font pb-1">Адрес:</td>
+        <td class="finish_font pl-3 pb-1">@Model.UserModel.Address</td>
+    </tr>
+</table>
+
+<div  class="ml-3 mt-3 finish_font">
+    <a asp-controller="account" asp-action="changeuserinfo" >Изменить информацию о себе</a>
+</div>
+<div class="ml-3 mt-2 finish_font">
+    <a asp-controller="account" asp-action="changepassword" >Задать новый пароль</a>
+</div>
+
+<div class="labelChoice mb-2 ml-3 mt-5">Мои заказы</div>
+@if (Model.UserOrdersModels.Any())
+{
+    <table class="table table-search ml-2" style="width:80%">
+        <thead>
+            <tr>
+                <th scope="col">№ заказа</th>
+                <th scope="col">Дата и время заказа</th>
+                <th scope="col" class="text-right">Количество товаров</th>
+                <th scope="col" class="text-right">Общая сумма</th>
+                <th></th>
+            </tr>
+        </thead>
+        @foreach (ShortOrderModel order in Model.UserOrdersModels)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td style="width:110px">@order.OrderDateAndTime.ToLocalTime()</td>
+                <td class="text-right" style="width:30px">@order.TotalCount</td>
+                <td class="text-right">@Math.Truncate(@order.TotalPrice) руб.</td>
+                <td class="text-right" style="width:120px">
+                    <a asp-controller="account" asp-action="orderdetails" asp-route-id="@order.Id">
+                        Детали заказа
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div class="finish_font mt-4 ml-3">
+        Вы не оформили ещё ни одного заказа.
+    </div>
+}

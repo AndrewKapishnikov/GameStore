@@ -1,4 +1,3 @@
-using System;
 
 namespace GameStore.Web.Models
 {

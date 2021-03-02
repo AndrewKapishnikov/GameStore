@@ -1,9 +1,8 @@
 ﻿using GameStore.Web.App;
+using GameStore.Web.Models;
+using GameStore.Web.Models.AdminPanelModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GameStore.Web.Controllers
@@ -33,12 +32,23 @@ namespace GameStore.Web.Controllers
             return View(model);
         }
 
-        [Route("{controller}/{action}/{category}")]
-        public async Task<IActionResult> CategoryGames(string category)
+        [Route("{controller}/{action}/{category}/{page?}")]
+        public async Task<IActionResult> CategoryGames(string category, int? page)
         {
-            var games = await gameService.GetAllGamesByCategoryAsync(category.Trim());
+            int pageNumber = (page ?? 1);
+            if (pageNumber > 100) pageNumber = 100;
+            if (pageNumber < 1) pageNumber = 1;
+            int pageSize = 7;
 
-            return View(games);
+            var (games, count) = await gameService.GetAllGamesByCategoryAsync(category.Trim(), pageNumber, pageSize);
+            var viewModel = new CategoryGamesViewModel
+            {
+                PageViewModel = new PaginationViewModel(count, pageNumber, pageSize),
+                Games = games,
+                Category = category
+            };
+
+            return View(viewModel);
         }
 
 

@@ -53,6 +53,15 @@ button:focus {
     padding: .5rem .65rem;
 }
 //-------------------------------------------------------
+#loginForm {
+    input.text{
+        color: #5c5c5c;
+    }
+    a {
+        color: #353535;
+    }
+}
+
 .bannerLeft {
     padding: 20px 0 10px 12px;
 }
@@ -210,10 +219,41 @@ button:focus {
     }
 }
 
-.table-order{
-    width:600px;
-    margin:0 auto;
+.table-order {
+    max-width: 600px;
+    margin: 0 auto;
+
+    .tdnumbers {
+        & > .changenumber {
+            display: flex;
+            flex-direction: row;
+            width: 90px;
+
+            .changenumber__additem {
+                max-width: 30px;
+
+                .changenumber__plus {
+                    width: 10px;
+                }
+            }
+
+            .changenumber__count {
+                max-width: 20px;
+                padding-left: 8px;
+            }
+
+            .changenumber__removeitem {
+                max-width: 30px;
+
+                .changenumber__minus {
+                    width: 10px;
+                }
+            }
+        }
+    }
 }
+
+
 .search_h3 {
     font: $font_size+8 $font;
     color: $base-color;
@@ -386,7 +426,7 @@ h3.smallersize {
        /* top: -2px;
         left: 11px;*/
         top:12px;
-        left:160px;
+        left:155px;
         width: 50px;
         height: 40px;
         color: red;
@@ -397,4 +437,33 @@ h3.smallersize {
 .textwarning {
     line-height: 1.7;
     width: 95%;
+}
+.checkboxsize {
+    width: 16px;
+    height: 16px;
+    margin-top:0.1rem;
+}
+
+.accountinput {
+    display: flex;
+    flex-direction: row;
+    margin-left: 40px;
+
+    .accountinput__privateoffice {
+        font: $font_size+2 $font;
+        margin-top: 1.3em;
+        margin-left: 25px;
+    }
+}
+
+
+.clickbutton:active {
+    position:relative;
+    left:2px;
+    top:2px;
+}
+
+.tablewidth {
+    width: 95%;
+    margin: 0 auto;
 }

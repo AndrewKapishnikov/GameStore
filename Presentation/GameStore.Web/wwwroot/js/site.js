@@ -117,5 +117,26 @@ if (searchForm) {
     );
 }
 
-   
 
+document.querySelectorAll('.changenumber__count').forEach(e1 => {
+    if (e1.innerText == 1) {
+        let parent = e1.previousElementSibling;
+        parent.querySelector('.changenumber__minus').addEventListener("click", e => {
+            e.preventDefault();
+        })
+    }
+    if (e1.innerText == 9) {
+        let parent = e1.nextElementSibling;
+        parent.querySelector('.changenumber__plus').addEventListener("click", e => {
+            e.preventDefault();
+        })
+    }
+
+})
+
+//if (addItem.innerText == 9) {
+//    //document.getElementById("changenumber__plus").disabled = true;
+//    document.getElementById("changenumber__plus").addEventListener("click", e => {
+//        e.preventDefault();
+//    })
+//}

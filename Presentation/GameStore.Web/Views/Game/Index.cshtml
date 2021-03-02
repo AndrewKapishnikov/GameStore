@@ -44,7 +44,7 @@
 <div class="mt-4 pl-5">
     <form  asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
         <input type="hidden" name="gameId" value="@Model.GameId" />
-        <button class="incor" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
+        <button class="incor clickbutton" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
     </form>
     <p class="shortdescription">
         @Html.Raw(@Model.ShortDescription)
