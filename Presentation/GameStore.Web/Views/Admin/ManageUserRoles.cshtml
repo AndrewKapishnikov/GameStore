@@ -1,0 +1,37 @@
+﻿@model List<UserRolesViewModel>
+@{
+    var userId = ViewBag.userId;
+    ViewData["Title"] = "Роли пользователя";
+    Layout = "_LayoutAdmin";
+    
+}
+<div class="finish_font ml-4" style="color:@ViewBag.Color">@TempData["TempDataMessage"]</div>
+<h3 class="search_h3">Роли выбранного пользователя</h3>
+<form method="post" action="/admin/manageuserroles"  class="form-location pl-0">
+    <input type="hidden" name="userId" value="@userId" />
+    <div class="card">
+        <div class="card-header finish_font">
+            <h2>Изменить роли для пользователя @ViewBag.Email</h2>
+        </div>
+        <div class="card-body">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="form-check m-1 mt-2">
+                    <input type="hidden" asp-for="@Model[i].RoleId" />
+                    <input type="hidden" asp-for="@Model[i].RoleName" />
+                    <input asp-for="@Model[i].IsSelected" class="form-check-input checkboxsize" />
+                    <label class="form-check-label finish_font ml-1" asp-for="@Model[i].IsSelected">
+                        @Model[i].RoleName
+                    </label>
+                </div>
+            }
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="Сохранить" class="btn btn-success mr-2"
+                   style="width:auto" />
+            <a asp-controller="admin" asp-action="users" asp-route-page="1"
+               class="btn btn-info" style="width:auto">Назад</a>
+        </div>
+    </div>
+</form>

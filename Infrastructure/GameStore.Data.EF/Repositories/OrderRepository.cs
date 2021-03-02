@@ -1,9 +1,6 @@
 ﻿using GameStore.DataEF;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GameStore.Data.EF
@@ -50,7 +47,10 @@ namespace GameStore.Data.EF
                                     .ThenInclude(orderItem => orderItem.Game)
                                     .ThenInclude(game => game.Category)
                                     .Include(order => order.User)
-                                    .Where(order => order.UserId == userId)
+                                    .Where(order => order.UserId == userId 
+                                           && order.PaymentDescription != null 
+                                           && order.DeliveryDescription != null)
+                                    .OrderByDescending(order => order.DateOfOrder)
                                     .ToArrayAsync();
             return ordersDto.Select(Order.Mapper.Map).ToArray();
         }

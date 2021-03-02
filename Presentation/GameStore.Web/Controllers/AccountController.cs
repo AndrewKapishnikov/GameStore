@@ -1,6 +1,7 @@
 ﻿using GameStore.Contractors;
 using GameStore.DataEF;
 using GameStore.Web.App;
+using GameStore.Web.App.Models;
 using GameStore.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -9,12 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GameStore.Web.Controllers
 {
-
     [Authorize]
     public class AccountController: Controller
     {
@@ -24,7 +23,6 @@ namespace GameStore.Web.Controllers
         private readonly IEnumerable<IDeliveryService> deliveryServices;
         private readonly EmailService emailService;
         private readonly OrderService orderService;
-      
 
         private const string emailKey = "emailkey";
         protected ISession Session => httpContextAccessor.HttpContext.Session;
@@ -43,7 +41,6 @@ namespace GameStore.Web.Controllers
             this.emailService = emailService;
             this.orderService = orderService;
         }
-
 
 
         [HttpGet]
@@ -192,7 +189,7 @@ namespace GameStore.Web.Controllers
                 }
 
                 var result = await signInManager.PasswordSignInAsync(
-                    model.Email, model.Password, model.RememberMe, false);
+                    model.Email, model.Password, model.RememberMe, true);
 
                 if (result.Succeeded)
                 {
@@ -212,7 +209,10 @@ namespace GameStore.Web.Controllers
                     //User confirmed and don't make order
                     return  Json(new { Success = true, ReturnUrl = returnUrl });
                 }
-
+                if(result.IsLockedOut)
+                {
+                    ModelState.AddModelError("RegisterError", "Превышено количество попыток входа. Аккаунт блокирован на 15 минут");
+                }
                 ModelState.AddModelError("RegisterError", "Неверный логин или пароль");
             }
 
@@ -239,16 +239,202 @@ namespace GameStore.Web.Controllers
             return RedirectToAction("index", "home");
         }
 
-        //[HttpGet]
-        //[AllowAnonymous]
-        //public IActionResult AccessDenied()
-        //{
-        //    return View();
-        //}
+        [Authorize(Policy = "ModeratorAndAdminRolePolicy")]
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByEmailAsync(model.Email);
+                if (user != null && await userManager.IsEmailConfirmedAsync(user))
+                {
+                    var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+                    var passwordResetLink = Url.Action("ResetPassword", "Account",
+                            new { email = model.Email, token = token }, Request.Scheme);
+
+                    await emailService.SendEmailAsync(model.Email, "Сменить пароль",
+                       $"Перейдите по ссылке, чтобы сбросить старый пароль и задать новый: <a href='{passwordResetLink}'>Ссылка для смены пароля</a>");
+
+                    return View("ForgotPasswordConfirmation");
+                }
+
+                return View("ForgotPasswordConfirmation");
+            }
+
+            return View(model);
+        }
 
 
-     
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (token == null || email == null)
+                ModelState.AddModelError("", "Неверный токен сброса пароля");
 
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
+                    if (result.Succeeded)
+                    {
+                        if (await userManager.IsLockedOutAsync(user))
+                        {
+                            await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+                        }
+                        
+                        TempData["TempDataMessage"] = $"Пароль для учётной записи {model.Email} успешно изменён!";
+                        return RedirectToAction("index", "home");
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return View(model);
+                }
+
+                TempData["TempDataMessage"] = $"Пользователь с электронной почтой {model.Email} не зарегистрирован!";
+                return RedirectToAction("index", "home");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PrivateOffice()
+        {
+            string name = User.Identity.Name;
+            var user = await userManager.FindByNameAsync(name);
+            var orders = await orderService.GetOrdersForUser(user);
+            var userModel = new UserModel(){ Id = user.Id,
+                                             Name = user.Name,
+                                             Surname = user.Surname,
+                                             Email = user.Email,
+                                             Phone = user.PhoneNumber,
+                                             EmailConfirmed = user.EmailConfirmed,
+                                             City = user.City,
+                                             Address = user.Address
+                                           };
+            var model = new UserWithOrderModel()
+            {
+                UserModel = userModel,
+                UserOrdersModels = orders
+            };
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderDetails(int id)
+        {
+           var order = await orderService.GetOrderDetailAsync(id);
+           return View(order);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ChangeUserInfo()
+        {
+            string name = User.Identity.Name;
+            var user = await userManager.FindByNameAsync(name);
+            var userModel = new ChangeUserViewModel()
+            {
+                Email = user.UserName,
+                Name = user.Name,
+                Surname = user.Surname,
+                Address = user.Address,
+                City = user.City,
+                Telephone = user.PhoneNumber
+            };
+            return View(userModel);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserInfo(ChangeUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByNameAsync(model.Email);
+                if (user != null)
+                {
+                    user.Name = model.Name;
+                    user.Surname = model.Surname;
+                    user.PhoneNumber = model.Telephone;
+                    user.City = model.City;
+                    user.Address = model.Address;
+                    var result = await userManager.UpdateAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        TempData["TempDataMessage"] = "Информация о пользователе успешно обновлена!";
+                        return RedirectToAction("privateoffice", "account");
+                    }
+                    TempData["TempDataMessage"] = "При изменении информации о пользователе произошла ошибка!";
+                    return RedirectToAction("privateoffice", "account");
+                }
+            }
+            return View(model);
+        }
+
+
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction("register","account");
+                }
+
+                var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View();
+                }
+
+                TempData["TempDataMessage"] = "Пароль успешно изменён!";
+                return RedirectToAction("privateoffice", "account");
+            }
+
+            return View(model);
+        }
 
 
     }

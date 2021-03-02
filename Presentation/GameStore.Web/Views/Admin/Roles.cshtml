@@ -1,0 +1,58 @@
+﻿@model IEnumerable<IdentityRole>
+@{
+    ViewData["Title"] = "Роли";
+    Layout = "_LayoutAdmin";
+}
+<h3 class="search_h3">Список ролей</h3>
+<div class="finish_font text-danger ml-4 mb-3 textwarning">@TempData["TempDataMessage"]</div>
+@if (Model.Any())
+{
+    <a asp-controller="admin" asp-action="createrole" class="btn btn-success finish_font mb-4 ml-4" style="width:auto">
+        Создать новую роль
+    </a>
+    foreach (var role in Model)
+    {
+        <div class="card mb-3" style="width:60%">
+            <div class="card-header finish_font">
+                Role Id : @role.Id
+            </div>
+            <div class="card-body finish_font">
+                <h5 class="card-title">@role.Name</h5>
+            </div>
+            <div class="card-footer">
+                <form method="post" asp-controller="admin" asp-action="deleterole" asp-route-id="@role.Id">
+                    <span id="confirmDeleteSpan_@role.Id" style="display:none">
+                        <span class="finish_font">Вы уверены что хотите удалить эту роль?</span>
+                        <button type="submit" class="btn btn-danger finish_font mr-1">Да</button>
+                        <a class="btn btn-primary finish_font text-white"
+                           onclick="confirmDelete('@role.Id', false)">Нет</a>
+                    </span>
+                    <span id="deleteSpan_@role.Id">
+                        <a class="btn btn-danger finish_font text-white"
+                           onclick="confirmDelete('@role.Id', true)">Удалить</a>
+                    </span>
+                </form>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="card">
+        <div class="card-header finish_font">
+            Роли не созданы
+        </div>
+        <div class="card-body finish_font">
+            <h5 class="card-title">
+                Нажмите кнопку, чтобы создать новую роль
+            </h5>
+            <a class="btn btn-success finish_font" style="width:auto"
+               asp-controller="admin" asp-action="createrole">
+                Создать роль
+            </a>
+        </div>
+    </div>
+}
+@section Scripts {
+    <script src="~/bundle/js/customscript.min.js"></script>
+}

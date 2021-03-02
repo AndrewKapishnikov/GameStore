@@ -10,5 +10,6 @@ namespace GameStore.Web.App.Models
         public bool EmailConfirmed { get; set; }
         public string Phone { get; set; }
         public string City { get; set; }
+        public string Address { get; set; }
     }
 }

@@ -2,8 +2,11 @@
 @{
     Layout = "_LayoutMain";
     ViewData["Title"] = "Games Store";
+    ViewBag.Description = "Интернет магазин компьютерных игр. В магазине представлены современные компьютерные игры различных жанров. " +
+                           "Вы сможете преобрести любую понравившуюся игру по доступной цене.";
 }
 @await Html.PartialAsync("SearchFormPartial")
+<div class="finish_font text-danger ml-4 mt-3 mb-2">@TempData["TempDataMessage"]</div>
 <div class="cards">
     @for (int i = 0; i < Model.Count; i += 2)
     {
@@ -25,7 +28,7 @@
                     <p class="price">Цена: <span>@Math.Truncate(Model[i].Price) руб.</span></p>
                     <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
                         <input type="hidden" name="gameId" value="@Model[i].GameId" />
-                        <button class="incor" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
+                        <button class="incor clickbutton" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
                     </form>
                 </div>
             </div>
@@ -49,7 +52,7 @@
                         <p class="price">Цена: <span>@Math.Truncate(Model[i + 1].Price) руб.</span></p>
                         <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
                             <input type="hidden" name="gameId" value="@Model[i + 1].GameId" />
-                            <button class="incor" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
+                            <button class="incor clickbutton" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
                         </form>
                     </div>
                 </div>

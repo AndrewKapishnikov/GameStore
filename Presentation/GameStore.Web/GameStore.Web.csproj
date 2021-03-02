@@ -11,6 +11,7 @@
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
     <Content Remove="compilerconfig.json" />
+    <Content Remove="Views\Account\AccessDenied.cshtml" />
     <Content Remove="Views\Admin\ConfirmGame.cshtml" />
     <Content Remove="Views\Order\NextDeliveryChoice.cshtml" />
     <Content Remove="Views\Shared\CssPartial.cshtml" />
@@ -47,6 +48,7 @@
   <ItemGroup>
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
+    <None Include="Views\Account\AccessDenied.cshtml" />
     <None Include="Views\Admin\ConfirmGame.cshtml" />
     <None Include="Views\Order\NextDeliveryChoice.cshtml" />
     <None Include="Views\Shared\CssPartial.cshtml" />
@@ -57,12 +59,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Account\AccessDenied.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Order\NextDeliveryChoice.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Shared\CssPartial.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Views\Order\NextDeliveryChoice.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Account\AccessDenied.cshtml" />
   </ItemGroup>
 
 </Project>

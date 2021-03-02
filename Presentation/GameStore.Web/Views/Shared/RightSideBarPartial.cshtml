@@ -18,12 +18,12 @@
         <form id="loginForm" name="loginForm" action="/account/login" method="POST" asp-antiforgery="true">
             <input type="hidden" id="returnUrl" name="returnUrl" value="@returnUrl" />
             <p>
-                <div id="errors"  class="text-danger ml-3 mr-3 font-base"></div>
+                <div id="errors" class="text-danger ml-3 mr-3 font-base"></div>
             <p>
-                <input asp-for="@Model.Email" class="text" type="text"  title="Введите Email" />
+                <input asp-for="@Model.Email" class="text" type="text" title="Введите Email" placeholder="Email" />
             </p>
             <p>
-                <input asp-for="@Model.Password" class="text"  title="Введите пароль" placeholder="*********" />
+                <input asp-for="@Model.Password" class="text" title="Введите пароль" placeholder="*********" />
             </p>
             <p>
                 <label>
@@ -32,18 +32,27 @@
                 </label>
             </p>
             <p>
-                <input id="loginSubmit" class="ml-3 mt-2 mb-3 login" type="image" src="/images/input.png" title="Войти">
+                <input id="loginSubmit" class="ml-3 mt-2 mb-3 login clickbutton" type="image" src="/images/input.png" title="Войти">
             </p>
             <a asp-controller="account" asp-action="register">Регистрация</a>
-            <a class="lostP" href="/">Забыли пароль?</a>
+            <a class="lostP" asp-controller="account" asp-action="forgotpassword">Забыли пароль?</a>
         </form>
     }
     else
-    { 
+    {
         <h3 class="smallersize">@User.Identity.Name</h3>
-        <form id="logout" asp-controller="account" asp-action="logout" method="POST">
-            <input  class="login mt-4 ml-3" type="image" value="Выйти"  src="/images/output2.png"  title="Выйти">
-        </form>
+        <div class="accountinput">
+            @*<div class="accountinput__privateoffice">
+                <form id="log_out" asp-controller="account" asp-action="logout" method="POST">
+                    <button type="submit" class="btn btn-danger ml-4">Выйти</button>
+                </form>
+            </div>*@
+            <div class="accountinput__logout">
+                <form id="logout" asp-controller="account" asp-action="logout" method="POST">
+                    <input class="login mt-4 ml-3 clickbutton" type="image" value="Выйти" src="/images/output2.png" title="Выйти">
+                </form>
+            </div>
+        </div>
     }
 </div>
 <div class="block">

@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.Web.Controllers
 {
-    [Authorize(Policy = "AdminRolePolicy")]
+    [Authorize(Policy = "ModeratorAndAdminRolePolicy")]
     public class AdminController : Controller
     {
         private IWebHostEnvironment hostingEnvironment;
@@ -42,8 +42,7 @@ namespace GameStore.Web.Controllers
             this.categoryService = categoryService;
             this.orderService = orderService;
         }
-
-
+         
         [HttpGet]
         [Route("{controller}/{action}/{page:int}")]
         public async Task<IActionResult> Games(int? page, int? pagesize, int? category, string name = "",
@@ -81,7 +80,7 @@ namespace GameStore.Web.Controllers
 
             return View(viewModel);
         }
-
+     
         [HttpGet]
         public async Task<IActionResult> AddGame()
         {
@@ -95,7 +94,7 @@ namespace GameStore.Web.Controllers
             return updateMode ? new SelectList(categories, "CategoryId", "Name", categoryId) 
                               : new SelectList(categories, "CategoryId", "Name");
         }
-
+ 
         [HttpPost]
         public async Task<IActionResult> AddGame(GameModel model, IFormFile titleImageFile)
         {
@@ -138,7 +137,6 @@ namespace GameStore.Web.Controllers
             return imageData;
         }
 
-
         [HttpGet]
         [Route("{controller}/{action}/{gameId:int}")]
         public IActionResult ConfirmGame(int gameId)
@@ -146,6 +144,7 @@ namespace GameStore.Web.Controllers
             ViewBag.GameId = gameId;
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> DeleteGame(int gameId)
         {
@@ -153,7 +152,6 @@ namespace GameStore.Web.Controllers
             TempData["TempDataMessage"] = "Игра успешно удалена!";
             return RedirectToAction("games", "admin", new { page = 1 });
         }
-
 
         [HttpGet]
         [Route("{controller}/{action}/{gameId:int}")]
@@ -207,7 +205,7 @@ namespace GameStore.Web.Controllers
             return BadRequest();
         }
 
-      
+
         [HttpGet]
         public IActionResult FileBrowser()
         {
@@ -233,6 +231,7 @@ namespace GameStore.Web.Controllers
             return BadRequest();
         }
 
+    
         [HttpPost]
         public IActionResult DeleteImage(string name)
         {
@@ -258,18 +257,19 @@ namespace GameStore.Web.Controllers
             return dir.GetFiles();
         }
 
-
-
+        [HttpGet]
         public async Task<IActionResult> Categories()
         {
             var categoriesModels = await categoryService.GetAllAsync();
             return View(categoriesModels);
         }
+
         [HttpGet]
         public IActionResult AddCategory()
         {
             return View();
         }
+
 
         [HttpPost]
         public async Task<IActionResult> AddCategory(CategoryModel categoryModel)
@@ -411,6 +411,7 @@ namespace GameStore.Web.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Policy = "AdminRolePolicy")]
         [HttpGet]
         [Route("{controller}/{action}/{userId}")]
         public IActionResult ConfirmDeleteUser(string userId)
@@ -419,6 +420,7 @@ namespace GameStore.Web.Controllers
             return View();
         }
 
+        [Authorize(Policy = "AdminRolePolicy")]
         [HttpPost]
         public async  Task<IActionResult> DeleteUser(string userId)
         {
@@ -443,6 +445,171 @@ namespace GameStore.Web.Controllers
             return RedirectToAction("users", "admin", new { page = 1, userconfirmed = false });
         }
 
+        [Authorize(Policy = "AdminRolePolicy")]
+        [HttpGet]
+        public IActionResult Roles()
+        {
+            var roles = roleManager.Roles;
+            return View(roles);
+        }
+        [Authorize(Policy = "AdminRolePolicy")]
+        [HttpGet]
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
+
+        [Authorize(Policy = "AdminRolePolicy")]
+        [HttpPost]
+        public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                IdentityRole identityRole = new IdentityRole
+                {
+                    Name = model.RoleName
+                };
+
+                IdentityResult result = await roleManager.CreateAsync(identityRole);
+
+                if (result.Succeeded)
+                {
+                    TempData["TempDataMessage"] = "Новая роль успешно создана!";
+                    return RedirectToAction("roles", "admin");
+                }
+
+                foreach (IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+            return View(model);
+        }
+
+        [Authorize(Policy = "AdminRolePolicy")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var role = await roleManager.FindByIdAsync(id);
+
+            if (role == null)
+            {
+                TempData["TempDataMessage"] = $"Роль с Id = {id} не найдена!";
+                return RedirectToAction("roles", "admin");
+            }
+            else
+            {
+                try
+                {
+                    var result = await roleManager.DeleteAsync(role);
+
+                    if (result.Succeeded)
+                    {
+                        TempData["TempDataMessage"] = "Выбранная роль успешно удалена!";
+                        return RedirectToAction("roles", "admin");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+
+                    var roles = roleManager.Roles;
+                    return View("Roles", roles);
+                }
+                catch (DbUpdateException ex)
+                {
+                   TempData["TempDataMessage"] = $"Роль {role.Name} не может быть удалена, так как существуют пользователи с этой ролью. " +
+                                                 $"Если вы хотите удалить эту роль, то сначала удалите всех пользователей с этой ролью.";
+                   return RedirectToAction("roles", "admin");
+                }
+            }
+        }
+
+        [Authorize(Policy = "AdminRolePolicy")]
+        [HttpGet]
+        [Route("{controller}/{action}/{userId}/{color?}")]
+        public async Task<IActionResult> ManageUserRoles(string userId, int color = 1)
+        {
+            ViewBag.userId = userId;
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                TempData["TempDataMessage"] = $"Пользователь с Id = {userId} не найден!";
+                return RedirectToAction("users", "admin", new { page = 1 });
+            }
+            ViewBag.Email = user.Email;
+            ViewBag.Color = ChoiceColor(color);
+            var model = new List<UserRolesViewModel>();
+            foreach (var role in roleManager.Roles)
+            {
+                var userRolesViewModel = new UserRolesViewModel
+                {
+                    RoleId = role.Id,
+                    RoleName = role.Name
+                };
+                if (await userManager.IsInRoleAsync(user, role.Name))
+                { 
+                    userRolesViewModel.IsSelected = true;
+                }
+                else
+                {
+                    userRolesViewModel.IsSelected = false;
+                }
+                model.Add(userRolesViewModel);
+            }
+            return View(model);
+        }
+
+        [Authorize(Policy = "AdminRolePolicy")]
+        [HttpPost]
+        public async Task<IActionResult> ManageUserRoles(List<UserRolesViewModel> model, string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                TempData["TempDataMessage"] = $"Пользователь с Id = {userId} не найден!";
+                return RedirectToAction("users", "admin", new { page = 1});
+            }
+
+            var roles = await userManager.GetRolesAsync(user);
+            var result = await userManager.RemoveFromRolesAsync(user, roles);
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Невозможно удалить существующие роли пользователя");
+                return View(model);
+            }
+
+            result = await userManager.AddToRolesAsync(user,
+                model.Where(x => x.IsSelected).Select(y => y.RoleName));
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Невозможно добавить выбранные роли пользователю");
+                return View(model);
+            }
+
+            var random = new Random().Next(1, 10);
+            TempData["TempDataMessage"] = "Роли для пользователя успешно изменены!";
+            return RedirectToAction("manageuserroles", "admin", new { userId = userId, color = random });
+        }
+
+
+        private string ChoiceColor(int color) => color switch
+        {
+            1 => "#ef031a",
+            2 => "#2703ef",
+            3 => "#16f5f5",
+            4 => "#0ce763",
+            5 => "#38e70c",
+            6 => "#540d0d",
+            7 => "#f3a414",
+            8 => "#f314e2",
+            9 => "#657088",
+            _ => "#e93027"
+        };
 
         private UserModel MapUser(User user)
         {

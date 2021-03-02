@@ -6,7 +6,7 @@
 <div class="finish_font text-danger ml-4">@TempData["TempDataMessage"]</div>
 <h3 class="search_h3">Добавить новую категорию для игр</h3>
 <div class="ml-3">
-   <form asp-controller="admin" asp-action="addcategory" class="form-location pl-0" method="post" enctype="multipart/form-data" asp-antiforgery="true">
+   <form asp-controller="admin" asp-action="addcategory" class="form-location pl-0" method="post" asp-antiforgery="true">
       <div class="text-danger" asp-validation-summary="ModelOnly"></div>
       <div class="form-group mr-5">
           <label asp-for="Name" class="col-form-label"></label>

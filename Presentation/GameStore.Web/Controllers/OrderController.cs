@@ -62,13 +62,13 @@ namespace GameStore.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveItem(int gameId)
+        public async Task<IActionResult> RemoveItem(int gameId, string returnUrl)
         {
-            //TODO
-            //Exception if remove item when session ended
             var model = await orderService.RemoveGameAsync(gameId);
-
-            return View("Index", model);
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+            else
+                return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

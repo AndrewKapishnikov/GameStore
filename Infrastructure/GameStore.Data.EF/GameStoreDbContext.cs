@@ -1,4 +1,5 @@
 ﻿using GameStore.DataEF;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -6,8 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GameStore.Data.EF
 {
@@ -28,9 +28,10 @@ namespace GameStore.Data.EF
             BuildOrders(modelBuilder);
             BuildGames(modelBuilder);
             BuildUsers(modelBuilder);
+         
             base.OnModelCreating(modelBuilder);
         }
-
+        
         private static void BuildCategories(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CategoryDTO>(action =>

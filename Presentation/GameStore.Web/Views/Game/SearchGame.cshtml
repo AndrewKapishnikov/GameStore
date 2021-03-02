@@ -5,7 +5,7 @@
 @await Html.PartialAsync("SearchFormPartial")
 @if (Model.Count != 0)
 {
-    <h3 class="search_h3">Игры по запросу поиска</h3>
+    <h3 class="search_h3 mt-4">Игры по запросу поиска</h3>
     <table class="table table-search">
         <thead>
             <tr>
@@ -24,7 +24,7 @@
                         <a asp-controller="game" asp-action="index" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.Name)</a>
                         <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
                             <input type="hidden" name="gameId" value="@item.GameId" />
-                            <button class="incor" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
+                            <button class="incor clickbutton" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
                         </form>
                     </td>
                     <td>
@@ -43,7 +43,7 @@
                             </div>
                         }
                     </td>
-                    <td class="price">
+                    <td class="price" style="width:80px">
                         @Math.Truncate(item.Price) руб.
                     </td>
                 </tr>

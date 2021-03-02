@@ -1,0 +1,56 @@
+﻿@model ChangeUserViewModel
+@{
+    ViewBag.Title = "Изменить информацию";
+}
+<h3 class="search_h3">Изменить информацию</h3>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="account" asp-action="changeuserinfo" class="form-location" asp-antiforgery="true">
+            <input type="hidden" asp-for="Email" />
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="form-line">
+                <div class="form-group">
+                    <label asp-for="Name" class="col-form-label"></label>
+                    <input asp-for="Name" class="form-control" title="Имя" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Surname" class="col-form-label"></label>
+                    <input asp-for="Surname" class="form-control" title="Фамилия" />
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-line">
+                <div class="form-group">
+                    <label asp-for="City" class="col-form-label"></label>
+                    <input asp-for="City" class="form-control" title="Город" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telephone" class="col-form-label"></label>
+                    <input id="phone" asp-for="Telephone" class="form-control" title="Телефон" />
+                    <span asp-validation-for="Telephone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="col-form-label"></label>
+                <input id="address" asp-for="Address" class="form-control form-input" title="Улица  Дом №  Кв. № " />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-success col-form-label mt-4 mr-2">Сохранить</button>
+            <a asp-controller="account" asp-action="privateoffice">
+                <input type="button" class="btn btn-info col-form-label mt-4" value="Назад">
+            </a>
+        </form>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.maskedinput.min.js"></script>
+    <script>
+        $(function(){
+            $("#phone").mask("+7 (999) 999-99-99");
+
+        });
+    </script>
+}

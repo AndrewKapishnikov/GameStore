@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System;
 //using System.Net.Mail;
 
-
 namespace GameStore.Web.App
 {
     public class EmailService
@@ -39,10 +38,8 @@ namespace GameStore.Web.App
                 await client.SendAsync(message);
 
                 await client.DisconnectAsync(true);
-               
             }
         }
-
 
         public async Task SendOrderEmailAsync(OrderModel model)
         {
@@ -72,10 +69,8 @@ namespace GameStore.Web.App
             message.Append(Math.Truncate(model.TotalPrice) + " руб.</div></div>");
 
             await SendEmailAsync(model.UserEmail,"Данные оформленного заказа", message.ToString());
-
-
         }
 
 
-        }
     }
+}

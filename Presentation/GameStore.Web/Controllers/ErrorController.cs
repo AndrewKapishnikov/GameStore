@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameStore.Web.Controllers
 {
@@ -22,6 +17,7 @@ namespace GameStore.Web.Controllers
                 case 404:
                     ViewBag.ErrorMessage = "Страница не найдена";
                     break;
+                
             }
 
             return View("NotFound");

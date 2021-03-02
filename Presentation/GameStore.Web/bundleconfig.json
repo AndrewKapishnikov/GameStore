@@ -23,5 +23,11 @@
     "inputFiles": [
       "wwwroot/js/filebrowser.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/bundle/js/customscript.min.js",
+    "inputFiles": [
+      "wwwroot/js/customscript.js"
+    ]
   }
 ]

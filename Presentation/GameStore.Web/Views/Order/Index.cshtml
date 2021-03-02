@@ -5,13 +5,13 @@
 @await Html.PartialAsync("SearchFormPartial")
 @if (Model.TotalCount != 0)
 {
-    <h3 class="search_h3">Ваша Корзина</h3>
+    <h3 class="search_h3 mt-4">Ваша Корзина</h3>
     <table class="table table-search table-order">
         <tbody>
             @for (int i = 0; i < Model.OrderItems.Length; i++)
             {
                 <tr>
-                    <td>
+                    <td style="width:70px;">
                         @if (Model.OrderItems[i].ImageData != null)
                         {
                             <div class="orderimage">
@@ -19,14 +19,31 @@
                             </div>
                         }
                     </td>
-                    <td><strong>@Model.OrderItems[i].GameName</strong></td>
-                    <td class="text-center">@Model.OrderItems[i].Count</td>
-                    <td class="text-right price ">@Math.Truncate(Model.OrderItems[i].Price) руб.</td>
+                    <td style="width:200px;"><strong>@Model.OrderItems[i].GameName</strong></td>
+                    <td class="text text-left tdnumbers" style="width:70px" >
+                        <div class="changenumber">
+                            <div  class="changenumber__removeitem">
+                                <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
+                                    <input type ="hidden" name="count" value="-1" />
+                                    <input type="hidden" name="gameId" value="@Model.OrderItems[i].GameId" />
+                                    <input type="submit" id="changenumber__minus" class="changenumber__minus" value="-" title="Уменьшить количество товара на единицу" />
+                                </form>
+                            </div>
+                            <div id="changenumber__count" class="changenumber__count"> @Model.OrderItems[i].Count</div>
+                            <div class="changenumber__additem">
+                                <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
+                                    <input type="hidden" name="gameId" value="@Model.OrderItems[i].GameId" />
+                                    <input type="submit" id="changenumber__plus" class="changenumber__plus" value="+" title="Увеличить количество товара на единицу"/>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-right price" style="width:120px">@(Math.Truncate(Model.OrderItems[i].Price)*Model.OrderItems[i].Count) руб.</td>
                     <td class="text text-left">
-                        <form asp-controller="order" asp-action="removeitem" method="post">
+                        <form asp-controller="order" asp-action="removeitem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
                             <input type="hidden" name="gameId" value="@Model.OrderItems[i].GameId" />
                             <button type="submit">
-                                <img class="deleteimage" src="/images/deleteimage.png" alt="" />
+                                <img class="deleteimage" src="/images/deleteimage.png" alt="" title="Удалить этот товар"/>
                             </button>
                         </form>
                     </td>
@@ -38,20 +55,20 @@
             {
                 <tr>
                     <td colspan="2" class="result text-right ">Стоимость доставки:</td>
-                    <td class="result text-center"></td>
+                    <td class="result text-center pr-0"></td>
                     <td class="result text-right"> @Math.Truncate(Model.DeliveryPrice) руб.</td>
                 </tr>
             }
             <tr>
                 <td colspan="2" class="result text-right ">Итого:</td>
-                <td class="result text-center">@Model.TotalCount</td>
+                <td class="result text-center pl-4" >@Model.TotalCount шт.</td>
                 <td class="result text-right"> @Math.Truncate(Model.TotalPrice) руб.</td>
             </tr>
         </tfoot>
     </table>
     <form asp-controller="order" asp-action="makeorder" method="post">
         <input type="hidden" name="orderId" value="@Model.Id" />
-        <button class="offer"  type="submit"><img class="offer__img" src="/images/orderoffer.png" alt="In Cart"></button>
+        <button class="offer clickbutton"  type="submit"><img class="offer__img" src="/images/orderoffer.png" alt="In Cart"></button>
     </form>
 }
 else

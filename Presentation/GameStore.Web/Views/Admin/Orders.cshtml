@@ -39,7 +39,7 @@
     <thead>
         <tr>
             <th style="padding:0"></th>
-            <th>№</th>
+            <th style="width:30px;">№</th>
             <th>
                 <sort action="orders" controller="admin" up="@Model.SortViewModel.Up"
                       current-sort-order="@Model.SortViewModel.Current"
@@ -124,12 +124,12 @@ else
 @functions {
     private async Task TableString(ShortOrderModel order)
     {
-       <td>@order.Id</td>
+       <td style="width:30px;">@order.Id</td>
        <td style="width:140px;">@order.OrderDateAndTime.ToLocalTime()</td>
        <td>@order.UserEmail</td>
        <td>@order.UserName @order.UserSurname</td>
-       <td class="text-right" style="width:60px;">@Math.Truncate(order.TotalPrice) &#8381;</td>
-       <td class="text-right" style="width:145px;">
+       <td class="text-right" style="width:65px;">@Math.Truncate(order.TotalPrice) &#8381;</td>
+       <td class="text-right" style="width:200px;">
            <a asp-controller="admin" asp-action="orderinfo" asp-route-orderId="@order.Id">
                Детали
            </a> /

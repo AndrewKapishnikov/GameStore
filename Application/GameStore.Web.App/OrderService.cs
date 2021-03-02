@@ -91,8 +91,6 @@ namespace GameStore.Web.App
 
         public async Task<OrderModel> AddGameAsync(int gameId, int count)
         {
-            if (count < 1)
-                throw new InvalidOperationException("The number of added books cannot be less than one!");
             var (hasValue, order) = await TryGetOrderAsync();
             if (!hasValue)
                 order = orderRepository.Create();
@@ -107,7 +105,10 @@ namespace GameStore.Web.App
         {
             var game = await gameRepository.GetGameByIdAsync(gameId, false);
             if (order.Items.TryGet(game, out OrderItem orderItem))
-                orderItem.Count += count;
+            {
+                if (count == 1 && orderItem.Count < 9 || count == -1 && orderItem.Count > 1)
+                    orderItem.Count += count;
+            }
             else
                 order.Items.Add(game, count);
 
@@ -165,9 +166,10 @@ namespace GameStore.Web.App
         }
 
 
-        public async Task<Order[]> GetOrdersForUser(User user)
+        public async Task<ShortOrderModel[]> GetOrdersForUser(User user)
         {
-            return await orderRepository.GetOrdersByUserIdAsync(user.Id);
+           var orders = await orderRepository.GetOrdersByUserIdAsync(user.Id);
+           return orders.Select(ShortOrderMap).ToArray();
         }
 
         public async Task<OrderModel> SetDeliveryAsync(Delivery delivery)
@@ -248,10 +250,18 @@ namespace GameStore.Web.App
             return Map(order);
         }
 
+        public async Task<OrderModel> GetOrderDetailAsync(int orderId)
+        {
+            var order = await orderRepository.GetByIdAsync(orderId);
+            return Map(order);
+        }
+
+
         public async Task RemoveOrderAsync(int orderId)
         {
             var order = await orderRepository.GetByIdAsync(orderId);
             await orderRepository.RemoveAsync(order);
+            Session.RemoveCart();
         }
 
         internal ShortOrderModel ShortOrderMap(Order order)

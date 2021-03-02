@@ -37,8 +37,9 @@ namespace GameStore.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<GameImageData>(options => Configuration.GetSection("ImagesData").Bind(options));
-
+            //TestMode GameStore.MemoryStorage in Infrastructure section
+            //services.Configure<GameImageData>(options => Configuration.GetSection("ImagesData").Bind(options));
+             
             services.AddHttpContextAccessor();
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
@@ -54,11 +55,11 @@ namespace GameStore.Web
             {
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedEmail = true;
-                options.Lockout.MaxFailedAccessAttempts = 100;
+                options.Lockout.MaxFailedAccessAttempts = 7;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-                options.Password.RequireDigit = false;
+                options.Password.RequireDigit = true;
 
             }).AddEntityFrameworkStores<GameStoreDbContext>()
               .AddDefaultTokenProviders()
@@ -69,7 +70,7 @@ namespace GameStore.Web
             {
                 options.Cookie.HttpOnly = true;
                 options.Cookie.SameSite = SameSiteMode.Lax;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.None; //comment with https
+                //options.Cookie.SecurePolicy = CookieSecurePolicy.None; //comment with https
                 options.ExpireTimeSpan = TimeSpan.FromHours(24);
            
             });
@@ -83,6 +84,7 @@ namespace GameStore.Web
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("ModeratorAndAdminRolePolicy", policy => policy.RequireRole("Moderator", "Admin"));
             });
 
             services.AddSingleton<GameMemoryService>();
@@ -115,9 +117,9 @@ namespace GameStore.Web
         {
             if (env.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
-                app.UseExceptionHandler("/Error");
-                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+                app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Error");
+                //app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 app.UseBrowserLink();
             }
             else
@@ -157,7 +159,6 @@ namespace GameStore.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-
             });
         }
 
