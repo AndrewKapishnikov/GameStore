@@ -3,6 +3,7 @@
 <head>
     @await Html.PartialAsync("MetatagsPartial")
     @await Html.PartialAsync("CssPartial")
+    <link href="~/bundle/css/chiefslider.min.css" rel="stylesheet" />
 </head>
 <body>
     <div id="wrapper">
@@ -21,8 +22,11 @@
         <div class="clear"></div>
         @await Html.PartialAsync("FooterPartial")
     </div>
+    <script src="~/bundle/js/chiefslider.min.js"></script>
     @await Html.PartialAsync("ScriptsPartial")
     @await Html.PartialAsync("ValidationsScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+ 

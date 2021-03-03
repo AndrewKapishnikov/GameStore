@@ -64,10 +64,10 @@ body {
 
 /*Начало блока slider*/
 #slider {
-	height:254px;
+	height:250px;
 	background-image:url(../images/slider_bg.png);
 	background-repeat:repeat-x;
-	padding-top:30px;
+	padding-top:36px;
 }
 
 #slider_img {

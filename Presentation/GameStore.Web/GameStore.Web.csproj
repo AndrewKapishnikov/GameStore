@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\bundle\js\" />
+    <Folder Include="wwwroot\images\slider\" />
     <Folder Include="wwwroot\images\uploads\" />
   </ItemGroup>
 

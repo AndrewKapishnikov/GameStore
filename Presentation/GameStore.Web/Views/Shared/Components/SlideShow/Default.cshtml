@@ -1,0 +1,30 @@
+﻿@model FileInfo[]
+<div class="header-slider">
+    <div class="slider" data-slider="chiefslider">
+        <div class="slider__container">
+            <div class="slider__wrapper">
+                <div class="slider__items">
+                    @foreach (var file in Model)
+                    {
+                        <div class="slider__item">
+                            <div class="slider__item-container">
+                                <div class="slider__item-content">
+                                    <img class="slider__image"  src="~/images/slider/@file.Name" alt="thumb" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <a href="#" class="slider__control" data-slide="prev"></a>
+        <a href="#" class="slider__control" data-slide="next"></a>
+        <ol class="slider__indicators">
+            @foreach (var file in Model)
+            {
+                <li data-slide-to="@file.Name"></li>
+            }
+        </ol>
+    </div>
+</div>
+

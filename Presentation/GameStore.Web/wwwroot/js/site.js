@@ -23,7 +23,6 @@ if (loginButton) {
 }
 
 async function SubmitLogin(email, password, remember, returnUrl, orderUrl) {
-    
     const response = await fetch("/account/login", {
         method: "POST",
         headers: {
@@ -131,12 +130,17 @@ document.querySelectorAll('.changenumber__count').forEach(e1 => {
             e.preventDefault();
         })
     }
-
+    //if (addItem.innerText == 9) {
+    //    //document.getElementById("changenumber__plus").disabled = true;
+    //    document.getElementById("changenumber__plus").addEventListener("click", e => {
+    //        e.preventDefault();
+    //    })
+    //}
 })
 
-//if (addItem.innerText == 9) {
-//    //document.getElementById("changenumber__plus").disabled = true;
-//    document.getElementById("changenumber__plus").addEventListener("click", e => {
-//        e.preventDefault();
-//    })
-//}
+const $slider = document.querySelector('[data-slider="chiefslider"]');
+const slider = new ChiefSlider($slider, {
+    loop: true,
+    autoplay: true,
+    interval: 7000,
+});
