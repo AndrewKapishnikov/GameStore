@@ -1,9 +1,10 @@
 ﻿@model OrderModel
 @{
     ViewData["Title"] = "Заказ оформлен";
+
 }
 <h3 class="search_h3">Заказ оформлен и будет передан в службу доставки</h3>
-<div class="finish_font mt-2 mb-2">Дата и время оформления заказа: @Model.OrderDateAndTime.ToLocalTime()</div>
+<div class="finish_font mt-2 mb-2">Дата и время оформления заказа: @Model.OrderDateAndTime.ConvertUtcToMoscowTime().ToString(CultureInfo.InvariantCulture) </div>
 <div class="finish_font mb-3 text_color">
     На почту @Model.UserEmail отправлено письмо с параметрами заказа
 </div>
@@ -50,7 +51,7 @@
 @if (Model.DeliveryName == "Courier")
 {
     <div class="mt-2 finish_font">
-        г. @Model.UserCity 
+        г. @Model.UserCity
         @Model.UserAddress
     </div>
 }
@@ -59,6 +60,25 @@
 <pre class="finish_font">
 @Model.PaymentDescription
 </pre>
+@if (Model.PaymentName == "PayPalService")
+{
+    <div class="mt-2 finish_font">
+        TransactionId: @ViewBag.transactionPayPal["TransactionId"]
+    </div>
+    <div class="mt-2 finish_font">
+        Статус платежа: @ViewBag.transactionPayPal["PaymentStatus"]
+    </div>
+    <div class="mt-2 finish_font">
+        Оплаченная сумма: @ViewBag.transactionPayPal["GrossTotal"] руб.
+    </div>
+    <div class="mt-2 finish_font">
+        Платеж отправлен пользователю PayPal: @ViewBag.transactionPayPal["BusinessEmail"]
+    </div>
+    <div class="mt-2 finish_font">
+        Плательщик: @ViewBag.transactionPayPal["PayerEmail"]
+    </div>
+
+}
 
 <p class="mt-5 finish_font">
     <a asp-controller="Home" asp-action="index">Вернутся в магазин за новыми покупками...</a>.

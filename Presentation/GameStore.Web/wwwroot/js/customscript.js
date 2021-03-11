@@ -10,3 +10,4 @@
         $('#' + confirmDeleteSpan).hide();
     }
 }
+

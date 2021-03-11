@@ -18,12 +18,12 @@
       "wwwroot/css/chiefslider.css"
     ]
   },
-  {
-    "outputFileName": "wwwroot/bundle/js/site.min.js",
-    "inputFiles": [
-      "wwwroot/js/site.js"
-    ]
-  },
+  //{
+  //  "outputFileName": "wwwroot/bundle/js/site.min.js",
+  //  "inputFiles": [
+  //    "wwwroot/js/site.js"
+  //  ]
+  //},
   {
     "outputFileName": "wwwroot/bundle/js/minfilebrowser.min.js",
     "inputFiles": [

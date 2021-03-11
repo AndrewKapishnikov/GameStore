@@ -533,3 +533,10 @@ ChiefSlider.prototype.moveTo = function (index) {
 ChiefSlider.prototype.refresh = function () {
     this._refresh();
 };
+
+const $slider = document.querySelector('[data-slider="chiefslider"]');
+const slider = new ChiefSlider($slider, {
+    loop: true,
+    autoplay: true,
+    interval: 7000,
+});

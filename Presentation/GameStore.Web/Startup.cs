@@ -8,16 +8,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.IO;
 using GameStore.DataEF;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using GameStore.Web.ExtensionsMethods;
 using GameStore.Contractors;
 using GameStore.Contractors.Interfaces;
 using WebMarkupMin.AspNetCore5;
+using GameStore.Web.App.Models;
 
 namespace GameStore.Web
 {
@@ -26,9 +23,11 @@ namespace GameStore.Web
         public Startup(IConfiguration configuration)
         {
             var builder = new ConfigurationBuilder()
-                           .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Infrastructure/GameStore.MemoryStorage"))
-                           .AddJsonFile("dataimages.json")
+                            //.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Infrastructure/GameStore.MemoryStorage"))
+                            //.AddJsonFile("dataimages.json")
+                           .AddEnvironmentVariables()
                            .AddConfiguration(configuration);
+        
           
             Configuration = builder.Build();
         }
@@ -57,6 +56,7 @@ namespace GameStore.Web
                 options.SignIn.RequireConfirmedEmail = true;
                 options.Lockout.MaxFailedAccessAttempts = 7;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                options.Lockout.AllowedForNewUsers = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireDigit = true;
@@ -64,21 +64,17 @@ namespace GameStore.Web
             }).AddEntityFrameworkStores<GameStoreDbContext>()
               .AddDefaultTokenProviders()
               .AddErrorDescriber<CustomIdentityErrorDescriber>();
- 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options => 
+
+            services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;
                 options.Cookie.SameSite = SameSiteMode.Lax;
                 //options.Cookie.SecurePolicy = CookieSecurePolicy.None; //comment with https
-                options.ExpireTimeSpan = TimeSpan.FromHours(24);
-           
-            });
-            services.ConfigureApplicationCookie(options =>
-            {
+                options.ExpireTimeSpan = TimeSpan.FromDays(7);
+                options.SlidingExpiration = true;
                 options.LoginPath = "/account/register";
                 options.AccessDeniedPath = "/account/accessdenied";
-         
+                
             });
 
             services.AddAuthorization(options =>
@@ -86,6 +82,10 @@ namespace GameStore.Web
                 options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("ModeratorAndAdminRolePolicy", policy => policy.RequireRole("Moderator", "Admin"));
             });
+         
+            services.AddScoped(service => Configuration.GetSection("PayPal").Get<PayPalConfig>());
+            services.AddScoped(service => Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            services.AddScoped<EmailService>();
 
             services.AddSingleton<GameMemoryService>();
             services.AddSingleton<OrderMemoryService>();
@@ -93,15 +93,14 @@ namespace GameStore.Web
             services.AddSingleton<GameService>();
             services.AddSingleton<OrderService>();
             services.AddSingleton<CategoryService>();
-            services.AddSingleton(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
-            services.AddSingleton<EmailService>();
-
+  
             services.AddSingleton<IDeliveryService, PostamateDeliveryService>();
             services.AddSingleton<IDeliveryService, CourierDeliveryService>();
             services.AddSingleton<IPaymentService, CashPaymentService>();
+            services.AddSingleton<IPaymentService, PayPalPaymentService>();
             services.AddSingleton<IPaymentService, EmulateKassaPaymentService>();
             services.AddSingleton<IExternalWebService, EmulateKassaPaymentService>();
-
+         
             services.AddWebMarkupMin(options =>
             {
                 options.AllowMinificationInDevelopmentEnvironment = true;
@@ -129,7 +128,8 @@ namespace GameStore.Web
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
             }
-            //app.UseHttpsRedirection();
+
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
            
             app.UseRouting();
@@ -138,9 +138,9 @@ namespace GameStore.Web
             app.UseAuthorization();
 
             app.UseSession();
-
-            //When use this middleware BrowserLink don't work. Uncomment in Production mode
-            //app.UseWebMarkupMin();
+              
+           //When use this middleware BrowserLink don't work. Uncomment in Production mode
+            app.UseWebMarkupMin();
 
             //For testing purposes
             //app.Use(async (context, next) =>

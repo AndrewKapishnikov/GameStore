@@ -64,7 +64,7 @@ button:focus {
 
 .searh_submit {
   background-image: url(/images/go_search.png);
-  width: 185px;
+  width: 182px;
   height: 28px; }
 
 #naviHeader ul {
@@ -175,14 +175,15 @@ button:focus {
     flex-direction: row;
     width: 90px; }
     .table-order .tdnumbers > .changenumber .changenumber__additem {
-      max-width: 30px; }
+      /* max-width: 30px;
+*/ }
       .table-order .tdnumbers > .changenumber .changenumber__additem .changenumber__plus {
         width: 10px; }
     .table-order .tdnumbers > .changenumber .changenumber__count {
       max-width: 20px;
       padding-left: 8px; }
     .table-order .tdnumbers > .changenumber .changenumber__removeitem {
-      max-width: 30px; }
+      /* max-width: 30px;*/ }
       .table-order .tdnumbers > .changenumber .changenumber__removeitem .changenumber__minus {
         width: 10px; }
 
@@ -219,16 +220,24 @@ button:focus {
   padding-left: 25px;
   font-size: 1.1em;
   font: 15px Tahoma, Geneva, sans-serif; }
+  .form-location .form-group {
+    margin-bottom: 1px;
+    width: 60%; }
+    .form-location .form-group .form-control {
+      margin-right: 10px; }
   .form-location .form-line {
     display: flex;
     width: 60%;
     justify-content: space-between; }
     .form-location .form-line input {
       height: 1.4em; }
-  .form-location .form-group {
-    margin-bottom: 1px; }
+    .form-location .form-line .form-group {
+      margin-bottom: 1px;
+      width: 45%; }
+      .form-location .form-line .form-group .form-control {
+        margin-right: 10px; }
   .form-location .form-input {
-    width: 60%;
+    width: 100%;
     height: 1.4em;
     font-size: 1em;
     margin-bottom: 3px; }
@@ -303,7 +312,7 @@ h3.smallersize {
   margin-top: 7px; }
 
 .input-width {
-  width: 30%;
+  width: 40%;
   height: 1.4em;
   font-size: 1em;
   margin-bottom: 3px; }
@@ -346,3 +355,10 @@ h3.smallersize {
 .tablewidth {
   width: 95%;
   margin: 0 auto; }
+
+@media (min-width: 1550px) {
+  .lSale_block, .rSale_block {
+    width: 340px; } }
+
+.paypal .paypal__img {
+  width: 220px; }

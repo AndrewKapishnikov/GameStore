@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <!--<AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>-->
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
@@ -11,10 +13,11 @@
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
     <Content Remove="compilerconfig.json" />
-    <Content Remove="Views\Account\AccessDenied.cshtml" />
+    <Content Remove="Views\Account\DeniedAccess.cshtml" />
     <Content Remove="Views\Admin\ConfirmGame.cshtml" />
-    <Content Remove="Views\Order\NextDeliveryChoice.cshtml" />
-    <Content Remove="Views\Shared\CssPartial.cshtml" />
+    <Content Remove="Views\Order\NextDelivery.cshtml" />
+    <Content Remove="Views\Order\ServicePayPal.cshtml" />
+    <Content Remove="Views\Shared\_CssPartial.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +28,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="WebMarkupMin.AspNet.Common" Version="2.9.0" />
@@ -48,28 +55,11 @@
   <ItemGroup>
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
-    <None Include="Views\Account\AccessDenied.cshtml" />
+    <None Include="Views\Account\DeniedAccess.cshtml" />
     <None Include="Views\Admin\ConfirmGame.cshtml" />
-    <None Include="Views\Order\NextDeliveryChoice.cshtml" />
-    <None Include="Views\Shared\CssPartial.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Shared\CssPartial.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Account\AccessDenied.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Order\NextDeliveryChoice.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\CssPartial.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Order\NextDeliveryChoice.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Account\AccessDenied.cshtml" />
+    <None Include="Views\Order\NextDelivery.cshtml" />
+    <None Include="Views\Order\ServicePayPal.cshtml" />
+    <None Include="Views\Shared\_CssPartial.cshtml" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GameStore.Web.App
 {
@@ -22,6 +23,8 @@ namespace GameStore.Web.App
         public decimal DeliveryPrice { get; set; }
 
         public string PaymentDescription { get; set; }
+        public string PaymentName { get; set; }
+        public IReadOnlyDictionary<string, string> PaymentParameters { get; set; }
 
     }
 }

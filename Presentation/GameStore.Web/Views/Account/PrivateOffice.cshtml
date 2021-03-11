@@ -66,7 +66,7 @@
         {
             <tr>
                 <td>@order.Id</td>
-                <td style="width:110px">@order.OrderDateAndTime.ToLocalTime()</td>
+                <td style="width:110px">@order.OrderDateAndTime.ConvertUtcToMoscowTime().ToString(CultureInfo.InvariantCulture)</td>
                 <td class="text-right" style="width:30px">@order.TotalCount</td>
                 <td class="text-right">@Math.Truncate(@order.TotalPrice) руб.</td>
                 <td class="text-right" style="width:120px">

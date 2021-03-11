@@ -12,7 +12,7 @@
 
 .slider__items {
     display: flex;
-    transition: transform 1.5s ease;
+    transition: transform 2s ease;
 }
 
 .slider_disable-transition {

@@ -5,13 +5,14 @@
 }
 <h3 class="search_h3">Информация о заказе</h3>
 <div class="finish_font">Номер заказа: №@Model.Id</div>
+
 @if (Model.PaymentDescription == null)
 {
-    <div class="finish_font mt-2 mb-2">Пользователь отправил товар в корзину: @Model.OrderDateAndTime.ToLocalTime()</div>
+    <div class="finish_font mt-2 mb-2">Пользователь отправил товар в корзину: @Model.OrderDateAndTime.ConvertUtcToMoscowTime().ToString(CultureInfo.InvariantCulture)</div>
 }
 else
 {
-    <div class="finish_font mt-2 mb-2">Дата и время оформления заказа: @Model.OrderDateAndTime.ToLocalTime()</div>
+    <div class="finish_font mt-2 mb-2">Дата и время оформления заказа: @Model.OrderDateAndTime.ConvertUtcToMoscowTime().ToString(CultureInfo.InvariantCulture)</div>
 }
 <table class="table table-sm table-striped finish_font">
     <thead class="thead-dark">
@@ -99,6 +100,24 @@ else
     <div class="finish_font">
         <pre>@Model.PaymentDescription</pre>
     </div>
+    @if (Model.PaymentName == "PayPalService")
+    {
+        <div class="mt-2 finish_font">
+            TransactionId: @Model.PaymentParameters["TransactionId"]
+        </div>
+        <div class="mt-2 finish_font">
+            Статус платежа: @Model.PaymentParameters["PaymentStatus"]
+        </div>
+        <div class="mt-2 finish_font">
+            Оплаченная сумма: @Model.PaymentParameters["GrossTotal"] руб.
+        </div>
+        <div class="mt-2 finish_font">
+            Платеж отправлен пользователю PayPal: @Model.PaymentParameters["BusinessEmail"]
+        </div>
+        <div class="mt-2 finish_font">
+            Плательщик: @Model.PaymentParameters["PayerEmail"]
+        </div>
+    }
 }
 else
 {
@@ -109,5 +128,5 @@ else
 }
 
 <a asp-controller="admin" asp-action="orders" asp-route-makeorder="false" asp-route-page="1">
-    <input type="button" class="btn btn-info col-form-label mt-5 finish_font" value="Назад">
+    <input type="button" class="btn btn-info col-form-label mt-4 finish_font" value="Назад">
 </a>

@@ -6,7 +6,6 @@
 <form asp-controller="order" asp-action="startpayment" method="post" class="form-location">
     <input type="hidden" name="orderId" value="@ViewBag.OrderId" />
     <div class="form-group">
-        @*<label for="code" class="mb-3 labelChoice">Способ оплаты:</label>*@
         <select class="form-control form-input" name="service">
             @foreach (var method in Model)
             {

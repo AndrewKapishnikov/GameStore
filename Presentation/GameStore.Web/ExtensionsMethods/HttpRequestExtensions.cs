@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-
 namespace GameStore.Web.ExtensionsMethods
 {
     public static class ExtensionHttpRequest
