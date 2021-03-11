@@ -138,9 +138,3 @@ document.querySelectorAll('.changenumber__count').forEach(e1 => {
     //}
 })
 
-const $slider = document.querySelector('[data-slider="chiefslider"]');
-const slider = new ChiefSlider($slider, {
-    loop: true,
-    autoplay: true,
-    interval: 7000,
-});

@@ -2,6 +2,7 @@
 using GameStore.Contractors.Interfaces;
 using GameStore.DataEF;
 using GameStore.Web.App;
+using GameStore.Web.App.Models;
 using GameStore.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -125,7 +126,7 @@ namespace GameStore.Web.Controllers
                 var dataSteps = deliveryService.FirstStep(order);
                 var webService = webExternalService.SingleOrDefault(s => s.Name == service);
                 if (webService == null)
-                    return View("NextDeliveryChoice", dataSteps);
+                    return View("NextDelivery", dataSteps);
 
                 var returnUri = GetReturnUri(nameof(NextDeliveryStep), webService.Name);
                 var redirectUri = await webService.GetServiceUriAsync(dataSteps.Parameters, returnUri);
@@ -141,7 +142,7 @@ namespace GameStore.Web.Controllers
             var deliveryService = deliveryServices.Single(p => p.Name == service);
             var dataSteps = deliveryService.NextStep(step, values);
             if (!dataSteps.IsFinal)
-                return View("NextDeliveryChoice", dataSteps);
+                return View("NextDelivery", dataSteps);
 
             var delivery = deliveryService.GetDelivery(dataSteps);
             await orderService.SetDeliveryAsync(delivery);
@@ -174,6 +175,13 @@ namespace GameStore.Web.Controllers
                     var finishModel = await SetPaymentAndSendEmail(paymentService, dataStepsPayment);
                     return View("FinishOrder", finishModel);
                 }
+                if (paymentService.Name == "PayPalService")
+                {
+                    var orderModel = await orderService.GetOrderDetailAsync(orderId);
+                    ViewBag.payPalConfig = HttpContext.RequestServices.GetService(typeof(PayPalConfig)) as PayPalConfig;
+                    ViewBag.returnUrl = GetReturnUri(nameof(SuccessPayPal), paymentService.Name, orderId);
+                    return View("ServicePayPal", orderModel);
+                }
                 var webService = webExternalService.SingleOrDefault(s => s.Name == service);
                 if (webService == null)
                     return View("NextPaymentChoice", dataStepsPayment);
@@ -203,6 +211,25 @@ namespace GameStore.Web.Controllers
             
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> SuccessPayPal(string tx, string service, int orderId)
+        {
+            var order = await orderService.GetOrderAsync();
+            var payPalConfig = HttpContext.RequestServices.GetService(typeof(PayPalConfig)) as PayPalConfig;
+            var result = PDTHolder.Success(tx, payPalConfig);
+            if (result != null && orderId == order.Id)
+            {
+                var values = result.GetPayPalPaymentParameters(orderId);
+                var paymentService = paymentServices.Single(choice => choice.Name == service);
+                var dataSteps = paymentService.NextStep(1, values);
+                var finishModel = await SetPaymentAndSendEmail(paymentService, dataSteps);
+                ViewBag.transactionPayPal = values;
+                return View("FinishOrder", finishModel);
+            }
+            return View();
+        }
+
         private async Task<OrderModel> SetPaymentAndSendEmail(IPaymentService paymentService, DataSteps data)
         {
             var payment = paymentService.GetPayment(data);
@@ -214,6 +241,18 @@ namespace GameStore.Web.Controllers
         private Uri GetReturnUri(string action, string serviceName)
         {
             var query = QueryString.Create("service", serviceName);
+            return CreateReturnUri(action, query);
+        }
+
+        private Uri GetReturnUri(string action, string serviceName, int orderId)
+        {
+            var query = QueryString.Create("service", serviceName);
+            query += QueryString.Create("orderId", orderId.ToString());
+            return CreateReturnUri(action, query);
+        }
+
+        private Uri CreateReturnUri(string action, QueryString query)
+        {
             var builder = new UriBuilder(Request.Scheme, Request.Host.Host)
             {
                 Path = Url.Action(action),
@@ -223,8 +262,6 @@ namespace GameStore.Web.Controllers
                 builder.Port = Request.Host.Port.Value;
             return builder.Uri;
         }
-
-
 
     }
 }

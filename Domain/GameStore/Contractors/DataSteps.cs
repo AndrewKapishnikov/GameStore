@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameStore.Contractors
 {
@@ -21,7 +19,7 @@ namespace GameStore.Contractors
         private readonly Dictionary<string, string> parameters;
         public IReadOnlyDictionary<string, string> Parameters => parameters;
 
-        //This is what you need to enter in the next step.
+        //This is what you need to enter in the next step
         private readonly List<Field> fields;
         public IReadOnlyList<Field> Fields => fields;
 

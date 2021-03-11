@@ -44,44 +44,7 @@ namespace GameStore.Web.App
             }
             return (false, null);
         }
-
-        internal OrderModel Map(Order order)
-        {
-            var orderItemModel = new List<OrderItemModel>();
-            foreach (OrderItem orderItem in order.Items)
-            {
-                orderItemModel.Add(new OrderItemModel()
-                {
-                    GameId = orderItem.Game?.Id ?? 0,
-                    GameName = orderItem.Game?.Name,
-                    Publisher = orderItem.Game?.Publisher,
-                    Category = orderItem.Game?.Category?.Name,
-                    Count = orderItem.Count,
-                    Price = orderItem.Price,
-                    ImageData = orderItem.Game?.ImageData
-                });
-            }
-
-            return new OrderModel
-            {
-                Id = order.Id,
-                OrderDateAndTime = order.DateOfOrder,
-                OrderReviewed = order.OrderReviewed,
-                OrderItems = orderItemModel.ToArray(),
-                TotalCount = order.TotalCount,
-                TotalPrice = order.TotalPrice,
-                DeliveryName = order.Delivery?.NameDelivery,
-                DeliveryDescription = order.Delivery?.Description,
-                DeliveryPrice = order.Delivery?.DeliveryPrice ?? 0m,
-                PaymentDescription = order.Payment?.Description,
-                UserName = string.Concat(order.User?.Name," ",order.User?.Surname),
-                UserCity = order.User?.City,
-                UserAddress = order.User?.Address,
-                UserEmail = order.User?.Email,
-                UserPhone = order.User?.PhoneNumber                                
-            };
-        }
-
+        
         internal async Task<IEnumerable<Game>> GetGamesAsync(Order order)
         {
             var gameIds = order.Items.Select(orderItem => orderItem.Game.Id);
@@ -262,6 +225,45 @@ namespace GameStore.Web.App
             var order = await orderRepository.GetByIdAsync(orderId);
             await orderRepository.RemoveAsync(order);
             Session.RemoveCart();
+        }
+
+        internal OrderModel Map(Order order)
+        {
+            var orderItemModel = new List<OrderItemModel>();
+            foreach (OrderItem orderItem in order.Items)
+            {
+                orderItemModel.Add(new OrderItemModel()
+                {
+                    GameId = orderItem.Game?.Id ?? 0,
+                    GameName = orderItem.Game?.Name,
+                    Publisher = orderItem.Game?.Publisher,
+                    Category = orderItem.Game?.Category?.Name,
+                    Count = orderItem.Count,
+                    Price = orderItem.Price,
+                    ImageData = orderItem.Game?.ImageData
+                });
+            }
+
+            return new OrderModel
+            {
+                Id = order.Id,
+                OrderDateAndTime = order.DateOfOrder,
+                OrderReviewed = order.OrderReviewed,
+                OrderItems = orderItemModel.ToArray(),
+                TotalCount = order.TotalCount,
+                TotalPrice = order.TotalPrice,
+                DeliveryName = order.Delivery?.NameDelivery,
+                DeliveryDescription = order.Delivery?.Description,
+                DeliveryPrice = order.Delivery?.DeliveryPrice ?? 0m,
+                PaymentDescription = order.Payment?.Description,
+                PaymentName = order.Payment?.NamePayment,
+                PaymentParameters = order.Payment?.Parameters,
+                UserName = string.Concat(order.User?.Name, " ", order.User?.Surname),
+                UserCity = order.User?.City,
+                UserAddress = order.User?.Address,
+                UserEmail = order.User?.Email,
+                UserPhone = order.User?.PhoneNumber
+            };
         }
 
         internal ShortOrderModel ShortOrderMap(Order order)

@@ -1,0 +1,28 @@
+﻿@model OrderModel
+@{
+    ViewData["Title"] = "Оплата заказа через PayPal";
+}
+<h3 class="search_h3">Оплата заказа через платёжную систему PayPal</h3>
+<form method="post" action="@ViewBag.payPalConfig.PostUrl">
+    <input type="hidden" name="upload" value="1" />
+    <input type="hidden" name="return" value="@ViewBag.returnUrl" />
+    <input type="hidden" name="cmd" value="_cart" />
+    <input type="hidden" name="business" value="@ViewBag.payPalConfig.Business" />
+    <input type="hidden" name="currency_code" value="RUB" />
+    @{ var index = 1;}
+    @foreach (var item in Model.OrderItems)
+    {
+        <input type="hidden" name="item_number_@index" value="@item.GameId" />
+        <input type="hidden" name="item_name_@index" value="@item.GameName" />
+        <input type="hidden" name="amount_@index" value="@Math.Truncate(item.Price)" />
+        <input type="hidden" name="quantity_@index" value="@item.Count" />
+        index++;
+    }
+    <input type="hidden" name="item_number_@index" value="@Model.Id" />
+    <input type="hidden" name="item_name_@index" value="Delivery" />
+    <input type="hidden" name="amount_@index" value="@Math.Truncate(Model.DeliveryPrice)" />
+    <input type="hidden" name="quantity_@index" value="1" />
+    <button class="paypal clickbutton ml-3 mt-2" type="submit">
+        <img class="paypal__img" src="/images/paynow.png" alt="In Cart">
+    </button>
+</form>

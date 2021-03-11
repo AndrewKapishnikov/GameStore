@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Заказы";
     Layout = "_LayoutAdmin";
+
 }
 <div class="finish_font text-danger ml-4">@TempData["TempDataMessage"]</div>
 <h3 class="search_h3">Список заказов</h3>
@@ -125,7 +126,9 @@ else
     private async Task TableString(ShortOrderModel order)
     {
        <td style="width:30px;">@order.Id</td>
-       <td style="width:140px;">@order.OrderDateAndTime.ToLocalTime()</td>
+       <td style="width:140px;">
+           @order.OrderDateAndTime.ConvertUtcToMoscowTime().ToString(CultureInfo.InvariantCulture)
+       </td>
        <td>@order.UserEmail</td>
        <td>@order.UserName @order.UserSurname</td>
        <td class="text-right" style="width:65px;">@Math.Truncate(order.TotalPrice) &#8381;</td>

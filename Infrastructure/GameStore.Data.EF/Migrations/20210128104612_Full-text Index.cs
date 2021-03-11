@@ -25,8 +25,9 @@ namespace GameStore.Data.EF.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.Sql("CREATE FULLTEXT CATALOG StoreFullTextCatalog AS DEFAULT", suppressTransaction: true);
-            migrationBuilder.Sql("CREATE FULLTEXT INDEX ON Games(Name, Publisher) KEY INDEX PK_Games WITH STOPLIST = SYSTEM", suppressTransaction: true);
+           // Транзакция миграции для microsoft Azure не проходит
+           // migrationBuilder.Sql("CREATE FULLTEXT CATALOG StoreFullTextCatalog AS DEFAULT", suppressTransaction: true);
+           // migrationBuilder.Sql("CREATE FULLTEXT INDEX ON Games(Name, Publisher) KEY INDEX PK_Games WITH STOPLIST = SYSTEM", suppressTransaction: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

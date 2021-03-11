@@ -243,7 +243,7 @@ namespace GameStore.Web.Controllers
         [HttpGet]
         public IActionResult AccessDenied()
         {
-            return View();
+            return View("DeniedAccess");
         }
 
         [HttpGet]

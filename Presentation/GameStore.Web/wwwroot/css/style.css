@@ -352,9 +352,10 @@ body {
 	margin-bottom:10px;
 }
 
-#loginForm a.lostP {
-	border:none;
-}
+	#loginForm a.lostP {
+		border: none;
+		padding:0 0 0 10px;
+	}
 
 #loginForm a:hover {
 	text-decoration:underline;
