@@ -1,32 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameStore
 {
-    public class OrderMemoryStorage
+    public class OrderMemoryEntity
     {
         public int Id { get; }
 
-        private List<OrderItemMemoryStorage> items;
+        private List<OrderItemMemoryEntity> items;
 
-        public OrderMemoryStorage(int id, IEnumerable<OrderItemMemoryStorage> items)
+        public OrderMemoryEntity(int id, IEnumerable<OrderItemMemoryEntity> items)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
             Id = id;
-            this.items = new List<OrderItemMemoryStorage>(items);
+            this.items = new List<OrderItemMemoryEntity>(items);
         }
 
-        public IReadOnlyCollection<OrderItemMemoryStorage> Items => items;
+        public IReadOnlyCollection<OrderItemMemoryEntity> Items => items;
       
 
         public int TotalCount => items.Sum(item => item.Count);
         public decimal TotalPrice => items.Sum(item => item.Price * item.Count);
 
-        public OrderItemMemoryStorage GetItem(int gameId)
+        public OrderItemMemoryEntity GetItem(int gameId)
         {
             int index = items.FindIndex(item => item.GameId == gameId);
             if (index == -1)
@@ -35,7 +33,7 @@ namespace GameStore
             return items[index];
         }
 
-        public bool TryGetOrderItem(int gameId, out OrderItemMemoryStorage orderItem)
+        public bool TryGetOrderItem(int gameId, out OrderItemMemoryEntity orderItem)
         {
             int index = items.FindIndex(item => item.GameId == gameId);
             if (index == -1)
@@ -52,10 +50,10 @@ namespace GameStore
         }
         public void AddOrderItem(int gameId, decimal price,int count)
         {
-            if (TryGetOrderItem(gameId, out OrderItemMemoryStorage orderItem))
+            if (TryGetOrderItem(gameId, out OrderItemMemoryEntity orderItem))
                 throw new InvalidOperationException("Game already exists!");
 
-            items.Add(new OrderItemMemoryStorage(gameId, count, price));
+            items.Add(new OrderItemMemoryEntity(gameId, count, price));
         }
 
         public void RemoveOrderItem(int gameId)

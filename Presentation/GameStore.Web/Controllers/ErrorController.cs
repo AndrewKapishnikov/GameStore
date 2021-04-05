@@ -27,8 +27,8 @@ namespace GameStore.Web.Controllers
         public IActionResult Error()
         { 
             var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            var exceptionMessage = exceptionHandlerPathFeature.Error.Message;
-            var exceptionPath = exceptionHandlerPathFeature.Path;
+            var exceptionMessage = exceptionHandlerPathFeature?.Error?.Message ?? "Exception Page";
+            var exceptionPath = exceptionHandlerPathFeature?.Path;
   
             switch (exceptionMessage)
             {
@@ -49,7 +49,7 @@ namespace GameStore.Web.Controllers
 
             ViewBag.ExceptionMessage = exceptionMessage;
             ViewBag.ExceptionPath = exceptionPath;
-            ViewBag.StackTrace = exceptionHandlerPathFeature.Error.StackTrace;
+            ViewBag.StackTrace = exceptionHandlerPathFeature?.Error?.StackTrace;
 
             return View("Error");
         }

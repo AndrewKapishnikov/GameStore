@@ -1,12 +1,9 @@
 ﻿using GameStore.DataEF;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameStore
 {
+    //ValueObject OrderItem
     public class OrderItem
     {
         private readonly OrderItemDTO dto;
@@ -15,7 +12,11 @@ namespace GameStore
         {
             this.dto = dto;
         }
-        public int Id => dto.Id;
+
+        public int Count => dto.Count;
+        public decimal Price => dto.Price;
+        public Order Order => Order.Mapper.Map(dto.Order);
+       
         public Game Game
         {
             get
@@ -25,28 +26,20 @@ namespace GameStore
                 else
                     return null;
             }
-            
-        }
-        public Order Order
-        {
-            get => Order.Mapper.Map(dto.Order);
         }
 
-        public int Count
+        public void ChangeCountByOneItem(int count)
         {
-            get { return dto.Count; }
-            set
-            {
-                ThrowIfCountGreaterThanZero(value);
-                dto.Count = value;
-            }
+            if (count == 1 && Count < 9 || count == -1 && Count > 1)
+                dto.Count += count;
         }
 
-        public decimal Price
+        public void ChangeCount(int count)
         {
-            get => dto.Price;
-            set => dto.Price = value;
+            if (count > 0 && count < 10)
+                dto.Count = count;
         }
+       
         private static void ThrowIfCountGreaterThanZero(int count)
         {
             if (count <= 0)
@@ -61,6 +54,9 @@ namespace GameStore
                     throw new ArgumentNullException(nameof(order));
 
                 ThrowIfCountGreaterThanZero(count);
+
+                if (game == null)
+                    throw new ArgumentNullException(nameof(game));
 
                 return new OrderItemDTO
                 {

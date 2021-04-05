@@ -154,7 +154,7 @@ namespace GameStore.Data.EF
                                         .ToArrayAsync();
                     }
                     break;
-                case nameof(Game.Publisher):
+                case nameof(Game.GameDescription.Publisher):
                     if (sortByAscending)
                     {
                         games = await db.Games.OrderBy(p => p.Publisher)

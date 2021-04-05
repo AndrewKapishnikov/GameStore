@@ -1,4 +1,5 @@
 ﻿using GameStore.Web.App;
+using GameStore.Web.App.Interfaces;
 using GameStore.Web.App.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,8 +9,8 @@ namespace GameStore.Web.Components
 {
     public class CategoryMenuViewComponent: ViewComponent
     {
-        private readonly CategoryService category;
-        public CategoryMenuViewComponent(CategoryService categoryService)
+        private readonly AbstractCategoryService category;
+        public CategoryMenuViewComponent(AbstractCategoryService categoryService)
         {
             category = categoryService;
         }

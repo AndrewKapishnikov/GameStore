@@ -42,6 +42,7 @@ namespace GameStore.Web.App
         [Required(ErrorMessage = "Заполните поле Дата выхода")]
         [Display(Name = "Дата выхода:")]
         public DateTime ReleaseDate { get; set; }
+
         public DateTime DateOfAdding { get; set; }
 
         [Display(Name = "Игра находится в продаже")]

@@ -15,6 +15,9 @@ using GameStore.Contractors;
 using GameStore.Contractors.Interfaces;
 using WebMarkupMin.AspNetCore5;
 using GameStore.Web.App.Models;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using GameStore.Web.App.Interfaces;
 
 namespace GameStore.Web
 {
@@ -23,11 +26,10 @@ namespace GameStore.Web
         public Startup(IConfiguration configuration)
         {
             var builder = new ConfigurationBuilder()
-                            //.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Infrastructure/GameStore.MemoryStorage"))
-                            //.AddJsonFile("dataimages.json")
+                           //.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Infrastructure/GameStore.MemoryStorage"))
+                           //.AddJsonFile("dataimages.json")   //TestMode MemoryStorage
                            .AddEnvironmentVariables()
                            .AddConfiguration(configuration);
-        
           
             Configuration = builder.Build();
         }
@@ -36,9 +38,9 @@ namespace GameStore.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //TestMode GameStore.MemoryStorage in Infrastructure section
+            //TestMode MemoryStorage GameStore.MemoryStorage in Infrastructure section
             //services.Configure<GameImageData>(options => Configuration.GetSection("ImagesData").Bind(options));
-             
+
             services.AddHttpContextAccessor();
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
@@ -48,7 +50,9 @@ namespace GameStore.Web
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
             });
 
-            services.AddMemoryStorageRepositories();
+            //TestMode MemoryStorage
+            //services.AddMemoryStorageRepositories();
+
             services.AddEntityFrameworkRepositories(Configuration.GetConnectionString("GameStore"));
             services.AddIdentity<User, IdentityRole>(options =>
             {
@@ -85,14 +89,16 @@ namespace GameStore.Web
          
             services.AddScoped(service => Configuration.GetSection("PayPal").Get<PayPalConfig>());
             services.AddScoped(service => Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
-            services.AddScoped<EmailService>();
+            services.AddScoped<AbstractEmailService, EmailService>();
 
-            services.AddSingleton<GameMemoryService>();
-            services.AddSingleton<OrderMemoryService>();
+            //TestMode MemoryStorage
+            //services.AddSingleton<GameMemoryService>();
+            //services.AddSingleton<OrderMemoryService>();
 
-            services.AddSingleton<GameService>();
-            services.AddSingleton<OrderService>();
-            services.AddSingleton<CategoryService>();
+            services.AddScoped<IChangeGameService, GameService>();
+            services.AddScoped<IGetGamesService, GameService>();
+            services.AddScoped<AbstractCategoryService, CategoryService>();
+            services.AddScoped<AbstractOrderService, OrderService>();
   
             services.AddSingleton<IDeliveryService, PostamateDeliveryService>();
             services.AddSingleton<IDeliveryService, CourierDeliveryService>();
@@ -106,8 +112,8 @@ namespace GameStore.Web
                 options.AllowMinificationInDevelopmentEnvironment = true;
                 options.AllowCompressionInDevelopmentEnvironment = true;
             }).AddHtmlMinification()
-              .AddHttpCompression();              
-
+              .AddHttpCompression();
+          
             services.AddControllersWithViews();
         }
 
@@ -117,21 +123,19 @@ namespace GameStore.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
                 //app.UseExceptionHandler("/Error");
                 //app.UseStatusCodePagesWithReExecute("/Error/{0}");
-                app.UseBrowserLink();
             }
             else
             {
                 app.UseHsts();
                 app.UseExceptionHandler("/Error");
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
-
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-           
+          
             app.UseRouting();
 
             app.UseAuthentication();
@@ -139,7 +143,7 @@ namespace GameStore.Web
 
             app.UseSession();
               
-           //When use this middleware BrowserLink don't work. Uncomment in Production mode
+            //When use this middleware BrowserLink don't work. Uncomment in Production mode
             app.UseWebMarkupMin();
 
             //For testing purposes
@@ -149,6 +153,33 @@ namespace GameStore.Web
             //    var routes = context.Request.RouteValues;
             //    await next.Invoke();
             //});
+           
+            var supportedCultures = new[]
+            {
+                new CultureInfo("en-US"),
+                new CultureInfo("en"),
+                new CultureInfo("ru-RU"),
+                new CultureInfo("ru")
+            };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("ru-RU"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = s =>
+                {
+                    if (s.Context.Request.Path.StartsWithSegments(new PathString("/js")) &&
+                       !s.Context.User.IsInRole("Admin"))
+                    {
+                        s.Context.Response.StatusCode = 404;
+                        s.Context.Response.Redirect("/error/404");
+                    }
+                }
+            });
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,30 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GameStore.MemoryStorage
 {
     public class OrderMemoryRepository : IOrderMemoryRepository
     {
-        private readonly List<OrderMemoryStorage> orders = new List<OrderMemoryStorage>();
-        public OrderMemoryStorage Create()
+        private readonly List<OrderMemoryEntity> orders = new List<OrderMemoryEntity>();
+        public OrderMemoryEntity Create()
         {
             int nextId = orders.Count + 1;
-            var order = new OrderMemoryStorage(nextId, new OrderItemMemoryStorage[0]);
+            var order = new OrderMemoryEntity(nextId, new OrderItemMemoryEntity[0]);
 
             orders.Add(order);
 
             return order;
         }
 
-        public OrderMemoryStorage GetById(int id)
+        public OrderMemoryEntity GetById(int id)
         {
             return orders.Single(order => order.Id == id);
         }
 
-        public void Update(OrderMemoryStorage order){;}
+        public void Update(OrderMemoryEntity order){;}
       
     }
 }

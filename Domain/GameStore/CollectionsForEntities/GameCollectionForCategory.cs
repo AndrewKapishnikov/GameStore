@@ -3,14 +3,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameStore
 {
     public class GameCollectionForCategory: IReadOnlyCollection<Game>
     {
-        private readonly List<Game> items;
+        private readonly IReadOnlyCollection<Game> items;
 
         public GameCollectionForCategory(IEnumerable<GameDTO> gameDto)
         {

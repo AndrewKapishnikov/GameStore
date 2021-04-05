@@ -1,4 +1,4 @@
-﻿using GameStore.DataEF;
+﻿using GameStore.Web.App.Interfaces;
 using GameStore.Web.App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GameStore.Web.App
 {
-    public class GameService
+    public class GameService: IGetGamesService, IChangeGameService
     {
         private readonly IGameRepository gameRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
@@ -56,19 +56,17 @@ namespace GameStore.Web.App
 
         public async Task<(IReadOnlyCollection<GameModel>, int)> GetGamesForAdminByPageAsync(int pageNo, int pageSize, SortGameStates sortGame)
         {
-            string sortColumn = null;
-            bool sortByAscending = true;
-            (sortColumn, sortByAscending) = ParseSortGameState(sortGame);
+            var (sortColumn, sortByAscending) = ParseSortGameState(sortGame);
             var games = await gameRepository.GetGamesForAdminPanel(pageNo - 1, pageSize, sortColumn, sortByAscending);
             var gameModel = games.Select(Map).ToArray();
             var countGames = await gameRepository.TotalItems();
-
             return (gameModel, countGames);
         }
 
-        public async Task<(IReadOnlyCollection<GameModel>, int)> GetGamesForAdminByCategoryAndNameAsync(int pageNo, int pageSize, SortGameStates sortGame, string gameName, int categoryId)
+        public async Task<(IReadOnlyCollection<GameModel>, int)> GetGamesForAdminByCategoryAndNameAsync(
+                                                                 int pageNo, int pageSize, SortGameStates sortGame, string gameName, int categoryId)
         {
-            IQueryable<GameDTO> games = gameRepository.GetAllGames();
+            var games = gameRepository.GetAllGames();
 
             if (categoryId != 0)
             {
@@ -107,12 +105,12 @@ namespace GameStore.Web.App
                     break;
             }
 
-            var count = await games.CountAsync();
-            var gamesFinal = await games.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var count = games.Count();
+            var gamesFinal = games.Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
             var gamesModel = gamesFinal.Select(Game.Mapper.Map).Select(Map).ToArray();
 
-            return (gamesModel, count);
-
+            return await Task.FromResult((gamesModel, count));
+          
         }
 
         private (string, bool) ParseSortGameState(SortGameStates sortGame)
@@ -128,10 +126,10 @@ namespace GameStore.Web.App
                     sortColumn = nameof(Game.Name); sortByAscending = false;
                     break;
                 case SortGameStates.PublisherAsc:
-                    sortColumn = nameof(Game.Publisher); sortByAscending = true;
+                    sortColumn = nameof(Game.GameDescription.Publisher); sortByAscending = true;
                     break;
                 case SortGameStates.PublisherDesc:
-                    sortColumn = nameof(Game.Publisher); sortByAscending = false;
+                    sortColumn = nameof(Game.GameDescription.Publisher); sortByAscending = false;
                     break;
                 case SortGameStates.PriceAsc:
                     sortColumn = nameof(Game.Price); sortByAscending = true;
@@ -152,58 +150,58 @@ namespace GameStore.Web.App
 
         public async Task AddNewGame(GameModel gameNew)
         {
-            var game = CreateGameDTO(gameNew);
-            await gameRepository.AddGame(Game.Mapper.Map(game));
+            var game = CreateGame(gameNew);
+            await gameRepository.AddGame(game);
                 
         }
 
         public async Task UpdateGame(GameModel gameNew)
         {
-            var game = CreateGameDTO(gameNew);
+            var game = CreateGame(gameNew);
             game.Id = gameNew.GameId;
-            await gameRepository.UpdateGame(Game.Mapper.Map(game));
+            await gameRepository.UpdateGame(game);
             Session.RemoveCart();
         }
 
-        public async Task RemoveGame(int gameId)
+        public async Task RemoveGameByGameId(int gameId)
         {
             var game = await gameRepository.GetGameByIdAsync(gameId, false);
             await gameRepository.RemoveGame(game);
             Session.RemoveCart();
         }
 
-        private GameModel Map(Game game)
+        public static GameModel Map(Game game)
         {
             return new GameModel
             {
                 GameId = game.Id,
-                Publisher = game.Publisher,
-                Category = game.Category.Name,
-                CategoryId = game.Category.Id,
+                Category = game.Category?.Name,
+                CategoryId = game.Category?.Id,
                 Name = game.Name,
-                ShortDescription = game.ShortDescription,
-                Description = game.Description,
                 Price = game.Price,
                 ImageData = game.ImageData,
-                ReleaseDate = game.ReleaseDate,
                 DateOfAdding = game.DateOfAdding,
-                OnSale = game.OnSale
+                OnSale = game.OnSale,
+                Publisher = game.GameDescription.Publisher,
+                ShortDescription = game.GameDescription.ShortDescription,
+                Description = game.GameDescription.Description,
+                ReleaseDate = game.GameDescription.ReleaseDate,
             };
         }
-        private GameDTO CreateGameDTO(GameModel gameModel)
+        public static Game CreateGame(GameModel gameModel)
         {
             
             if (gameModel.DateOfAdding == DateTime.MinValue) gameModel.DateOfAdding = DateTime.UtcNow;
-            return Game.DTOFactory.Create(gameModel.Name,
-                                          gameModel.Publisher,
-                                          gameModel.ShortDescription,
-                                          gameModel.Description,
-                                          gameModel.Price,
-                                          gameModel.ImageData,
-                                          gameModel.ReleaseDate,
-                                          gameModel.DateOfAdding,
-                                          gameModel.OnSale,
-                                          gameModel.CategoryId ?? 1);
+            var gameDescription = GameDescription.Create(gameModel.Publisher, gameModel.ShortDescription,
+                                                         gameModel.Description, gameModel.ReleaseDate);
+            return Game.Mapper.Map(Game.DTOFactory.Create(
+                                        gameModel.Name,
+                                        gameModel.Price,
+                                        gameModel.ImageData,
+                                        gameModel.DateOfAdding,
+                                        gameModel.OnSale,
+                                        gameModel.CategoryId ?? 1,
+                                        gameDescription));
         }
     }
 }

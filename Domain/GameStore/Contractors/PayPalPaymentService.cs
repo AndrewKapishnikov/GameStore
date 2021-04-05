@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace GameStore.Contractors
 {
-    public class PayPalPaymentService:IPaymentService
+    public class PayPalPaymentService: IPaymentService
     {
          public string Name => "PayPalService";
 

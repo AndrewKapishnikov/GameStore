@@ -56,6 +56,7 @@
         <div class="form-group mt-3">
             <label for="titleImageFile" class="col-form-label mr-1">Главная картинка</label>
             <input type="file" id="titleImageFile" name="titleImageFile" class="btn" title="Главная картинка" />
+            <span asp-validation-for="ImageData" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-success col-form-label mt-3">Добавить</button>
     </form>
@@ -74,6 +75,8 @@
 
         });
 
+        //In order for the semicolons to be validated normally,
+        //we need to change the scripts section in the view as follows
         $.validator.methods.range = function (value, element, param) {
             var globalizedValue = value.replace(",", ".");
             return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
