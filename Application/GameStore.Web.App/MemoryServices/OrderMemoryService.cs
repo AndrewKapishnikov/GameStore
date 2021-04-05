@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GameStore.Web.App
 {
@@ -25,7 +24,7 @@ namespace GameStore.Web.App
         }
         public bool TryGetModel(out OrderModel model)
         {
-            if (TryGetOrder(out OrderMemoryStorage order))
+            if (TryGetOrder(out OrderMemoryEntity order))
             {
                 model = Map(order);
                 return true;
@@ -34,7 +33,7 @@ namespace GameStore.Web.App
             return false;
         }
 
-        internal bool TryGetOrder(out OrderMemoryStorage order)
+        internal bool TryGetOrder(out OrderMemoryEntity order)
         {
             if (Session.TryGetCart(out Cart cart))
             {
@@ -45,7 +44,7 @@ namespace GameStore.Web.App
             return false;
         }
 
-        internal OrderModel Map(OrderMemoryStorage order)
+        internal OrderModel Map(OrderMemoryEntity order)
         {
             var games = GetGames(order);
             var items = order.Items.Join(games, orderItem => orderItem.GameId,
@@ -70,7 +69,7 @@ namespace GameStore.Web.App
         }
 
 
-        internal IEnumerable<GameMemoryStorage> GetGames(OrderMemoryStorage order)
+        internal IEnumerable<GameMemoryEntity> GetGames(OrderMemoryEntity order)
         {
             var gameIds = order.Items.Select(item => item.GameId);
 
@@ -82,7 +81,7 @@ namespace GameStore.Web.App
             if (count < 1)
                 throw new InvalidOperationException("The number of added books cannot be less than one!");
 
-            if (!TryGetOrder(out OrderMemoryStorage order))
+            if (!TryGetOrder(out OrderMemoryEntity order))
                 order = orderRepository.Create();
 
             AddOrUpdateGame(order, gameId, count);
@@ -91,10 +90,10 @@ namespace GameStore.Web.App
             return Map(order);
         }
 
-        internal void AddOrUpdateGame(OrderMemoryStorage order, int gameId, int count)
+        internal void AddOrUpdateGame(OrderMemoryEntity order, int gameId, int count)
         {
             var game = gameRepository.GetGameById(gameId);
-            if (order.TryGetOrderItem(gameId, out OrderItemMemoryStorage orderItem))
+            if (order.TryGetOrderItem(gameId, out OrderItemMemoryEntity orderItem))
                 orderItem.Count += count;
             else
                 order.AddOrderItem(game.Id, game.Price, count);
@@ -113,15 +112,15 @@ namespace GameStore.Web.App
             return Map(order);
         }
 
-        public OrderMemoryStorage GetOrder()
+        public OrderMemoryEntity GetOrder()
         {
-            if (TryGetOrder(out OrderMemoryStorage order))
+            if (TryGetOrder(out OrderMemoryEntity order))
                 return order;
 
             throw new InvalidOperationException("Session is empty.");
         }
 
-        internal void UpdateSession(OrderMemoryStorage order)
+        internal void UpdateSession(OrderMemoryEntity order)
         {
             var cart = new Cart(order.Id, order.TotalCount, order.TotalPrice);
             Session.Set(cart);

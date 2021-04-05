@@ -1,6 +1,7 @@
 ﻿using GameStore.Contractors;
 using GameStore.DataEF;
 using GameStore.Web.App;
+using GameStore.Web.App.Interfaces;
 using GameStore.Web.App.Models;
 using GameStore.Web.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -21,18 +22,18 @@ namespace GameStore.Web.Controllers
         private readonly SignInManager<User> signInManager;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IEnumerable<IDeliveryService> deliveryServices;
-        private readonly EmailService emailService;
-        private readonly OrderService orderService;
+        private readonly AbstractEmailService emailService;
+        private readonly AbstractOrderService orderService;
 
         private const string emailKey = "emailkey";
         protected ISession Session => httpContextAccessor.HttpContext.Session;
 
-        public AccountController (UserManager<User> userManager,
-                                  SignInManager<User> signInManager,
-                                  IHttpContextAccessor httpContextAccessor,
-                                  IEnumerable<IDeliveryService> deliveryServices,
-                                  EmailService emailService,
-                                  OrderService orderService)
+        public AccountController(UserManager<User> userManager,
+                                 SignInManager<User> signInManager,
+                                 IHttpContextAccessor httpContextAccessor,
+                                 IEnumerable<IDeliveryService> deliveryServices,
+                                 AbstractEmailService emailService,
+                                 AbstractOrderService orderService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -42,12 +43,11 @@ namespace GameStore.Web.Controllers
             this.orderService = orderService;
         }
 
-
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register()
         {
-            return View();
+            return View("Register");
         }
 
         [AcceptVerbs("Get", "Post")]
@@ -250,7 +250,7 @@ namespace GameStore.Web.Controllers
         [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
-            return View();
+            return View("ForgotPassword");
         }
 
         [HttpPost]
@@ -264,7 +264,7 @@ namespace GameStore.Web.Controllers
                 {
                     var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
-                    var passwordResetLink = Url.Action("ResetPassword", "Account",
+                    var passwordResetLink = Url?.Action("ResetPassword", "Account",
                             new { email = model.Email, token = token }, Request.Scheme);
 
                     await emailService.SendEmailAsync(model.Email, "Сменить пароль",
@@ -404,7 +404,7 @@ namespace GameStore.Web.Controllers
         [HttpGet]
         public IActionResult ChangePassword()
         {
-            return View();
+            return View("ChangePassword");
         }
 
         [HttpPost]
@@ -426,7 +426,7 @@ namespace GameStore.Web.Controllers
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
-                    return View();
+                    return View("ChangePassword");
                 }
 
                 TempData["TempDataMessage"] = "Пароль успешно изменён!";

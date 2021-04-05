@@ -19,7 +19,7 @@ namespace GameStore.Contractors
         private readonly Dictionary<string, string> parameters;
         public IReadOnlyDictionary<string, string> Parameters => parameters;
 
-        //This is what you need to enter in the next step
+        //This is what you need to enter for the next step. You will select these fields in the view.
         private readonly List<Field> fields;
         public IReadOnlyList<Field> Fields => fields;
 

@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameStore
 {
@@ -44,7 +42,7 @@ namespace GameStore
             return game.Select(Map).ToArray();
         }
 
-        private GameModel Map(GameMemoryStorage game)
+        private GameModel Map(GameMemoryEntity game)
         {
             return new GameModel
             {
@@ -56,7 +54,7 @@ namespace GameStore
                 Description = game.Description,
                 Price = game.Price,
                 ImageData = game.ImageData,
-                ReleaseDate = DateTime.Now,       //Stub here
+                ReleaseDate = DateTime.Now,       
                 DateOfAdding = game.DateOfAdding
             };
         }

@@ -2,6 +2,7 @@
 using GameStore.Contractors.Interfaces;
 using GameStore.DataEF;
 using GameStore.Web.App;
+using GameStore.Web.App.Interfaces;
 using GameStore.Web.App.Models;
 using GameStore.Web.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -17,19 +18,17 @@ namespace GameStore.Web.Controllers
 {
     public class OrderController: Controller
     {
-        //If I delete an order from the database, it is necessary to delete an entry in the cart, if such an order exists there //TODO this
-
         //private readonly OrderMemoryService orderService;
-        private readonly OrderService orderService;
+        private readonly AbstractOrderService orderService;
         private readonly UserManager<User> userManager;
-        private readonly EmailService emailService;
+        private readonly AbstractEmailService emailService;
         private readonly IEnumerable<IDeliveryService> deliveryServices;
         private readonly IEnumerable<IPaymentService> paymentServices;
         private readonly IEnumerable<IExternalWebService> webExternalService;
 
-        public OrderController(OrderService orderService,
+        public OrderController(AbstractOrderService orderService,
                                UserManager<User> userManager,
-                               EmailService emailService,
+                               AbstractEmailService emailService,
                                IEnumerable<IDeliveryService> deliveryServices,
                                IEnumerable<IPaymentService> paymentServices,
                                IEnumerable<IExternalWebService> webExternalService)
@@ -52,11 +51,13 @@ namespace GameStore.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddItem(int gameId, string returnUrl, int count = 1)
+        public async Task<IActionResult> AddItem(int gameId, string returnUrl, int count)
         {
+            if (count != -1)
+                count = 1;
             await orderService.AddGameAsync(gameId, count);
 
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            if (!string.IsNullOrEmpty(returnUrl) && (Url?.IsLocalUrl(returnUrl) ?? true))
                 return Redirect(returnUrl);
             else
                 return RedirectToAction("Index", "Home");
@@ -66,7 +67,7 @@ namespace GameStore.Web.Controllers
         public async Task<IActionResult> RemoveItem(int gameId, string returnUrl)
         {
             var model = await orderService.RemoveGameAsync(gameId);
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            if (!string.IsNullOrEmpty(returnUrl) && (Url?.IsLocalUrl(returnUrl) ?? true))
                 return Redirect(returnUrl);
             else
                 return RedirectToAction("Index", "Home");
@@ -76,7 +77,6 @@ namespace GameStore.Web.Controllers
         public async Task<IActionResult> UpdateItem(int gameId, int count)
         {
             var model = await orderService.UpdateGameAsync(gameId, count);
-
             return View("Index", model);
         }
 
@@ -84,12 +84,12 @@ namespace GameStore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> MakeOrder(int orderId)
         {
-            if(User.Identity.IsAuthenticated)
+            if(User?.Identity.IsAuthenticated ?? false)
             {
-                var user = await userManager.FindByNameAsync(User.Identity.Name);
                 var order = await orderService.GetOrderAsync();
                 if(orderId == order.Id)
                 {
+                    var user = await userManager.FindByNameAsync(User.Identity.Name);
                     await orderService.SetUserForOrderAsync(user, orderId);
                     var deliveryChoice = deliveryServices.ToDictionary(service => service.Name, service => service.Title);
                     ViewBag.OrderId = orderId;
@@ -99,7 +99,7 @@ namespace GameStore.Web.Controllers
             }
             else
             {
-                ViewBag.orderUrl = $"{Request.Path.ToString().ToLower()}?orderId={orderId}";
+                ViewBag.orderUrl = $"{Request?.Path.ToString().ToLower()}?orderId={orderId}";
                 return View("../Account/Register", new RegisterViewModel());
             }
            
@@ -110,15 +110,15 @@ namespace GameStore.Web.Controllers
         [Authorize]
         public async Task<IActionResult> StartDelivery(string service, int orderId)
         {
-            var deliveryService = deliveryServices.Single(p => p.Name == service);
             var order = await orderService.GetOrderAsync(); 
             if( order.Id == orderId)
             {
-                if (deliveryService.Name == "Courier")
+                var deliveryService = deliveryServices.Single(p => p.Name == service);
+                if (deliveryService is CourierDeliveryService)
                 {
                     var data = deliveryService.FirstStep(order);
                     var delivery = deliveryService.GetDelivery(data);
-                    await orderService.SetDeliveryAsync(delivery);
+                    var orderModel = await orderService.SetDeliveryAsync(delivery);
                     ViewBag.OrderId = order.Id;
                     var paymentChoice = paymentServices.ToDictionary(service => service.Name, service => service.Title);
                     return View("PaymentChoice", paymentChoice);
@@ -149,7 +149,7 @@ namespace GameStore.Web.Controllers
 
             var order = await orderService.GetOrderAsync();
             ViewBag.OrderId = order.Id;
-            if (deliveryService.Name == "Postamate")
+            if (deliveryService is PostamateDeliveryService)
             {
                 var payment = paymentServices.Where(p => p.Name != "Cash").ToDictionary(service => service.Name, service => service.Title);
                 return View("PaymentChoice", payment);
@@ -165,17 +165,17 @@ namespace GameStore.Web.Controllers
         [Authorize]
         public async Task<IActionResult> StartPayment(string service, int orderId)
         {
-            var paymentService = paymentServices.Single(choice => choice.Name == service);
             var order = await orderService.GetOrderAsync();
             if(order.Id == orderId)
             {
+                var paymentService = paymentServices.Single(choice => choice.Name == service);
                 var dataStepsPayment = paymentService.FirstStep(order);
-                if (paymentService.Name == "Cash")
+                if (paymentService is CashPaymentService)
                 {
                     var finishModel = await SetPaymentAndSendEmail(paymentService, dataStepsPayment);
                     return View("FinishOrder", finishModel);
                 }
-                if (paymentService.Name == "PayPalService")
+                if (paymentService is PayPalPaymentService)
                 {
                     var orderModel = await orderService.GetOrderDetailAsync(orderId);
                     ViewBag.payPalConfig = HttpContext.RequestServices.GetService(typeof(PayPalConfig)) as PayPalConfig;
@@ -227,7 +227,7 @@ namespace GameStore.Web.Controllers
                 ViewBag.transactionPayPal = values;
                 return View("FinishOrder", finishModel);
             }
-            return View();
+            return View("SuccessPayPal");
         }
 
         private async Task<OrderModel> SetPaymentAndSendEmail(IPaymentService paymentService, DataSteps data)
@@ -253,13 +253,16 @@ namespace GameStore.Web.Controllers
 
         private Uri CreateReturnUri(string action, QueryString query)
         {
+             
             var builder = new UriBuilder(Request.Scheme, Request.Host.Host)
             {
                 Path = Url.Action(action),
                 Query = query.ToString(),
             };
+          
             if (Request.Host.Port != null)
-                builder.Port = Request.Host.Port.Value;
+                    builder.Port = Request.Host.Port.Value;
+           
             return builder.Uri;
         }
 

@@ -67,7 +67,7 @@ namespace GameStore.Web.App
                     switch (sKey)
                     {
                         case "mc_gross":
-                            //sValue = sValue.Replace(".", ",");
+                            sValue = sValue.Replace(".", ",");
                             pDt.GrossTotal = Convert.ToDouble(sValue);
                             break;
                         case "invoice":
@@ -80,7 +80,7 @@ namespace GameStore.Web.App
                             pDt.PayerFirstName = Convert.ToString(sValue);
                             break;
                         case "mc_fee":
-                            //sValue = sValue.Replace(".", ",");
+                            sValue = sValue.Replace(".", ",");
                             pDt.PaymentFee = Convert.ToDouble(sValue);
                             break;
                         case "business":

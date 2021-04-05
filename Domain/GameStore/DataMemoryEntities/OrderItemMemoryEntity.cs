@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameStore
 {
-    public class OrderItemMemoryStorage
+    public class OrderItemMemoryEntity
     {
         private int count;
         public int GameId { get; }
@@ -21,7 +17,7 @@ namespace GameStore
                 count = value;
             }
         }
-        public OrderItemMemoryStorage(int gameId, int count, decimal price)
+        public OrderItemMemoryEntity(int gameId, int count, decimal price)
         {
             ThrowIfInvalidCount(count);
             GameId = gameId;

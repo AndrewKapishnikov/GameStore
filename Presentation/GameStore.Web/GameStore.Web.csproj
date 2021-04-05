@@ -13,11 +13,11 @@
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
     <Content Remove="compilerconfig.json" />
-    <Content Remove="Views\Account\DeniedAccess.cshtml" />
+    <!--<Content Remove="Views\Account\DeniedAccess.cshtml" />
     <Content Remove="Views\Admin\ConfirmGame.cshtml" />
     <Content Remove="Views\Order\NextDelivery.cshtml" />
     <Content Remove="Views\Order\ServicePayPal.cshtml" />
-    <Content Remove="Views\Shared\_CssPartial.cshtml" />
+    <Content Remove="Views\Shared\_CssPartial.cshtml" />-->
   </ItemGroup>
 
   <ItemGroup>
@@ -55,11 +55,13 @@
   <ItemGroup>
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
-    <None Include="Views\Account\DeniedAccess.cshtml" />
+    <!--<None Include="Views\Account\DeniedAccess.cshtml" />
     <None Include="Views\Admin\ConfirmGame.cshtml" />
     <None Include="Views\Order\NextDelivery.cshtml" />
     <None Include="Views\Order\ServicePayPal.cshtml" />
-    <None Include="Views\Shared\_CssPartial.cshtml" />
+    <None Include="Views\Shared\_CssPartial.cshtml" />-->
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

@@ -3,19 +3,18 @@ using MailKit.Net.Smtp;
 using System.Text;
 using System.Threading.Tasks;
 using System;
+using GameStore.Web.App.Interfaces;
 //using System.Net.Mail;
 
 namespace GameStore.Web.App
 {
-    public class EmailService
+    public class EmailService: AbstractEmailService
     {
-        private readonly EmailConfiguration emailConfiguration;
-
         public EmailService(EmailConfiguration emailConfiguration)
         {
             this.emailConfiguration = emailConfiguration;
         }
-        public async Task SendEmailAsync(string email, string subject, string messageBodу)
+        public override async Task SendEmailAsync(string email, string subject, string messageBodу)
         {
             
             MimeMessage message = new MimeMessage();
@@ -41,7 +40,7 @@ namespace GameStore.Web.App
             }
         }
 
-        public async Task SendOrderEmailAsync(OrderModel model)
+        public override async Task SendOrderEmailAsync(OrderModel model)
         {
             var message = new StringBuilder();
             message.Append("<h2>Заказ передан в службу доставки</h2><div>");

@@ -31,6 +31,7 @@ $(document).ready(function () {
     $('#formAdd')
         .submit(function (e) {
             e.preventDefault();
+            $(".error").remove();
             $.ajax({
                 url: '/admin/uploadpicturefilebrowser',
                 type: 'POST',
@@ -40,11 +41,14 @@ $(document).ready(function () {
                 success: function (data) {
                     $('#uploadPicture').val('');
                     $('#fileExplorer').append(`<div class="thumbnail"><img class="ml-2" src="/images/uploads/${data.data}" alt="thumb" title="${data.data}"
-                                                width="120" height="100" /><br />${data.data}<form action="/admin/deleteimage" method="post">
+                                                width="136" height="80" /><br />${data.data}<form action="/admin/deleteimage" method="post">
                                                 <input type="hidden" name="name" value="${data.data}"/><input style="margin-left:30px;" type="submit" value="Удалить"/></form></div>`);
+                },
+                error: function(jqxhr, status, errorMsg) {
+                        $('<div class="error ml-4"/>')
+                            .text("Недопустимый формат")
+                            .insertBefore('#formAdd');
                 }
-
-
             });
         });
 });

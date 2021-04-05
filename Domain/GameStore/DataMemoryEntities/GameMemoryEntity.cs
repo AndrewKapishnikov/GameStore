@@ -2,7 +2,7 @@
 
 namespace GameStore
 {
-    public class GameMemoryStorage
+    public class GameMemoryEntity
     {
         public int Id { get; }
         public string Name { get; }
@@ -14,7 +14,7 @@ namespace GameStore
         public byte[] ImageData { get; }
         public string ReleaseDate { get; }
         public DateTime DateOfAdding { get; }
-        public GameMemoryStorage (int id, string name, string publisher, string shortDescription, string description,
+        public GameMemoryEntity (int id, string name, string publisher, string shortDescription, string description,
                     string category, decimal price, byte[] imageData, string releaseDate, DateTime dateOfAdding)
         {
             Id = id;

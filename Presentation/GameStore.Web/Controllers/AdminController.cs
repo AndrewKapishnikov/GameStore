@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using GameStore.Web.App.Interfaces;
 
 namespace GameStore.Web.Controllers
 {
@@ -24,21 +24,24 @@ namespace GameStore.Web.Controllers
         private IWebHostEnvironment hostingEnvironment;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<User> userManager;
-        private readonly CategoryService categoryService;
-        private readonly GameService gameService;
-        private readonly OrderService orderService;
+        private readonly AbstractCategoryService categoryService;
+        private readonly AbstractOrderService orderService;
+        private readonly IGetGamesService getGamesService;
+        private readonly IChangeGameService changeGameService;
 
         public AdminController(IWebHostEnvironment hostingEnvironment,
                                RoleManager<IdentityRole> roleManager,
                                UserManager<User> userManager,
-                               CategoryService categoryService,
-                               OrderService orderService,
-                               GameService gameService)
+                               AbstractCategoryService categoryService,
+                               AbstractOrderService orderService,
+                               IGetGamesService getGamesService,
+                               IChangeGameService changeGameService)
         {
             this.hostingEnvironment = hostingEnvironment;
             this.roleManager = roleManager;
             this.userManager = userManager;
-            this.gameService = gameService;
+            this.getGamesService = getGamesService;
+            this.changeGameService = changeGameService;
             this.categoryService = categoryService;
             this.orderService = orderService;
         }
@@ -62,11 +65,11 @@ namespace GameStore.Web.Controllers
 
             if (name == "" && categoryId == 0)
             {
-                (gameModels, count) = await gameService.GetGamesForAdminByPageAsync(pageNumber, pageSize, sort);
+                (gameModels, count) = await getGamesService.GetGamesForAdminByPageAsync(pageNumber, pageSize, sort);
             }
             else
             {
-                (gameModels, count) = await gameService.GetGamesForAdminByCategoryAndNameAsync(pageNumber, pageSize, sort, name, categoryId);
+                (gameModels, count) = await getGamesService.GetGamesForAdminByCategoryAndNameAsync(pageNumber, pageSize, sort, name, categoryId);
             }
 
             var categoryModelList = await categoryService.GetAllAsync();
@@ -98,17 +101,19 @@ namespace GameStore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddGame(GameModel model, IFormFile titleImageFile)
         {
+            if (model.ReleaseDate < new DateTime(1980, 1, 01) || model.ReleaseDate >= new DateTime(2100, 1, 01))
+                ModelState.AddModelError("ReleaseDate", "Дата выхода должна быть в диапазоне от января 1980 до января 2100");
             if (ModelState.IsValid)
             {
                 if (titleImageFile != null && IsPermittedPictureExtention(titleImageFile.ContentType))
                 {
                     model.ImageData = GetBytesImageData(titleImageFile);
-                    await gameService.AddNewGame(model);
+                    await changeGameService.AddNewGame(model);
                     TempData["TempDataMessage"] = "Новая игра успешно добавлена в список товаров! Можете продолжить добавление игр.";
                     return RedirectToAction("addgame", "admin");
 
                 }
-                ModelState.AddModelError("No picture", "Вам необходимо добавить главное изображение для игры");
+                ModelState.AddModelError("ImageData", "Вам необходимо добавить главное изображение для игры");
             }
             ViewBag.Categories = await GetCategoriesSelectList(true, model.CategoryId ?? 1);
             return View(model);
@@ -148,7 +153,7 @@ namespace GameStore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteGame(int gameId)
         {
-            await gameService.RemoveGame(gameId);
+            await changeGameService.RemoveGameByGameId(gameId);
             TempData["TempDataMessage"] = "Игра успешно удалена!";
             return RedirectToAction("games", "admin", new { page = 1 });
         }
@@ -157,7 +162,7 @@ namespace GameStore.Web.Controllers
         [Route("{controller}/{action}/{gameId:int}")]
         public async Task<IActionResult> UpdateGame(int gameId)
         {
-            var gameModel = await gameService.GetGameByIdAsync(gameId);
+            var gameModel = await getGamesService.GetGameByIdAsync(gameId);
             ViewBag.Categories = await GetCategoriesSelectList(true, gameModel.CategoryId ?? 1);
             return View(gameModel);
         }
@@ -165,15 +170,18 @@ namespace GameStore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateGame(GameModel gameModel, IFormFile titleImageFile)
         {
+            if(gameModel.ReleaseDate < new DateTime(1980, 1, 01) || gameModel.ReleaseDate >= new DateTime(2100, 1, 01))
+                ModelState.AddModelError("ReleaseDate", "Дата выхода должна быть в диапазоне от января 1980 до января 2100");
             if (ModelState.IsValid)
             {
                 if (titleImageFile != null && IsPermittedPictureExtention(titleImageFile.ContentType))
                 {
                     gameModel.ImageData = GetBytesImageData(titleImageFile);
-                    await gameService.UpdateGame(gameModel);
+                    await changeGameService.UpdateGame(gameModel);
                     TempData["TempDataMessage"] = "Игра успешно отредактированна";
                     return RedirectToAction("games", "admin", new { page = 1 });
                 }
+                ModelState.AddModelError("", "Вам необходимо добавить главное изображение для игры");
             }
             ViewBag.Categories = await GetCategoriesSelectList(true, gameModel.CategoryId ?? 1);
             return View(gameModel);
@@ -184,7 +192,7 @@ namespace GameStore.Web.Controllers
         {
             var fullfileName = DateTime.Now.ToString("yyyyMMddHHmmss") + upload.FileName;
             var path = Path.Combine(hostingEnvironment.WebRootPath, "images\\uploads", fullfileName);
-            if (upload != null)
+            if (upload != null && IsPermittedPictureExtention(upload.ContentType))
             {
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
@@ -216,7 +224,7 @@ namespace GameStore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadPictureFileBrowser(IFormFile uploadPicture)
         {
-            if (uploadPicture != null)
+            if (uploadPicture != null && IsPermittedPictureExtention(uploadPicture.ContentType))
             {
                 var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + uploadPicture.FileName;
                 var path = Path.Combine(hostingEnvironment.WebRootPath, "images\\uploads", fileName);
@@ -276,7 +284,7 @@ namespace GameStore.Web.Controllers
         {
             if(ModelState.IsValid)
             {
-                await categoryService.CreateCategory(categoryModel);
+                await categoryService.AddNewCategory(categoryModel);
                 TempData["TempDataMessage"] = "Новая категория успешно добавлена. Можете продолжить добавление категорий";
                 return RedirectToAction("addcategory", "admin");
             }
@@ -452,6 +460,7 @@ namespace GameStore.Web.Controllers
             var roles = roleManager.Roles;
             return View(roles);
         }
+
         [Authorize(Policy = "AdminRolePolicy")]
         [HttpGet]
         public IActionResult CreateRole()
@@ -583,7 +592,7 @@ namespace GameStore.Web.Controllers
             }
 
             result = await userManager.AddToRolesAsync(user,
-                model.Where(x => x.IsSelected).Select(y => y.RoleName));
+                           model.Where(x => x.IsSelected).Select(y => y.RoleName));
 
             if (!result.Succeeded)
             {

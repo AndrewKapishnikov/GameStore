@@ -1,56 +1,53 @@
 ﻿using GameStore.Web.App;
+using GameStore.Web.App.Interfaces;
 using GameStore.Web.Models;
 using GameStore.Web.Models.AdminPanelModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GameStore.Web.Controllers
 {
     public class GameController: Controller
     {
-        private readonly GameService gameService;
-        private readonly CategoryService categoryService;
-
-        public GameController(GameService gameService, CategoryService categoryService)
+        private readonly IGetGamesService getGamesService;
+      
+        public GameController(IGetGamesService getGamesService)
         {
-            this.gameService = gameService;
-            this.categoryService = categoryService;
+            this.getGamesService = getGamesService;
         }
 
-        public async Task<IActionResult> SearchGame(string query)
+        public async Task<ActionResult<IReadOnlyCollection<GameModel>>> SearchGame(string query)
         {
-            var games = await gameService.GetAllGamesByNameOrPublisherAsync(query);
+            var games = await getGamesService.GetAllGamesByNameOrPublisherAsync(query);
             
             return View(games);
         }
 
-        public async Task<IActionResult> Index(int id)
+        public async Task<ActionResult<GameModel>> Index(int id)
         {
-            var model = await gameService.GetGameByIdAsync(id);
+            var model = await getGamesService.GetGameByIdAsync(id);
 
             return View(model);
         }
 
         [Route("{controller}/{action}/{category}/{page?}")]
-        public async Task<IActionResult> CategoryGames(string category, int? page)
+        public async Task<ActionResult<CategoryGamesViewModel>> CategoryGames(string category, int? page)
         {
             int pageNumber = (page ?? 1);
             if (pageNumber > 100) pageNumber = 100;
             if (pageNumber < 1) pageNumber = 1;
             int pageSize = 7;
 
-            var (games, count) = await gameService.GetAllGamesByCategoryAsync(category.Trim(), pageNumber, pageSize);
+            var (games, count) = await getGamesService.GetAllGamesByCategoryAsync(category.Trim(), pageNumber, pageSize);
             var viewModel = new CategoryGamesViewModel
             {
                 PageViewModel = new PaginationViewModel(count, pageNumber, pageSize),
                 Games = games,
                 Category = category
             };
-
             return View(viewModel);
         }
-
 
 
     }

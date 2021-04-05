@@ -9,7 +9,7 @@
         <form asp-controller="admin" asp-action="updategame" class="form-location pl-0" method="post" enctype="multipart/form-data" asp-antiforgery="true">
             <input type="hidden" name="@nameof(Model.GameId)" value="@Model.GameId" />
             <input type="hidden" name="@nameof(Model.DateOfAdding)" value="@Model.DateOfAdding" />
-            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="text-danger validation" asp-validation-summary="ModelOnly"></div>
             <div class="form-line">
                 <div class="form-group mr-5">
                     <label asp-for="Name" class="col-form-label"></label>

@@ -3,8 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GameStore
 {
@@ -39,9 +38,15 @@ namespace GameStore
             if (TryGet(game, out OrderItem orderItem))
                 return orderItem;
 
-            throw new InvalidOperationException("Book not found.");
+            throw new InvalidOperationException("Game not found.");
         }
 
+        /// <summary>
+        /// Try get such game in Order, and if game exists in order return OrderItem
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="orderItem"></param>
+        /// <returns></returns>
         public bool TryGet(Game game, out OrderItem orderItem)
         {
             var index = items.FindIndex(item => item.Game.Id == game.Id);
@@ -55,6 +60,12 @@ namespace GameStore
             return true;
         }
 
+        /// <summary>
+        /// Create new OrderItem with Game and add in Order
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public OrderItem Add(Game game, int count)
         {
             if (TryGet(game, out OrderItem orderItem))

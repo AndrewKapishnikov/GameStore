@@ -82,7 +82,7 @@
                 <td>
                     @game.DateOfAdding.Date.ToShortDateString().ToString(CultureInfo.InvariantCulture)
                 </td>
-                <td class="text-right">@Math.Truncate(@game.Price) руб.</td>
+                <td class="text-right" style="width:75px;">@Math.Truncate(@game.Price) руб.</td>
                 <td class="text-right" style="width:130px;">
                     <a asp-controller="admin" asp-action="updategame" asp-route-gameId="@game.GameId">
                         Редакт

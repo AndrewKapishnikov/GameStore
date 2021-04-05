@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace GameStore
 {
+    //Entity Order
     public class Order
     {
         private readonly OrderDTO dto; 

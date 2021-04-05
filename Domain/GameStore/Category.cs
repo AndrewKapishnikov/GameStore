@@ -1,12 +1,11 @@
 ﻿using GameStore.DataEF;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GameStore
 {
+    //Entity Category
     public class Category
     {
         private readonly CategoryDTO dto;
@@ -20,25 +19,23 @@ namespace GameStore
 
         public int Id => dto.Id;
         public string UrlSlug => dto.UrlSlug;
-        public string Name
-        {
-            get => dto.Name;
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException(nameof(Name));
-                dto.Name = value.Trim();
-            }
-        }
-
-      
+        public string Name => dto.Name;
+        
         public static class DtoFactory
         {
             public static CategoryDTO Create(string name, string urlSlug)
             {
-                if (string.IsNullOrWhiteSpace(name) ||
-                    string.IsNullOrWhiteSpace(name))
+                if (string.IsNullOrWhiteSpace(name))
                     throw new ArgumentException(nameof(Name));
+
+                if (string.IsNullOrWhiteSpace(urlSlug))
+                    throw new ArgumentException(nameof(UrlSlug));
+
+                if (name.Length < 3 || name.Length > 40)
+                    throw new ArgumentOutOfRangeException("Name is less than 3 characters or longer than 40 characters");
+
+                if (urlSlug.Length < 3 || urlSlug.Length > 30)
+                    throw new ArgumentOutOfRangeException("UrlSlug is less than 3 characters or longer than 30 characters");
 
                 return new CategoryDTO() { Name = name, UrlSlug = urlSlug };
             }

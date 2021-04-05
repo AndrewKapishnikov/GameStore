@@ -16,7 +16,7 @@ namespace GameStore.Data.EF
 
             var optionsBuilder = new DbContextOptionsBuilder<GameStoreDbContext>();
             optionsBuilder.UseSqlServer<GameStoreDbContext>(config.GetConnectionString("GameStore"));
-
+            
             return new GameStoreDbContext(optionsBuilder.Options);
         }
     }
