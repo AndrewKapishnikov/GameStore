@@ -24,8 +24,8 @@ namespace GameStore.UnitTests.Application
         {
             //Arrage
             var fakeCart = new Cart(1, 2, 4);
-            var orderRepository = Substitute.For<IOrderRepository>();
-            var gameRepository = Substitute.For<IGameRepository>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
             var contextAccessor = Substitute.For<IHttpContextAccessor>();
                 contextAccessor.HttpContext.Session.TryGetCart(out fakeCart).Returns(false);
             var orderService = new OrderService(gameRepository, orderRepository, contextAccessor);
@@ -50,9 +50,9 @@ namespace GameStore.UnitTests.Application
             byte[] bytes;
             var order = Order.Mapper.Map(fakeOrderDto);
             Cart fakeCart = new Cart(order.Id, 2, 4);
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetByIdAsync(order.Id).Returns(order);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
             var contextAccessor = Substitute.For<IHttpContextAccessor>();
                 contextAccessor.HttpContext.Session.TryGetValue("SomeKey", out bytes).ReturnsForAnyArgs(x =>
             {
@@ -85,10 +85,10 @@ namespace GameStore.UnitTests.Application
             Cart fakeCart = new Cart(order.Id, order.TotalCount, order.TotalPrice);
             var gameDto = collectionGameDto.First();
             var game = Game.Mapper.Map(gameDto);
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetByIdAsync(order.Id).Returns(order);
                 orderRepository.UpdateAsync(order).Returns(Task.CompletedTask);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
                 gameRepository.GetGameByIdAsync(game.Id, false).Returns(game);
             var contextAccessor = Substitute.For<IHttpContextAccessor>();
                 contextAccessor.HttpContext.Session.TryGetValue("SomeKey", out bytes).ReturnsForAnyArgs(x =>
@@ -124,10 +124,10 @@ namespace GameStore.UnitTests.Application
             var order = Order.Mapper.Map(fakeOrderDto);
             order.Items.Add(game, count);
             
-            var orderRepository = Substitute.For<IOrderRepository>();
-                orderRepository.Create().Returns(order);
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
+                orderRepository.CreateAsync().Returns(order);
                 orderRepository.UpdateAsync(order).Returns(Task.CompletedTask);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
                 gameRepository.GetGameByIdAsync(game.Id, false).Returns(game);
             var contextAccessor = Substitute.For<IHttpContextAccessor>();
                 contextAccessor.HttpContext.Session.TryGetValue("SomeKey", out bytes).ReturnsForAnyArgs(x =>
@@ -147,7 +147,7 @@ namespace GameStore.UnitTests.Application
                 orderModel.Id.Should().Be(order.Id);
                 orderModel.OrderItems.First().Count.Should().Be(count + 1);
                 orderModel.TotalCount.Should().Be(count + 1);
-                orderRepository.Received(1).Create();
+                orderRepository.Received(1).CreateAsync();
                 orderRepository.Received(1).UpdateAsync(order);
                 gameRepository.GetGameByIdAsync(game.Id, false);
             });
@@ -165,11 +165,11 @@ namespace GameStore.UnitTests.Application
             int totalCount = order.TotalCount;
             Cart fakeCart = new Cart(order.Id, order.TotalCount, order.TotalPrice);
 
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetByIdAsync(order.Id).Returns(order);
                 orderRepository.UpdateAsync(order).Returns(Task.CompletedTask);
                 orderRepository.RemoveAsync(order).Returns(Task.CompletedTask);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
             var contextAccessor = Substitute.For<IHttpContextAccessor>();
                 contextAccessor.HttpContext.Session.TryGetValue("SomeKey", out bytes).ReturnsForAnyArgs(x =>
             {
@@ -197,8 +197,8 @@ namespace GameStore.UnitTests.Application
         public void GetOrderAsync_WhenCartIsEmpty_ThrowInvalidOperationException()
         {
             byte[] bytes;
-            var orderRepository = Substitute.For<IOrderRepository>();
-            var gameRepository = Substitute.For<IGameRepository>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
             var contextAccessor = Substitute.For<IHttpContextAccessor>();
                 contextAccessor.HttpContext.Session.TryGetValue("SomeKey", out bytes).ReturnsForAnyArgs(x =>
                 {
@@ -229,10 +229,10 @@ namespace GameStore.UnitTests.Application
             order.Items.Add(game, count);
             Cart fakeCart = new Cart(order.Id, order.TotalCount, order.TotalPrice);
 
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetByIdAsync(order.Id).Returns(order);
                 orderRepository.UpdateAsync(order).Returns(Task.CompletedTask);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
                 gameRepository.GetGameByIdAsync(game.Id, false).Returns(game);
             var contextAccessor = Substitute.For<IHttpContextAccessor>();
             contextAccessor.HttpContext.Session.TryGetValue("SomeKey", out bytes).ReturnsForAnyArgs(x =>
@@ -260,10 +260,10 @@ namespace GameStore.UnitTests.Application
         {
             var order = Order.Mapper.Map(fakeOrderDto);
             var fakeUser = CreateFakeUser();
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetByIdAsync(order.Id).Returns(order);
                 orderRepository.UpdateAsync(order).Returns(Task.CompletedTask);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
             var orderService = new OrderService(gameRepository, orderRepository, contextAccessor);
 
             //Act
@@ -282,9 +282,9 @@ namespace GameStore.UnitTests.Application
             var orderDtoCollect = new OrderDTO[] { fakeOrderDto };
             var orderCollection = orderDtoCollect.Select(Order.Mapper.Map).ToArray();
             var user = new User() { Id = Guid.NewGuid().ToString() };
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetOrdersByUserIdAsync(user.Id).Returns(orderCollection);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
             var orderService = new OrderService(gameRepository, orderRepository, contextAccessor);
 
             //Act
@@ -308,10 +308,10 @@ namespace GameStore.UnitTests.Application
             var delivery = CreateFakeDelivery();
             Cart fakeCart = new Cart(order.Id, order.TotalCount, order.TotalPrice);
 
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetByIdAsync(order.Id).Returns(order);
                 orderRepository.UpdateAsync(order).Returns(Task.CompletedTask);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
             var contextAccessor = Substitute.For<IHttpContextAccessor>();
             contextAccessor.HttpContext.Session.TryGetValue("SomeKey", out bytes).ReturnsForAnyArgs(x =>
             {
@@ -339,10 +339,10 @@ namespace GameStore.UnitTests.Application
             var payment = CreateFakePayment();
             Cart fakeCart = new Cart(order.Id, order.TotalCount, order.TotalPrice);
 
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetByIdAsync(fakeCart.OrderId).Returns(order);
                 orderRepository.UpdateAsync(order).Returns(Task.CompletedTask);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
             var contextAccessor = Substitute.For<IHttpContextAccessor>();
             contextAccessor.HttpContext.Session.TryGetValue("SomeKey", out bytes).ReturnsForAnyArgs(x =>
             {
@@ -372,8 +372,8 @@ namespace GameStore.UnitTests.Application
             fakeOrderDto.User = fakeUser;
             var orderDtoCollect = new OrderDTO[] { fakeOrderDto };
             var iQuerableOrderCollection = orderDtoCollect.AsQueryable();
-            var gameRepository = Substitute.For<IGameRepository>();
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetAllOrders().Returns(iQuerableOrderCollection);
             var orderService = new OrderService(gameRepository, orderRepository, contextAccessor);
 
@@ -395,8 +395,8 @@ namespace GameStore.UnitTests.Application
         {
             var order = Order.Mapper.Map(fakeOrderDto);
             order.OrderReviewed = false;
-            var gameRepository = Substitute.For<IGameRepository>();
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetByIdAsync(order.Id).Returns(order);
                 orderRepository.UpdateAsync(order).Returns(Task.CompletedTask);
             var orderService = new OrderService(gameRepository, orderRepository, contextAccessor);
@@ -416,8 +416,8 @@ namespace GameStore.UnitTests.Application
         public void GetOrderDetailAsync_Pass_OrderId()
         {
             var order = Order.Mapper.Map(fakeOrderDto);
-            var gameRepository = Substitute.For<IGameRepository>();
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetByIdAsync(order.Id).Returns(order);
             var orderService = new OrderService(gameRepository, orderRepository, contextAccessor);
 
@@ -431,8 +431,8 @@ namespace GameStore.UnitTests.Application
         public void RemoveOrderAsync_Pass_OrderId()
         {
             var order = Order.Mapper.Map(fakeOrderDto);
-            var gameRepository = Substitute.For<IGameRepository>();
-            var orderRepository = Substitute.For<IOrderRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
+            var orderRepository = Substitute.For<IOrderRepositoryAsync>();
                 orderRepository.GetByIdAsync(order.Id).Returns(order);
                 orderRepository.RemoveAsync(order).Returns(Task.CompletedTask);
             var orderService = new OrderService(gameRepository, orderRepository, contextAccessor);

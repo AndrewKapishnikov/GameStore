@@ -15,8 +15,8 @@ namespace GameStore.Web.App
 {
     public class OrderService : AbstractOrderService
     {
-        public OrderService(IGameRepository gameRepository,
-                            IOrderRepository orderRepository,
+        public OrderService(IGetGamesRepositoryAsync gameRepository,
+                            IOrderRepositoryAsync orderRepository,
                             IHttpContextAccessor httpContextAccessor)
         {
             this.gameRepository = gameRepository;
@@ -61,7 +61,7 @@ namespace GameStore.Web.App
         {
             var (hasValue, order) = await TryGetOrderAsync();
             if (!hasValue)
-                order = orderRepository.Create();
+                order = await orderRepository.CreateAsync();
 
             await AddOrUpdateGameAsync(order, gameId, count);
             UpdateSession(order);

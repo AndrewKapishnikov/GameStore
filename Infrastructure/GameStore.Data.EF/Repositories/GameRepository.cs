@@ -1,4 +1,6 @@
-﻿using GameStore.DataEF;
+﻿using GameStore.Data.EF.Repositories;
+using GameStore.DataEF;
+using GameStore.EntityInterfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -7,23 +9,19 @@ using System.Threading.Tasks;
 
 namespace GameStore.Data.EF
 {
-    public class GameRepository : IGameRepository
+    public class GameRepository : BaseGameRepository, IGetGamesRepositoryAsync, IGetGamesRepository
     {
-        private readonly ContextDBFactory dbContextFactory;
-        public GameRepository(ContextDBFactory dbContextFactory)
-        {
-            this.dbContextFactory = dbContextFactory;
-        }
-
+        public GameRepository(ContextDBFactory dbContextFactory) : base(dbContextFactory) { }
+       
         public Game[] GetAllByCategory(string categoryUrlSlug)
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             var gamesDto = db.Games.Include(p => p.Category).Where(p => p.Category.UrlSlug == categoryUrlSlug && p.OnSale);
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
         public async Task<Game[]> GetAllByCategoryAsync(string categoryUrlSlug)
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             var gamesDto = await db.Games.Include(p => p.Category)
                                    .Where(p => p.Category.UrlSlug == categoryUrlSlug && p.OnSale)
                                    .ToArrayAsync();
@@ -34,7 +32,7 @@ namespace GameStore.Data.EF
         public Game[] GetAllByNameOrPublisher(string nameOrPublisher)
         {
             string strSearch = $"\"{nameOrPublisher.Trim()}\"";
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             var sqlParameter = new SqlParameter("@nameOrPublisher", strSearch);
             var gamesDto = db.Games.FromSqlRaw("SELECT * FROM Games WHERE CONTAINS((Name, Publisher), @nameOrPublisher)",
                                                   sqlParameter).Where(p => p.OnSale).Include(p => p.Category);
@@ -43,7 +41,7 @@ namespace GameStore.Data.EF
         public async Task<Game[]> GetAllByNameOrPublisherAsync(string nameOrPublisher)
         {
             string strSearch = $"\"{nameOrPublisher.Trim()}\"";
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             var sqlParameter = new SqlParameter("@nameOrPublisher", strSearch);
             var gamesDto = await db.Games.FromSqlRaw("SELECT * FROM Games WHERE CONTAINS((Name, Publisher), @nameOrPublisher)", sqlParameter)
                                          .Where(p => p.OnSale)
@@ -53,17 +51,16 @@ namespace GameStore.Data.EF
         }
 
 
-
         public Game GetGameById(int id)
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             var gameDto = db.Games.Include(p => p.Category).Single(p => p.Id == id);
-      
+
             return Game.Mapper.Map(gameDto);
         }
         public async Task<Game> GetGameByIdAsync(int id, bool withCategory)
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             GameDTO gameDto;
             if(withCategory)
             {
@@ -81,13 +78,13 @@ namespace GameStore.Data.EF
 
         public Game[] GetGamesByIds(IEnumerable<int> gamesId)
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             var gamesDto = db.Games.Include(p => p.Category).Join(gamesId, gameDto => gameDto.Id, id => id, (gamesDto, id) => gamesDto);
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
         public async Task<Game[]> GetGamesByIdsAsync(IEnumerable<int> gamesId)
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             var gamesDto = await db.Games.Include(p => p.Category)
                                    .Join(gamesId, gameDto => gameDto.Id, id => id, (gamesDto, id) => gamesDto)
                                    .ToArrayAsync();
@@ -99,13 +96,13 @@ namespace GameStore.Data.EF
 
         public Game[] GetLastEightGameByDataAdding()
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             var gamesDto = db.Games.Where(p => p.OnSale).Include(p => p.Category).OrderByDescending(p => p.DateOfAdding).Take(8);
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
         public async Task<Game[]> GetLastEightGameByDataAddingAsync()
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             var gamesDto = await db.Games.Where(p => p.OnSale)
                                          .Include(p => p.Category)
                                          .OrderByDescending(p => p.DateOfAdding)
@@ -117,22 +114,16 @@ namespace GameStore.Data.EF
 
         public async Task<Game[]> GetAllGamesNotOnSaleAsync()
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             var gamesDto = await db.Games.Include(p => p.Category)
                                    .Where(p => !p.OnSale)
                                    .ToArrayAsync();
             return gamesDto.Select(Game.Mapper.Map).ToArray();
         }
 
-        public async Task<int> TotalItems()
-        {
-            var db = dbContextFactory.Create(typeof(GameRepository));
-            return await db.Games.CountAsync<GameDTO>();
-        }
-
         public async Task<Game[]> GetGamesForAdminPanel(int pageNo, int pageSize, string sortColumn, bool sortByAscending)
         {
-            var db = dbContextFactory.Create(typeof(GameRepository));
+            var db = GetDbContextForGameRepository();
             GameDTO[] games = null;
             switch (sortColumn)
             {
@@ -221,37 +212,5 @@ namespace GameStore.Data.EF
             return games.Select(Game.Mapper.Map).ToArray();
         }
 
-
-        public IQueryable<GameDTO> GetAllGames()
-        {
-            var db = dbContextFactory.Create(typeof(GameRepository));
-            IQueryable<GameDTO> games = db.Games.Include(p => p.Category);
-            return games;
-        }
-
-
-        public async Task AddGame(Game game)
-        {
-            var db = dbContextFactory.Create(typeof(GameRepository));
-            var gameDto = Game.Mapper.Map(game);
-            await db.Games.AddAsync(gameDto);
-            await db.SaveChangesAsync();
-        }
-
-        public async Task RemoveGame(Game game)
-        {
-            var db = dbContextFactory.Create(typeof(GameRepository));
-            var gameDto = Game.Mapper.Map(game);
-            db.Games.Remove(gameDto);
-            await db.SaveChangesAsync();
-        }
-
-        public async Task UpdateGame(Game game)
-        {
-            var db = dbContextFactory.Create(typeof(GameRepository));
-            var gameDto = Game.Mapper.Map(game);
-            db.Entry(gameDto).State = EntityState.Modified;
-            await db.SaveChangesAsync();
-        }
     }
 }

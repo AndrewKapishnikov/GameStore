@@ -7,7 +7,7 @@ namespace GameStore.Web.App.Interfaces
 {
     public abstract class AbstractCategoryService
     {
-        protected ICategoryRepository categoryRepository;
+        protected ICategoryRepositoryAsync categoryRepository;
 
         public abstract Task<CategoryModel> GetByIdAsync(int id);
         public abstract Task<CategoryModel> GetByNameAsync(string name);

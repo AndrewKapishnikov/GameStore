@@ -17,7 +17,7 @@ namespace GameStore.UnitTests.Application
         {
             //Arrange
             var category = Category.Mapper.Map(categoryDto.First());
-            var categoryRepository = Substitute.For<ICategoryRepository>();
+            var categoryRepository = Substitute.For<ICategoryRepositoryAsync>();
                 categoryRepository.GetCategoryByIdAsync(category.Id).Returns(category);
             var categoryService = new CategoryService(categoryRepository);
 
@@ -38,7 +38,7 @@ namespace GameStore.UnitTests.Application
         public void GetByNameAsync_Pass_CategoryName()
         {
             var category = Category.Mapper.Map(categoryDto.First());
-            var categoryRepository = Substitute.For<ICategoryRepository>();
+            var categoryRepository = Substitute.For<ICategoryRepositoryAsync>();
                 categoryRepository.GetCategoryByNameAsync(category.Name).Returns(category);
             var categoryService = new CategoryService(categoryRepository);
 
@@ -60,7 +60,7 @@ namespace GameStore.UnitTests.Application
         public void GetAllAsyncTest()
         {
             var categories = categoryDto.Select(Category.Mapper.Map).ToArray();
-            var categoryRepository = Substitute.For<ICategoryRepository>();
+            var categoryRepository = Substitute.For<ICategoryRepositoryAsync>();
                 categoryRepository.GetAllCategoriesAsync().Returns(categories);
             var categoryService = new CategoryService(categoryRepository);
 
@@ -80,15 +80,15 @@ namespace GameStore.UnitTests.Application
         {
             var categoryModel = CreateFakeCategoryModel();
             var category = CategoryService.CreateCategory(categoryModel);
-            var categoryRepository = Substitute.For<ICategoryRepository>();
-                categoryRepository.AddCategory(category);
+            var categoryRepository = Substitute.For<ICategoryRepositoryAsync>();
+                categoryRepository.AddCategoryAsync(category);
             var categoryService = new CategoryService(categoryRepository);
 
             var task = categoryService.AddNewCategory(categoryModel);
 
             Assert.Multiple(() =>
             {
-               categoryRepository.Received(1).AddCategory(category);
+               categoryRepository.Received(1).AddCategoryAsync(category);
                Assert.IsTrue(task.IsCompletedSuccessfully);
             });
         }
@@ -98,9 +98,9 @@ namespace GameStore.UnitTests.Application
         {
             var categoryModel = CreateFakeCategoryModel();
             var category = CategoryService.CreateCategory(categoryModel);
-            var categoryRepository = Substitute.For<ICategoryRepository>();
+            var categoryRepository = Substitute.For<ICategoryRepositoryAsync>();
                 categoryRepository.GetCategoryByIdAsync(categoryModel.CategoryId).Returns(category);
-                categoryRepository.RemoveCategory(category).Returns(Task.CompletedTask);
+                categoryRepository.RemoveCategoryAsync(category).Returns(Task.CompletedTask);
             var categoryService = new CategoryService(categoryRepository);
 
             var task = categoryService.DeleteCategory(categoryModel.CategoryId);
@@ -108,7 +108,7 @@ namespace GameStore.UnitTests.Application
             Assert.Multiple(() =>
             {
                 categoryRepository.Received(1).GetCategoryByIdAsync(categoryModel.CategoryId);
-                categoryRepository.Received(1).RemoveCategory(category);
+                categoryRepository.Received(1).RemoveCategoryAsync(category);
                 Assert.IsTrue(task.IsCompletedSuccessfully);
             });
         }

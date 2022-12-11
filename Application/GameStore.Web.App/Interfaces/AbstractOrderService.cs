@@ -8,8 +8,8 @@ namespace GameStore.Web.App.Interfaces
 {
     public abstract class AbstractOrderService
     {
-        protected IGameRepository gameRepository;
-        protected IOrderRepository orderRepository;
+        protected IGetGamesRepositoryAsync gameRepository;
+        protected IOrderRepositoryAsync orderRepository;
         protected IHttpContextAccessor httpContextAccessor;
         protected ISession Session => httpContextAccessor.HttpContext?.Session;
 

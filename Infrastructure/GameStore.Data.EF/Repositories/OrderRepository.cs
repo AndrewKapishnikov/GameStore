@@ -1,22 +1,26 @@
 ﻿using GameStore.DataEF;
+using GameStore.EntityInterfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace GameStore.Data.EF
 {
-    public class OrderRepository: IOrderRepository
+    public class OrderRepository: IOrderRepositoryAsync, IOrderRepository
     {
         private readonly ContextDBFactory dbFactory;
 
         public OrderRepository(ContextDBFactory dbContextFactory)
         {
-            this.dbFactory = dbContextFactory;
+            dbFactory = dbContextFactory;
         }
-
+        private GameStoreDbContext GetDbContextForOrderRepository()
+        {
+            return dbFactory.Create(typeof(OrderRepository));
+        }
         public Order GetById(int id)
         {
-            var db = dbFactory.Create(typeof(OrderRepository));
+            var db = GetDbContextForOrderRepository();
 
             var orderDto = db.Orders.Include(order => order.Items)
                                     .ThenInclude(orderItem => orderItem.Game)
@@ -28,7 +32,7 @@ namespace GameStore.Data.EF
         }
         public async Task<Order> GetByIdAsync(int id)
         {
-            var db = dbFactory.Create(typeof(OrderRepository));
+            var db = GetDbContextForOrderRepository();
 
             var orderDto = await db.Orders.Include(order => order.Items)
                                     .ThenInclude(orderItem => orderItem.Game)
@@ -41,7 +45,7 @@ namespace GameStore.Data.EF
 
         public async Task<Order[]> GetOrdersByUserIdAsync(string userId)
         {
-            var db = dbFactory.Create(typeof(OrderRepository));
+            var db = GetDbContextForOrderRepository();
 
             var ordersDto = await db.Orders.Include(order => order.Items)
                                     .ThenInclude(orderItem => orderItem.Game)
@@ -58,7 +62,7 @@ namespace GameStore.Data.EF
 
         public Order Create()
         {
-            var db = dbFactory.Create(typeof(OrderRepository));
+            var db = GetDbContextForOrderRepository();
 
             var orderDto = Order.DtoFactory.Create();
             db.Orders.Add(orderDto);
@@ -68,7 +72,7 @@ namespace GameStore.Data.EF
         }
         public async Task<Order> CreateAsync()
         {
-            var db = dbFactory.Create(typeof(OrderRepository));
+            var db = GetDbContextForOrderRepository();
 
             var orderDto = Order.DtoFactory.Create();
             await db.Orders.AddAsync(orderDto);
@@ -81,28 +85,35 @@ namespace GameStore.Data.EF
 
         public void Update(Order order)
         {
-            var db = dbFactory.Create(typeof(OrderRepository));
-            
+            var db = GetDbContextForOrderRepository();
+
             db.SaveChanges();
         }
         public async Task UpdateAsync(Order order)
         {
-            var db = dbFactory.Create(typeof(OrderRepository));
+            var db = GetDbContextForOrderRepository();
             await db.SaveChangesAsync();
         }
 
         public async Task RemoveAsync(Order order)
         {
-            var db = dbFactory.Create(typeof(OrderRepository));
+            var db = GetDbContextForOrderRepository();
 
             db.Orders.Remove(Order.Mapper.Map(order));
             await db.SaveChangesAsync();
             
         }
+        public void Remove(Order order)
+        {
+            var db = GetDbContextForOrderRepository();
+
+            db.Orders.Remove(Order.Mapper.Map(order));
+            db.SaveChanges();
+        }
 
         public IQueryable<OrderDTO> GetAllOrders()
         {
-            var db = dbFactory.Create(typeof(OrderRepository));
+            var db = GetDbContextForOrderRepository();
             IQueryable<OrderDTO> orders = db.Orders.Include(order => order.User)
                                                    .Include(order => order.Items);
             return orders;

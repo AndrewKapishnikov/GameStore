@@ -80,7 +80,7 @@ namespace GameStore.Web
                 options.AccessDeniedPath = "/account/accessdenied";
                 
             });
-
+            
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));
@@ -123,7 +123,7 @@ namespace GameStore.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                //app.UseBrowserLink();             //for runtime layout, testing
                 //app.UseExceptionHandler("/Error");
                 //app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }

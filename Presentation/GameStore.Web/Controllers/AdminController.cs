@@ -51,6 +51,7 @@ namespace GameStore.Web.Controllers
         public async Task<IActionResult> Games(int? page, int? pagesize, int? category, string name = "",
                                                SortGameStates sort = SortGameStates.NameAsc)
         {
+         
             int pageNumber = (page ?? 1);
             if (pageNumber > 100) pageNumber = 100;
             if (pageNumber < 1) pageNumber = 1;

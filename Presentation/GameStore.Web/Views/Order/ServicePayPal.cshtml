@@ -6,9 +6,13 @@
 <form method="post" action="@ViewBag.payPalConfig.PostUrl">
     <input type="hidden" name="upload" value="1" />
     <input type="hidden" name="return" value="@ViewBag.returnUrl" />
+    @*<input type="hidden" name="rm" value="1">*@
+
+    @*<input type="hidden" name="return" value="http://localhost:5000/Order/SuccessPayPal" />*@
     <input type="hidden" name="cmd" value="_cart" />
     <input type="hidden" name="business" value="@ViewBag.payPalConfig.Business" />
     <input type="hidden" name="currency_code" value="RUB" />
+
     @{ var index = 1;}
     @foreach (var item in Model.OrderItems)
     {

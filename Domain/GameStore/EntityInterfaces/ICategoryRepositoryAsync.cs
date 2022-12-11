@@ -2,12 +2,12 @@
 
 namespace GameStore.EntityInterfaces
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepositoryAsync
     {
         Task<Category> GetCategoryByIdAsync(int id);
         Task<Category> GetCategoryByNameAsync(string name);
         Task<Category[]> GetAllCategoriesAsync();
-        Task AddCategory(Category category);
-        Task RemoveCategory(Category category);
+        Task AddCategoryAsync(Category category);
+        Task RemoveCategoryAsync(Category category);
     }
 }

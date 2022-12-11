@@ -5,7 +5,7 @@ using System.Linq;
 namespace GameStore.Contractors
 {
      public class DataSteps
-    {
+     {
         public string ServiceName { get; }
 
         public int Step { get; }

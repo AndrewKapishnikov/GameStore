@@ -20,7 +20,7 @@ namespace GameStore.UnitTests.Application
         {
             //Arrange
             var game = Game.Mapper.Map(collectionGameDto.First());
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
                 gameRepository.GetGameByIdAsync(game.Id, true)
                               .Returns(game);
             var gameService = new GameService(gameRepository, contextAccessor);
@@ -44,7 +44,7 @@ namespace GameStore.UnitTests.Application
         {
             var games = collectionGameDto.Select(Game.Mapper.Map).ToArray<Game>();
             var query = Faker.Random.String2(3, 30);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
                 gameRepository.GetAllByNameOrPublisherAsync(query)
                               .Returns(games);
             var gameService = new GameService(gameRepository, contextAccessor);
@@ -66,7 +66,7 @@ namespace GameStore.UnitTests.Application
         {
             var games = collectionGameDto.Select(Game.Mapper.Map).ToArray<Game>();
             var query = "";
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
             gameRepository.GetAllByNameOrPublisherAsync(query)
                           .Returns(games);
             var gameService = new GameService(gameRepository, contextAccessor);
@@ -89,7 +89,7 @@ namespace GameStore.UnitTests.Application
             var pageNumber = 1;
             var pageSize = 2;
             var categoryUrlSlug = Faker.Random.String2(3, 30);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
                 gameRepository.GetAllByCategoryAsync(categoryUrlSlug)
                               .Returns(games);
             var gameService = new GameService(gameRepository, contextAccessor);
@@ -109,7 +109,7 @@ namespace GameStore.UnitTests.Application
         public void GetGamesByDescedingOrderAsyncTest()
         {
             var games = collectionGameDto.Select(Game.Mapper.Map).ToArray<Game>();
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
                 gameRepository.GetLastEightGameByDataAddingAsync()
                               .Returns(games);
             var gameService = new GameService(gameRepository, contextAccessor);
@@ -134,10 +134,10 @@ namespace GameStore.UnitTests.Application
             var takeCountGames = 2;
             var sortColumn = SortGameStates.NameAsc;
             var sortColumnStr = nameof(Game.Name);
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
                 gameRepository.GetGamesForAdminPanel(pageNumber - 1, pageSize, sortColumnStr, true)
                               .Returns(games.Take(takeCountGames).ToArray());
-                gameRepository.TotalItems().Returns(games.Length);
+                gameRepository.TotalItemsAsync().Returns(games.Length);
             var gameService = new GameService(gameRepository, contextAccessor);
 
             //Act
@@ -150,7 +150,7 @@ namespace GameStore.UnitTests.Application
                 gameModel.Item1.Count.Should().Be(takeCountGames);
                 gameModel.Item2.Should().Be(games.Length);
                 gameRepository.Received(1).GetGamesForAdminPanel(pageNumber - 1, pageSize, sortColumnStr, true);
-                gameRepository.Received(1).TotalItems();
+                gameRepository.Received(1).TotalItemsAsync();
             });
         }
 
@@ -161,7 +161,7 @@ namespace GameStore.UnitTests.Application
         {
             var iQuerableGamesCollection = collectionGameDto.AsQueryable();
             var gameName = iQuerableGamesCollection.First().Name;
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
                 gameRepository.GetAllGames().Returns(iQuerableGamesCollection);
             var gameService = new GameService(gameRepository, contextAccessor);
 
@@ -186,7 +186,7 @@ namespace GameStore.UnitTests.Application
         {
             var iQuerableGamesCollection = collectionGameDto.AsQueryable();
             var gameName = "";
-            var gameRepository = Substitute.For<IGameRepository>();
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
             gameRepository.GetAllGames().Returns(iQuerableGamesCollection);
             var gameService = new GameService(gameRepository, contextAccessor);
 
@@ -208,13 +208,13 @@ namespace GameStore.UnitTests.Application
         {
             var gameModel = CreateFakeGameModel();
             var game = GameService.CreateGame(gameModel);
-            var gameRepository = Substitute.For<IGameRepository>();
-                gameRepository.AddGame(game);
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
+                gameRepository.AddGameAsync(game);
             var gameService = new GameService(gameRepository, contextAccessor);
 
             var task = gameService.AddNewGame(gameModel);
 
-            gameRepository.Received(1).AddGame(game);
+            gameRepository.Received(1).AddGameAsync(game);
             Assert.IsTrue(task.IsCompletedSuccessfully);
         }
 
@@ -224,15 +224,15 @@ namespace GameStore.UnitTests.Application
         {
             var gameModel = CreateFakeGameModel();
             var game = GameService.CreateGame(gameModel);
-            var gameRepository = Substitute.For<IGameRepository>();
-                gameRepository.UpdateGame(game);
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
+                gameRepository.UpdateGameAsync(game);
             var contextAccess = Substitute.For<IHttpContextAccessor>();
                 contextAccess.HttpContext.Session.RemoveCart();
             var gameService = new GameService(gameRepository, contextAccess);
 
             var task = gameService.UpdateGame(gameModel);
 
-            gameRepository.Received(1).UpdateGame(game);
+            gameRepository.Received(1).UpdateGameAsync(game);
             Assert.IsTrue(task.IsCompletedSuccessfully);
         }
 
@@ -243,8 +243,8 @@ namespace GameStore.UnitTests.Application
             var gameModel = CreateFakeGameModel();
             var game = GameService.CreateGame(gameModel);
                 game.Id = gameModel.GameId;
-            var gameRepository = Substitute.For<IGameRepository>();
-                gameRepository.RemoveGame(game);
+            var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();
+                gameRepository.RemoveGameAsync(game);
                 gameRepository.GetGameByIdAsync(game.Id, false).Returns(game);
             var contextAccess = Substitute.For<IHttpContextAccessor>();
                 contextAccess.HttpContext.Session.RemoveCart();

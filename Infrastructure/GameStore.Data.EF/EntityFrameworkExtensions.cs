@@ -22,9 +22,9 @@ namespace GameStore.Data.EF
 
             services.AddScoped<Dictionary<Type, GameStoreDbContext>>();
             services.AddSingleton<ContextDBFactory>();
-            services.AddSingleton<IGameRepository, GameRepository>();
-            services.AddSingleton<IOrderRepository, OrderRepository>();
-            services.AddSingleton<ICategoryRepository, CategoryRepository>();
+            services.AddSingleton<IGetGamesRepositoryAsync, GameRepository>();
+            services.AddSingleton<IOrderRepositoryAsync, OrderRepository>();
+            services.AddSingleton<ICategoryRepositoryAsync, CategoryRepository>();
 
             return services;
         }

@@ -11,11 +11,11 @@ namespace GameStore.Web.App
 {
     public class GameService: IGetGamesService, IChangeGameService
     {
-        private readonly IGameRepository gameRepository;
+        private readonly IGetGamesRepositoryAsync gameRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
         protected ISession Session => httpContextAccessor.HttpContext.Session;
 
-        public GameService(IGameRepository gameRepository,
+        public GameService(IGetGamesRepositoryAsync gameRepository,
                            IHttpContextAccessor httpContextAccessor)
         {
             this.gameRepository = gameRepository;
@@ -59,7 +59,7 @@ namespace GameStore.Web.App
             var (sortColumn, sortByAscending) = ParseSortGameState(sortGame);
             var games = await gameRepository.GetGamesForAdminPanel(pageNo - 1, pageSize, sortColumn, sortByAscending);
             var gameModel = games.Select(Map).ToArray();
-            var countGames = await gameRepository.TotalItems();
+            var countGames = await gameRepository.TotalItemsAsync();
             return (gameModel, countGames);
         }
 
@@ -151,7 +151,7 @@ namespace GameStore.Web.App
         public async Task AddNewGame(GameModel gameNew)
         {
             var game = CreateGame(gameNew);
-            await gameRepository.AddGame(game);
+            await gameRepository.AddGameAsync(game);
                 
         }
 
@@ -159,14 +159,14 @@ namespace GameStore.Web.App
         {
             var game = CreateGame(gameNew);
             game.Id = gameNew.GameId;
-            await gameRepository.UpdateGame(game);
+            await gameRepository.UpdateGameAsync(game);
             Session.RemoveCart();
         }
 
         public async Task RemoveGameByGameId(int gameId)
         {
             var game = await gameRepository.GetGameByIdAsync(gameId, false);
-            await gameRepository.RemoveGame(game);
+            await gameRepository.RemoveGameAsync(game);
             Session.RemoveCart();
         }
 

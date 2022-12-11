@@ -9,7 +9,7 @@ namespace GameStore.Web.App
 {
     public class CategoryService: AbstractCategoryService
     {
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepositoryAsync categoryRepository)
         {
            this.categoryRepository = categoryRepository;
         }
@@ -35,13 +35,13 @@ namespace GameStore.Web.App
         public override async Task AddNewCategory(CategoryModel categoryModel)
         {
             var category = CreateCategory(categoryModel);
-            await categoryRepository.AddCategory(category);
+            await categoryRepository.AddCategoryAsync(category);
         }
 
         public override async Task DeleteCategory(int categoryId)
         {
             var category = await categoryRepository.GetCategoryByIdAsync(categoryId);
-            await categoryRepository.RemoveCategory(category);
+            await categoryRepository.RemoveCategoryAsync(category);
         }
 
       

@@ -10,11 +10,6 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["Presentation/GameStore.Web/GameStore.Web.csproj", "Presentation/GameStore.Web/"]
-COPY ["Infrastructure/GameStore.MemoryStorage/GameStore.MemoryStorage.csproj", "Infrastructure/GameStore.MemoryStorage/"]
-COPY ["Domain/GameStore/GameStore.csproj", "Domain/GameStore/"]
-COPY ["Infrastructure/GameStore.Data.EF/GameStore.Data.EF.csproj", "Infrastructure/GameStore.Data.EF/"]
-COPY ["Application/GameStore.Web.App/GameStore.Web.App.csproj", "Application/GameStore.Web.App/"]
-COPY ["Plugins/GameStore.EmulateKassa/GameStore.EmulateKassa.csproj", "Plugins/GameStore.EmulateKassa/"]
 RUN dotnet restore "Presentation/GameStore.Web/GameStore.Web.csproj"
 COPY . .
 WORKDIR "/src/Presentation/GameStore.Web"

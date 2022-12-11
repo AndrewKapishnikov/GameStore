@@ -114,16 +114,15 @@ namespace GameStore.Web.Controllers
             if( order.Id == orderId)
             {
                 var deliveryService = deliveryServices.Single(p => p.Name == service);
+                var dataSteps = deliveryService.FirstStep(order);
                 if (deliveryService is CourierDeliveryService)
                 {
-                    var data = deliveryService.FirstStep(order);
-                    var delivery = deliveryService.GetDelivery(data);
+                   var delivery = deliveryService.GetDelivery(dataSteps);
                     var orderModel = await orderService.SetDeliveryAsync(delivery);
                     ViewBag.OrderId = order.Id;
                     var paymentChoice = paymentServices.ToDictionary(service => service.Name, service => service.Title);
                     return View("PaymentChoice", paymentChoice);
                 }
-                var dataSteps = deliveryService.FirstStep(order);
                 var webService = webExternalService.SingleOrDefault(s => s.Name == service);
                 if (webService == null)
                     return View("NextDelivery", dataSteps);
