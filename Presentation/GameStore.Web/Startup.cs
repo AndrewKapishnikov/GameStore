@@ -123,7 +123,7 @@ namespace GameStore.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseBrowserLink();             //for runtime layout, testing
+                app.UseBrowserLink();         
                 //app.UseExceptionHandler("/Error");
                 //app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
@@ -132,8 +132,9 @@ namespace GameStore.Web
                 app.UseHsts();
                 app.UseExceptionHandler("/Error");
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
+                app.UseWebMarkupMin();
             }
-
+            
             app.UseHttpsRedirection();
           
             app.UseRouting();
@@ -142,18 +143,7 @@ namespace GameStore.Web
             app.UseAuthorization();
 
             app.UseSession();
-              
-            //When use this middleware BrowserLink don't work. Uncomment in Production mode
-            app.UseWebMarkupMin();
-
-            //For testing purposes
-            //app.Use(async (context, next) =>
-            //{
-            //    var endPoint = context.GetEndpoint();
-            //    var routes = context.Request.RouteValues;
-            //    await next.Invoke();
-            //});
-           
+             
             var supportedCultures = new[]
             {
                 new CultureInfo("en-US"),
