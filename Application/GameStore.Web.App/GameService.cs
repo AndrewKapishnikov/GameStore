@@ -1,7 +1,6 @@
 ﻿using GameStore.Web.App.Interfaces;
 using GameStore.Web.App.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;

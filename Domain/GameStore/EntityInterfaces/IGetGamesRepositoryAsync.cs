@@ -1,7 +1,5 @@
-﻿using GameStore.DataEF;
-using GameStore.EntityInterfaces;
+﻿using GameStore.EntityInterfaces;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GameStore

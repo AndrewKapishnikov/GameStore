@@ -16,18 +16,7 @@ namespace GameStore
         public int Count => dto.Count;
         public decimal Price => dto.Price;
         public Order Order => Order.Mapper.Map(dto.Order);
-       
-        public Game Game
-        {
-            get
-            {
-                if (dto.Game != null)
-                    return Game.Mapper.Map(dto.Game);
-                else
-                    return null;
-            }
-        }
-
+        public Game Game => Game.Mapper.Map(dto.Game);
         public void ChangeCountByOneItem(int count)
         {
             if (count == 1 && Count < 9 || count == -1 && Count > 1)

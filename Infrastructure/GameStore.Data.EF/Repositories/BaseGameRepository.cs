@@ -1,10 +1,7 @@
 ﻿using GameStore.DataEF;
 using GameStore.EntityInterfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GameStore.Data.EF.Repositories
