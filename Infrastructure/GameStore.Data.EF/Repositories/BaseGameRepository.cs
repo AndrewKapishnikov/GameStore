@@ -18,6 +18,10 @@ namespace GameStore.Data.EF.Repositories
         {
             return dbContextFactory.Create(typeof(GameRepository));
         }
+        //protected GameStoreDbContext GetDbContextForGameRepository<T>()
+        //{
+        //    return dbContextFactory.Create(typeof(T));
+        //}
 
         public IQueryable<GameDTO> GetAllGames()
         {

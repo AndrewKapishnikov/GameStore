@@ -30,12 +30,11 @@ else
             <tr>
                 <td class="text-left">@(i + 1)</td>
                 <td class="font-weight-bold">
-                    @if (@Model.OrderItems[i].GameName != null)
-                        @Model.OrderItems[i].GameName
-                        else
-                        {
-                            <p>Товар удалён</p>
-                        }
+                    @if (@Model.OrderItems[i].GameName != null) @Model.OrderItems[i].GameName
+                     else
+                     {
+                        <p style="color:red">!!! "The game has been removed from sale!"</p>
+                     }
                 </td>
                 <td>@Model.OrderItems[i].Publisher</td>
                 <td class="text-right">@Model.OrderItems[i].Count</td>

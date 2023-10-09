@@ -8,6 +8,7 @@ using System.Web;
 
 namespace GameStore.Web.App
 {
+    //PDT it is Payment data transfer
     public class PDTHolder
     {
         public double GrossTotal { get; set; }
@@ -36,6 +37,7 @@ namespace GameStore.Web.App
             query = string.Format("cmd=_notify-synch&tx={0}&at={1}",txToken,authToken);
             string url = payPalConfig.PostUrl;
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.Headers.Add("User-Agent", "GamesStore"); //
             req.Method = "POST";
             req.ContentType = "application/x-www-form-urlencoded";
             req.ContentLength = query.Length;

@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System;
 using GameStore.Web.App.Interfaces;
+using MailKit.Security;
 //using System.Net.Mail;
 
 namespace GameStore.Web.App
@@ -32,7 +33,9 @@ namespace GameStore.Web.App
                 }
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
 
-                await client.ConnectAsync(emailConfiguration.SmtpServer, emailConfiguration.SmtpPort, true);
+                //await client.ConnectAsync(emailConfiguration.SmtpServer, emailConfiguration.SmtpPort, true);
+                //Changed smtp port from 465 to 587
+                await client.ConnectAsync(emailConfiguration.SmtpServer, emailConfiguration.SmtpPort, SecureSocketOptions.StartTls);
                 await client.AuthenticateAsync(emailConfiguration.SmtpUsername, emailConfiguration.SmtpPassword);
                 await client.SendAsync(message);
 

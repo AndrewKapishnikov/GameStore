@@ -134,7 +134,7 @@ namespace GameStore.Web
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 app.UseWebMarkupMin();
             }
-            
+           
             app.UseHttpsRedirection();
           
             app.UseRouting();

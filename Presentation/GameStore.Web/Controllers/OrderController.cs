@@ -226,7 +226,7 @@ namespace GameStore.Web.Controllers
                 ViewBag.transactionPayPal = values;
                 return View("FinishOrder", finishModel);
             }
-            return View("SuccessPayPal");
+            return View("NotSuccessPayPal");
         }
 
         private async Task<OrderModel> SetPaymentAndSendEmail(IPaymentService paymentService, DataSteps data)
