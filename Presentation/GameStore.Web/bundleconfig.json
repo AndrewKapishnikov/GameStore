@@ -41,5 +41,11 @@
     "inputFiles": [
       "wwwroot/js/chiefslider.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/bundle/js/someehosting.min.js",
+    "inputFiles": [
+      "wwwroot/js/somee_hosting.js"
+    ]
   }
 ]

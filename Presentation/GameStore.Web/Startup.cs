@@ -123,7 +123,7 @@ namespace GameStore.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();         
+                app.UseBrowserLink();
                 //app.UseExceptionHandler("/Error");
                 //app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }

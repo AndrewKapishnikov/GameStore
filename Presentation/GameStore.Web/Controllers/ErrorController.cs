@@ -1,24 +1,25 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.Web.Controllers
 {
     public class ErrorController : Controller
-    {      
+    {
         [Route("Error/{statusCode}")]
         public IActionResult HttpStatusCodeHandler(int statusCode)
         {
-            var statusCodeResult =  HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var statusCodeResult = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
 
             switch (statusCode)
             {
                 case 404:
                     ViewBag.ErrorMessage = "Страница не найдена";
                     break;
-                
-            }
 
+            }
+            
             return View("NotFound");
         }
 
