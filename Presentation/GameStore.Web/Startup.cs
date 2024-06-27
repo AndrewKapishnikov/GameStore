@@ -118,12 +118,13 @@ namespace GameStore.Web
         }
 
       
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
         {
-            if (env.IsDevelopment())
+            if (environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
+
                 //app.UseExceptionHandler("/Error");
                 //app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
@@ -143,33 +144,10 @@ namespace GameStore.Web
             app.UseAuthorization();
 
             app.UseSession();
-             
-            var supportedCultures = new[]
-            {
-                new CultureInfo("en-US"),
-                new CultureInfo("en"),
-                new CultureInfo("ru-RU"),
-                new CultureInfo("ru")
-            };
-            app.UseRequestLocalization(new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture("ru-RU"),
-                SupportedCultures = supportedCultures,
-                SupportedUICultures = supportedCultures
-            });
+           
+            app.UseRequestLocalizationOptions();
 
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                OnPrepareResponse = s =>
-                {
-                    if (s.Context.Request.Path.StartsWithSegments(new PathString("/js")) &&
-                       !s.Context.User.IsInRole("Admin"))
-                    {
-                        s.Context.Response.StatusCode = 404;
-                        s.Context.Response.Redirect("/error/404");
-                    }
-                }
-            });
+            app.UseStaticOptionsFiles();
 
             app.UseEndpoints(endpoints =>
             {

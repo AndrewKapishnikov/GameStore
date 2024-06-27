@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GameStore.Web.HelperClasses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace GameStore.Web.Controllers
 {
@@ -15,9 +17,8 @@ namespace GameStore.Web.Controllers
             switch (statusCode)
             {
                 case 404:
-                    ViewBag.ErrorMessage = "Страница не найдена";
+                    ViewBag.ErrorMessage = ErrorMessages.PageNotFound;
                     break;
-
             }
             
             return View("NotFound");
@@ -28,31 +29,38 @@ namespace GameStore.Web.Controllers
         public IActionResult Error()
         { 
             var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            var exceptionMessage = exceptionHandlerPathFeature?.Error?.Message ?? "Exception Page";
+            string exceptionPage = "Exception Page";
+            var exceptionMessage = exceptionHandlerPathFeature?.Error?.Message ?? exceptionPage;
             var exceptionPath = exceptionHandlerPathFeature?.Path;
-  
+
             switch (exceptionMessage)
             {
-                case "Sequence contains no elements.":
-                    ViewBag.ErrorMessage = "Страница не найдена";
+                case ExceptionMessages.NoElements:
+                    ViewBag.ErrorMessage = ErrorMessages.PageNotFound;
                     return View("NotFound");
-                case "Session is empty":
-                    ViewBag.ErrorMessage = "Выберите новый товар";
+                case ExceptionMessages.EmptySession:
+                    ViewBag.ErrorMessage = ErrorMessages.SelectNewProduct;
                     return View("NotFound");
-                case "An error occurred while updating the entries. See the inner exception for details.":
-                    if (exceptionPath == "/admin/deletecategory")
-                        return View("DeleteCategoryWarning");
-                    else if (exceptionPath == "/admin/deleteuser")
-                        return View("DeleteUserWarning");
-                    else
-                        return View("NotFound");
+                case ExceptionMessages.DatabaseNoConnectionString:
+                case ExceptionMessages.NoEstablishConnectionToSQLServer:
+                    ViewBag.ErrorMessage = ErrorMessages.DatabaseNoConnection;
+                    return View("NoConnection");
+                case ExceptionMessages.UpdatingEntriesError:
+                    switch(exceptionPath)
+                    {
+                        case "/admin/deletecategory": return View("DeleteCategoryWarning");
+                        case "/admin/deleteuser":     return View("DeleteUserWarning");
+                        default:                      return View("NotFound");
+                    }
             }
 
             ViewBag.ExceptionMessage = exceptionMessage;
             ViewBag.ExceptionPath = exceptionPath;
-            ViewBag.StackTrace = exceptionHandlerPathFeature?.Error?.StackTrace;
+            string stackTrace = exceptionHandlerPathFeature?.Error?.StackTrace;
+            ViewBag.StackTrace = stackTrace;
 
-            return View("Error");
+            return (exceptionMessage.Equals(exceptionPage) && exceptionPath is null && stackTrace is null) ? View("NotFound") : View("Error");
+           
         }
     }
 }

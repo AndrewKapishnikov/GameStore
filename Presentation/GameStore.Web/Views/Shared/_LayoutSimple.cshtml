@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    @await Html.PartialAsync("MetatagsPartial")
+    @await Html.PartialAsync("_CssPartial")
+</head>
+<body>
+    <div id="wrapper">
+        <div id="content">
+           <div id="sale" class="sale_padding">
+                @RenderBody()
+            </div>
+        </div>
+       <div class="clear"></div>
+    </div>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/bundle/js/someehosting.min.js"></script>
+</body>
+</html>

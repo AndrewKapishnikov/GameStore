@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{1A6AF64B-D404-414B-A590-68C1B3F74B9F}"
 EndProject
@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameStore.EmulateKassa", "P
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{67090CCF-3DD2-499C-A010-F38A56EEA8EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStore.UnitTests", "Tests\GameStore.UnitTests\GameStore.UnitTests.csproj", "{5359945F-1310-484B-A2B9-2B4037155486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameStore.UnitTests", "Tests\GameStore.UnitTests\GameStore.UnitTests.csproj", "{5359945F-1310-484B-A2B9-2B4037155486}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
