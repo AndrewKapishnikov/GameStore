@@ -179,7 +179,7 @@ namespace GameStore.Web.Controllers
                 {
                     gameModel.ImageData = GetBytesImageData(titleImageFile);
                     await changeGameService.UpdateGame(gameModel);
-                    TempData["TempDataMessage"] = "Игра успешно отредактированна";
+                    TempData["TempDataMessage"] = "Игра успешно отредактирована";
                     return RedirectToAction("games", "admin", new { page = 1 });
                 }
                 ModelState.AddModelError("", "Вам необходимо добавить главное изображение для игры");
@@ -527,7 +527,7 @@ namespace GameStore.Web.Controllers
                     var roles = roleManager.Roles;
                     return View("Roles", roles);
                 }
-                catch (DbUpdateException ex)
+                catch (DbUpdateException)
                 {
                    TempData["TempDataMessage"] = $"Роль {role.Name} не может быть удалена, так как существуют пользователи с этой ролью. " +
                                                  $"Если вы хотите удалить эту роль, то сначала удалите всех пользователей с этой ролью.";

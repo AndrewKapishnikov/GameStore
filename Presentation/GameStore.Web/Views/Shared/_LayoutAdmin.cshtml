@@ -1,26 +1,26 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    @await Html.PartialAsync("MetatagsPartial")
-    @await Html.PartialAsync("_CssPartial")
+    @await Html.PartialAsync("Partials/MetatagsPartial")
+    @await Html.PartialAsync("Partials/CssPartial")
  </head>
 <body>
     <div id="wrapper">
-        @await Html.PartialAsync("HeaderPartial")
+        @await Html.PartialAsync("Partials/HeaderPartial")
         <div id="content">
-            @await Html.PartialAsync("LeftSideBarAdminPartial")
+            @await Html.PartialAsync("Partials/LeftSideBarAdminPartial")
             <div id="sale" class="sale_padding">
                 @RenderBody()
             </div>
             <div id="rSidebar">
-                @await Html.PartialAsync("RightSideBarPartial", new LoginViewModel())
+                @await Html.PartialAsync("Partials/RightSideBarPartial", new LoginViewModel())
             </div>
         </div>
         <div class="clear"></div>
-        @await Html.PartialAsync("FooterPartial")
+        @await Html.PartialAsync("Partials/FooterPartial")
     </div>
-    @await Html.PartialAsync("ScriptsPartial")
-    @await Html.PartialAsync("ValidationsScriptsPartial")
+    @await Html.PartialAsync("Partials/ScriptsPartial")
+    @await Html.PartialAsync("Partials/ValidationsScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/bundle/js/someehosting.min.js"></script>
 </body>

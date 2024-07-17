@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Поиск по категории";
 }
-@await Html.PartialAsync("SearchFormPartial")
+@await Html.PartialAsync("Partials/SearchFormPartial")
 @if (Model.Games.Count != 0)
 {
     <h3 class="search_h3 mt-4">Игры категории "@Model.Games.First().Category"</h3>

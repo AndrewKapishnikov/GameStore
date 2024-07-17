@@ -1,30 +1,30 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    @await Html.PartialAsync("MetatagsPartial")
-    @await Html.PartialAsync("_CssPartial")
+    @await Html.PartialAsync("Partials/MetatagsPartial")
+    @await Html.PartialAsync("Partials/CssPartial")
     <link href="~/bundle/css/chiefslider.min.css" rel="stylesheet" />
 </head>
 <body>
     <div id="wrapper">
-        @await Html.PartialAsync("HeaderPartial")
-        @await Html.PartialAsync("SliderPartial")
+        @await Html.PartialAsync("Partials/HeaderPartial")
+        @await Html.PartialAsync("Partials/SliderPartial")
         <div id="content">
-            @await Html.PartialAsync("LeftSideBarPartial")
+            @await Html.PartialAsync("Partials/LeftSideBarPartial")
             <div id="sale">
                 @RenderBody()
             </div>
             <div id="rSidebar">
-                @await Html.PartialAsync("RightSideBarPartial", new LoginViewModel())
-                @await Html.PartialAsync("CustomerReviewsPartial")
+                @await Html.PartialAsync("Partials/RightSideBarPartial", new LoginViewModel())
+                @await Html.PartialAsync("Partials/CustomerReviewsPartial")
             </div>
         </div>
         <div class="clear"></div>
-        @await Html.PartialAsync("FooterPartial")
+        @await Html.PartialAsync("Partials/FooterPartial")
     </div>
     <script src="~/bundle/js/chiefslider.min.js"></script>
-    @await Html.PartialAsync("ScriptsPartial")
-    @await Html.PartialAsync("ValidationsScriptsPartial")
+    @await Html.PartialAsync("Partials/ScriptsPartial")
+    @await Html.PartialAsync("Partials/ValidationsScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/bundle/js/someehosting.min.js"></script>
 </body>

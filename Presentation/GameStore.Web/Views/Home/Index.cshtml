@@ -4,8 +4,9 @@
     ViewData["Title"] = "Games Store";
     ViewBag.Description = "Интернет магазин компьютерных игр. В магазине представлены современные компьютерные игры различных жанров. " +
                            "Вы сможете приобрести любую понравившуюся игру по доступной цене.";
+    ViewBag.Keywords = "игра, game, магазин, store, купить игру, computer game";
 }
-@await Html.PartialAsync("SearchFormPartial")
+@await Html.PartialAsync("Partials/SearchFormPartial")
 <div class="finish_font text-danger ml-4 mt-3 mb-2">@TempData["TempDataMessage"]</div>
 <div class="cards">
     @for (int i = 0; i < Model.Count; i += 2)
