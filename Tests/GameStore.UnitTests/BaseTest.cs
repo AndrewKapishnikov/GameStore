@@ -1,7 +1,6 @@
 ﻿using Bogus;
 using GameStore.DataEF;
 using GameStore.UnitTests.Domain.FakeData;
-using GameStore.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

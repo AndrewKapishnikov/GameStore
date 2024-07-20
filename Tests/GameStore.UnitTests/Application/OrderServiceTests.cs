@@ -22,7 +22,7 @@ namespace GameStore.UnitTests.Application
         [Test]
         public void TryGetModelAsync_When_OrderSession_Is_Empty_Returns_False()
         {
-            //Arrage
+            //Arrange
             var fakeCart = new Cart(1, 2, 4);
             var orderRepository = Substitute.For<IOrderRepositoryAsync>();
             var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();

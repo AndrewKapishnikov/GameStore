@@ -72,7 +72,7 @@ namespace GameStore.UnitTests.Presentation
         }
 
         [Test]
-        public void AddItem_WhenReturnUrlIsNotNullOrEmpty_And_ReturnUrlIsLocal_ReturtnsRedirectUrl()
+        public void AddItem_WhenReturnUrlIsNotNullOrEmpty_And_ReturnUrlIsLocal_ReturnsRedirectUrl()
         {
             int gameId = 1, count = 7;
             string returnUrl = "~/";
@@ -97,7 +97,7 @@ namespace GameStore.UnitTests.Presentation
         }
 
         [Test]
-        public void AddItem_WhenReturnUrlIsNullOrEmpty_ReturtnsRedirectToActionIndex()
+        public void AddItem_WhenReturnUrlIsNullOrEmpty_ReturnsRedirectToActionIndex()
         {
             int gameId = 1, count = 7;
             string returnUrl = string.Empty;
@@ -122,7 +122,7 @@ namespace GameStore.UnitTests.Presentation
         }
 
         [Test]
-        public void RemoveItem_WhenReturnUrlIsNotNullOrEmpty_And_ReturnUrlIsLocal_ReturtnsRedirectUrl()
+        public void RemoveItem_WhenReturnUrlIsNotNullOrEmpty_And_ReturnUrlIsLocal_ReturnsRedirectUrl()
         {
             int gameId = 1;
             string returnUrl = "~/";
@@ -148,7 +148,7 @@ namespace GameStore.UnitTests.Presentation
 
 
         [Test]
-        public void RemoveItem_WhenReturnUrlIsNullOrEmpty_ReturtnsRedirectUrl()
+        public void RemoveItem_WhenReturnUrlIsNullOrEmpty_ReturnsRedirectUrl()
         {
             int gameId = 1;
             string returnUrl = string.Empty;
@@ -201,7 +201,7 @@ namespace GameStore.UnitTests.Presentation
         }
 
         [Test]
-        public void MakeOrder_WhenUserIsAuthenticated_And_EquelOrderId_ReturnsViewDeliveryChoice()
+        public void MakeOrder_WhenUserIsAuthenticated_And_EqualOrderId_ReturnsViewDeliveryChoice()
         {
             string userName = Faker.Person.UserName; 
             var user = new User() { UserName = userName };
@@ -245,7 +245,7 @@ namespace GameStore.UnitTests.Presentation
 
 
         [Test]
-        public void MakeOrder_WhenUserIsAuthenticated_And_NotEquelOrderId_ReturnsCartEmptyView()
+        public void MakeOrder_WhenUserIsAuthenticated_And_NotEqualOrderId_ReturnsCartEmptyView()
         {
             int orderId = 2;
             string userName = Faker.Person.UserName;

@@ -42,8 +42,8 @@ namespace GameStore.Web.Controllers
             this.userManager = userManager;
             this.getGamesService = getGamesService;
             this.changeGameService = changeGameService;
-            this.categoryService = categoryService;
-            this.orderService = orderService;
+            this.categoryService = categoryService; 
+            this.orderService = orderService; 
         }
          
         [HttpGet]
@@ -376,11 +376,15 @@ namespace GameStore.Web.Controllers
 
             IQueryable<User> users = userManager.Users;
 
-            if (!String.IsNullOrEmpty(userName))
+            if (!string.IsNullOrEmpty(userName))
             {
-                users = users.Where(p => p.Name.Contains(userName) || p.Surname.Contains(userName));
+                string[] nameSurname = orderService.SplitParameterIntoNameAndSurname(ref userName);
+                if(nameSurname.Length == 1)
+                    users = users.Where(p => p.Name.Contains(userName) || p.Surname.Contains(userName));
+                else
+                    users = users.Where(p => p.Name.Contains(nameSurname[0]) && p.Surname.Contains(nameSurname[1]));
             }
-            if (!String.IsNullOrEmpty(userEmail))
+            if (!string.IsNullOrEmpty(userEmail))
             {
                 users = users.Where(p => p.UserName.Contains(userEmail));
             }

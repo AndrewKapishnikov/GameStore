@@ -2,6 +2,7 @@
 using GameStore.Web.App.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GameStore.Web.App.Interfaces
@@ -28,6 +29,14 @@ namespace GameStore.Web.App.Interfaces
         public abstract Task<OrderModel> GetOrderForAdminAsync(int orderId);
         public abstract Task<OrderModel> GetOrderDetailAsync(int orderId);
         public abstract Task RemoveOrderAsync(int orderId);
+
+        public string[] SplitParameterIntoNameAndSurname(ref string userNameAndSurname)
+        {
+            userNameAndSurname = userNameAndSurname.Trim();
+            var regex = new Regex(@"\s+"); //one or more whitespace
+            userNameAndSurname = regex.Replace(userNameAndSurname, " ");
+            return userNameAndSurname.Split(' ');
+        }
 
         public static OrderModel Map(Order order)
         {

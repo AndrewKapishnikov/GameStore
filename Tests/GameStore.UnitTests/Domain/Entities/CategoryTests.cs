@@ -14,7 +14,7 @@ namespace GameStore.UnitTests.Domain.Entities
         [Test]
         public void Category_With_Valid_Arguments_Is_Created()
         {
-            //Arrang
+            //Arrange
             var name = Faker.Random.String2(3, 40, russianLettersAndNumbers);
             var urlSlug = Faker.Random.String2(3, 30, russianLettersAndNumbers);
 

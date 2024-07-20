@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GameStore.Web.ExtensionsMethods
 {
-    public static class ApplicationExtensions
+    static class ApplicationExtensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {

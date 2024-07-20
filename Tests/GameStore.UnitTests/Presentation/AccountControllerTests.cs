@@ -694,7 +694,7 @@ namespace GameStore.UnitTests.Presentation
         }
 
         [Test]
-        public void ChangeUserInfo_WhenUserIsNotNullAndUserUpdateResultSucceeded_ReturnsSuceededTempDataMessage()
+        public void ChangeUserInfo_WhenUserIsNotNullAndUserUpdateResultSucceeded_ReturnsSucceededTempDataMessage()
         {
             var model = CreateChangeUserViewModel();
             User user = CreateFakeUser();
@@ -796,7 +796,7 @@ namespace GameStore.UnitTests.Presentation
         }
 
         [Test]
-        public void ChangePassword_WhenUserIsNotNullAndChangePasswordSucceeded_ReturnsSuceessTempData()
+        public void ChangePassword_WhenUserIsNotNullAndChangePasswordSucceeded_ReturnsSuccessTempData()
         {
             var model = new ChangePasswordViewModel() { CurrentPassword = Faker.Random.String2(6, 20), NewPassword = Faker.Random.String2(6, 20) };
             var user = CreateFakeUser();

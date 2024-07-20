@@ -8,7 +8,7 @@ using System;
 
 namespace GameStore.Web.ExtensionsMethods
 {
-    public static class AspNetIdentityExtensions
+    static class AspNetIdentityExtensions
     {
         public static IServiceCollection AddAspNetCoreIdentity(this IServiceCollection services)
         {

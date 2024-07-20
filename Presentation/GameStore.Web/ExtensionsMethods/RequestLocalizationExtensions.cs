@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace GameStore.Web.ExtensionsMethods
 {
-    public static class RequestLocalizationExtensions
+    static class RequestLocalizationExtensions
     {
         public static IApplicationBuilder UseRequestLocalizationOptions(this IApplicationBuilder builder)
         {

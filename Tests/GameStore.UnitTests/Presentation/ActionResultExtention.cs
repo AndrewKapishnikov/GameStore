@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace GameStore.UnitTests.Presentation
 {
-    public static class ActionResultExtention
+    public static class ActionResultExtension
     {
         public static T GetFromTaskViewResult<T>(this Task<ActionResult<T>> taskActionResult)
         {

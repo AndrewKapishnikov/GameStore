@@ -40,7 +40,7 @@ namespace GameStore.UnitTests.Application
         }
 
         [Test]
-        public void GetAllGamesByNameOrPublisherAsyn_Pass_ValidQuery()
+        public void GetAllGamesByNameOrPublisherAsync_Pass_ValidQuery()
         {
             var games = collectionGameDto.Select(Game.Mapper.Map).ToArray<Game>();
             var query = Faker.Random.String2(3, 30);
@@ -62,7 +62,7 @@ namespace GameStore.UnitTests.Application
         }
 
         [Test]
-        public void GetAllGamesByNameOrPublisherAsyn_Pass_EmptyQuery()
+        public void GetAllGamesByNameOrPublisherAsync_Pass_EmptyQuery()
         {
             var games = collectionGameDto.Select(Game.Mapper.Map).ToArray<Game>();
             var query = "";
@@ -106,7 +106,7 @@ namespace GameStore.UnitTests.Application
         }
 
         [Test]
-        public void GetGamesByDescedingOrderAsyncTest()
+        public void GetGamesByDescendingOrderAsyncTest()
         {
             var games = collectionGameDto.Select(Game.Mapper.Map).ToArray<Game>();
             var gameRepository = Substitute.For<IGetGamesRepositoryAsync>();

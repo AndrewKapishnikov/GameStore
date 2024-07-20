@@ -5,7 +5,7 @@ using System;
 
 namespace GameStore.Web.ExtensionsMethods
 {
-    public static class StaticFilesConfigExtensions
+    static class StaticFilesConfigExtensions
     {
         public static IApplicationBuilder UseStaticOptionsFiles(this IApplicationBuilder builder)
         {

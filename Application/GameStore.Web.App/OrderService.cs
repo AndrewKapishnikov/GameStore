@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using GameStore.Web.App.Interfaces;
+using System.Text.RegularExpressions;
 
 [assembly: InternalsVisibleTo("GameStore.UnitTests")]
 
@@ -165,11 +166,17 @@ namespace GameStore.Web.App
                                                                                                     string userName, string userEmail, bool makeOrder)
         {
             IQueryable<OrderDTO> orders = orderRepository.GetAllOrders();
-            if (!String.IsNullOrEmpty(userName))
+            
+            //userName can be Name and Surname here
+            if (!string.IsNullOrEmpty(userName))
             {
-                orders = orders.Where(p => p.User.Name.Contains(userName) || p.User.Surname.Contains(userName));
+                string[] nameSurname = SplitParameterIntoNameAndSurname(ref userName);
+                if (nameSurname.Length == 1)
+                    orders = orders.Where(p => p.User.Name.Contains(userName) || p.User.Surname.Contains(userName));
+                else
+                    orders = orders.Where(p => p.User.Name.Contains(nameSurname[0]) && p.User.Surname.Contains(nameSurname[1]));
             }
-            if (!String.IsNullOrEmpty(userEmail))
+            if (!string.IsNullOrEmpty(userEmail))
             {
                 orders = orders.Where(p => p.User.UserName.Contains(userEmail));
             }

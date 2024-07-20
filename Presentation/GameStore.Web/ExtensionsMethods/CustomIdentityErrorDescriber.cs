@@ -3,7 +3,7 @@
 
 namespace GameStore.Web.ExtensionsMethods
 {
-    public class CustomIdentityErrorDescriber : IdentityErrorDescriber
+    class CustomIdentityErrorDescriber : IdentityErrorDescriber
     {
         public override IdentityError DefaultError() { return new IdentityError { Code = nameof(DefaultError), Description = $"Произошла неизвестная ошибка" }; }
         public override IdentityError ConcurrencyFailure() { return new IdentityError { Code = nameof(ConcurrencyFailure), Description = "Ошибка оптимистичного контроля параллелизма, объект был изменён" }; }

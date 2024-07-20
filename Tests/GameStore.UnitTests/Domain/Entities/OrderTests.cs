@@ -23,7 +23,7 @@ namespace GameStore.UnitTests.Domain.Entities
         }
 
         [Test]
-        public void TotalCountItemsOfOrder_WithNonEmptyItems_CalcualtesTotalCount()
+        public void TotalCountItemsOfOrder_WithNonEmptyItems_CalculatesTotalCount()
         {
             var order = CreateTestOrder();
 
@@ -31,7 +31,7 @@ namespace GameStore.UnitTests.Domain.Entities
         }
 
         [Test]
-        public void TotalPrice_WithNonEmptyItems_CalcualtesTotalPrice()
+        public void TotalPrice_WithNonEmptyItems_CalculatesTotalPrice()
         {
             var order = CreateTestOrder();
 

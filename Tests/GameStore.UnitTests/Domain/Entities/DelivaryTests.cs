@@ -6,7 +6,7 @@ using System;
 namespace GameStore.UnitTests.Domain.Entities
 {
     [TestFixture]
-    public class DelivaryTests: BaseTest
+    public class DeliveryTests: BaseTest
     {
         [Test]
         public void Delivery_With_Valid_Arguments_Is_Created()

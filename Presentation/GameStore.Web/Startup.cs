@@ -52,8 +52,8 @@ namespace GameStore.Web
 
             services.AddWebMarkupMin(options =>
             {
-                options.AllowMinificationInDevelopmentEnvironment = true;
-                options.AllowCompressionInDevelopmentEnvironment = true;
+               options.AllowMinificationInDevelopmentEnvironment = true;
+               options.AllowCompressionInDevelopmentEnvironment = true;
             }).AddHtmlMinification()
               .AddHttpCompression();
           
