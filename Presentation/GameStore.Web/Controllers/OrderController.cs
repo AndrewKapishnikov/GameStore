@@ -117,7 +117,7 @@ namespace GameStore.Web.Controllers
                 var dataSteps = deliveryService.FirstStep(order);
                 if (deliveryService is CourierDeliveryService)
                 {
-                   var delivery = deliveryService.GetDelivery(dataSteps);
+                    var delivery = deliveryService.GetDelivery(dataSteps);
                     var orderModel = await orderService.SetDeliveryAsync(delivery);
                     ViewBag.OrderId = order.Id;
                     var paymentChoice = paymentServices.ToDictionary(service => service.Name, service => service.Title);
@@ -127,6 +127,7 @@ namespace GameStore.Web.Controllers
                 if (webService == null)
                     return View("NextDelivery", dataSteps);
 
+                //We can add external delivery service and redirect here for handling (project does not yet contain an external delivery service)
                 var returnUri = GetReturnUri(nameof(NextDeliveryStep), webService.Name);
                 var redirectUri = await webService.GetServiceUriAsync(dataSteps.Parameters, returnUri);
                 return Redirect(redirectUri.ToString());
@@ -148,16 +149,11 @@ namespace GameStore.Web.Controllers
 
             var order = await orderService.GetOrderAsync();
             ViewBag.OrderId = order.Id;
+            var payments = paymentServices;
             if (deliveryService is PostamateDeliveryService)
-            {
-                var payment = paymentServices.Where(p => p.Name != "Cash").ToDictionary(service => service.Name, service => service.Title);
-                return View("PaymentChoice", payment);
-            }
-            else
-            {
-                var paymentChoice = paymentServices.ToDictionary(service => service.Name, service => service.Title);
-                return View("PaymentChoice", paymentChoice);
-            }
+                payments = payments.Where(p => p.Name != "Cash");
+
+            return View("PaymentChoice", payments.ToDictionary(service => service.Name, service => service.Title));
         }
 
         [HttpPost]
@@ -176,7 +172,7 @@ namespace GameStore.Web.Controllers
                 }
                 if (paymentService is PayPalPaymentService)
                 {
-                    var orderModel = await orderService.GetOrderDetailAsync(orderId);
+                    var orderModel = AbstractOrderService.Map(order);
                     ViewBag.payPalConfig = HttpContext.RequestServices.GetService(typeof(PayPalConfig)) as PayPalConfig;
                     ViewBag.returnUrl = GetReturnUri(nameof(SuccessPayPal), paymentService.Name, orderId);
                     return View("ServicePayPal", orderModel);
