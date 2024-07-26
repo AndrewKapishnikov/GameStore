@@ -16,55 +16,15 @@
             {
                 <div id="hot"></div>
             }
-            <h2>
-                <a asp-controller="game" asp-action="index" asp-route-id="@Model[i].GameId">@Model[i].Name</a>
-            </h2>
-            <div class="flexblock">
-                <div class="flexblock__leftitem">
-                    <a asp-controller="game" asp-action="index" asp-route-id="@Model[i].GameId">
-                        <img  alt="Picture" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model[i].ImageData))" />
-                    </a>
-                </div>
-                <div class="flexblock__rightitem">
-                    <p class="price">Цена: <span>@Math.Truncate(Model[i].Price) руб.</span></p>
-                    <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
-                        <input type="hidden" name="gameId" value="@Model[i].GameId" />
-                        <button class="incor clickbutton" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
-                    </form>
-                </div>
-            </div>
-            <div class="clear"></div>
-            <p class="descr">@Model[i].ShortDescription</p>
+            @{ await Html.RenderPartialAsync("GameCardPartial", Model[i]); }
         </div>
 
-         if ((i + 1) < Model.Count)
-         {
+        if ((i + 1) < Model.Count)
+        {
             <div class="rSale_block">
-                <h2>
-                    <a asp-controller="game" asp-action="index" asp-route-id="@Model[i + 1].GameId">@Model[i + 1].Name</a>
-                </h2>
-                <div class="flexblock">
-                    <div class="flexblock__leftitem">
-                        <a asp-controller="game" asp-action="index" asp-route-id="@Model[i + 1].GameId">
-                            <img alt="Picture" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model[i + 1].ImageData))" />
-                        </a>
-                    </div>
-                    <div class="flexblock__rightitem">
-                        <p class="price">Цена: <span>@Math.Truncate(Model[i + 1].Price) руб.</span></p>
-                        <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
-                            <input type="hidden" name="gameId" value="@Model[i + 1].GameId" />
-                            <button class="incor clickbutton" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
-                        </form>
-                    </div>
-                </div>
-                <div class="clear"></div>
-                <p class="descr">@Model[i + 1].ShortDescription</p>
+              @{ await Html.RenderPartialAsync("GameCardPartial", Model[i + 1]); }
             </div>
-         }
+        }
      }
-     
 </div>
-@section Scripts{
-    @*<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>*@
-}
 

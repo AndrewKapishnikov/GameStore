@@ -1,0 +1,21 @@
+﻿@model GameModel
+
+<h2>
+    <a asp-controller="game" asp-action="index" asp-route-id="@Model.GameId">@Model.Name</a>
+</h2>
+<div class="flexblock">
+    <div class="flexblock__leftitem">
+        <a asp-controller="game" asp-action="index" asp-route-id="@Model.GameId">
+            <img alt="Picture" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" />
+        </a>
+    </div>
+    <div class="flexblock__rightitem">
+        <p class="price">Цена: <span>@Math.Truncate(Model.Price) руб.</span></p>
+        <form asp-controller="order" asp-action="additem" asp-route-returnUrl="@Context.Request.GetCurrentUrl()" method="post">
+            <input type="hidden" name="gameId" value="@Model.GameId" />
+            <button class="incor clickbutton" type="submit"><img src="/images/korz.png" alt="In Cart"></button>
+        </form>
+    </div>
+</div>
+<div class="clear"></div>
+<p class="descr">@Model.ShortDescription</p>
