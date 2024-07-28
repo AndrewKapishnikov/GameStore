@@ -8,11 +8,11 @@
 
 @if (Model.PaymentDescription == null)
 {
-    <div class="finish_font mt-2 mb-2">Пользователь отправил товар в корзину: @Model.OrderDateAndTime.ConvertUtcToMoscowTime().ToString(CultureInfo.InvariantCulture)</div>
+    <div class="finish_font mt-2 mb-2">Пользователь отправил товар в корзину: @Model.OrderDateAndTime.ConvertUtcToMoscowTime().ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.CurrentCulture) мск</div>
 }
 else
 {
-    <div class="finish_font mt-2 mb-2">Дата и время оформления заказа: @Model.OrderDateAndTime.ConvertUtcToMoscowTime().ToString(CultureInfo.InvariantCulture)</div>
+    <div class="finish_font mt-2 mb-2">Дата и время оформления заказа: @Model.OrderDateAndTime.ConvertUtcToMoscowTime().ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.CurrentCulture) мск</div>
 }
 <table class="table table-sm table-striped finish_font">
     <thead class="thead-dark">

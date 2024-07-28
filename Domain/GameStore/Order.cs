@@ -10,7 +10,11 @@ namespace GameStore
     {
         private readonly OrderDTO dto; 
         public int Id => dto.Id;
-        public DateTime DateOfOrder => dto.DateOfOrder;
+        public DateTime DateOfOrder
+        {
+            get => dto.DateOfOrder;
+            set => dto.DateOfOrder = value;
+        }
         public bool OrderReviewed 
         {
             get => dto.OrderReviewed;

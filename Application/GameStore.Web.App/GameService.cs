@@ -140,7 +140,7 @@ namespace GameStore.Web.App
                     sortColumn = nameof(Game.DateOfAdding); sortByAscending = true;
                     break;
                 case SortGameStates.DateOfAddingDesc:
-                    sortColumn = nameof(Game.Price); sortByAscending = false;
+                    sortColumn = nameof(Game.DateOfAdding); sortByAscending = false;
                     break;
             }
 

@@ -4,7 +4,7 @@
 
 }
 <h3 class="search_h3">Заказ оформлен и будет передан в службу доставки</h3>
-<div class="finish_font mt-2 mb-2">Дата и время оформления заказа: @Model.OrderDateAndTime.ConvertUtcToMoscowTime().ToString(CultureInfo.InvariantCulture) </div>
+<div class="finish_font mt-2 mb-2">Дата и время оформления заказа: @Model.OrderDateAndTime.ConvertUtcToMoscowTime().ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.CurrentCulture) мск </div>
 <div class="finish_font mb-3 text_color">
     На почту @Model.UserEmail отправлено письмо с параметрами заказа
 </div>

@@ -80,7 +80,7 @@
                 <td>@game.Name</td>
                 <td>@game.Publisher</td>
                 <td>
-                    @game.DateOfAdding.Date.ToShortDateString().ToString(CultureInfo.InvariantCulture)
+                    @game.DateOfAdding.Date.ToShortDateString().ToString(CultureInfo.CurrentCulture)
                 </td>
                 <td class="text-right" style="width:75px;">@Math.Truncate(@game.Price) руб.</td>
                 <td class="text-right" style="width:130px;">

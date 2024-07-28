@@ -399,10 +399,10 @@ namespace GameStore.Web.Controllers
                     users = users.OrderByDescending(p => p.Email);
                     break;
                 case SortUserStates.UserNameAsc:
-                    users = users.OrderBy(p => p.Name);
+                    users = users.OrderBy(p => p.Name).ThenBy(p => p.Surname);
                     break;
                 case SortUserStates.UserNameDesc:
-                    users = users.OrderByDescending(p => p.Name);
+                    users = users.OrderByDescending(p => p.Name).ThenByDescending(p => p.Surname);
                     break;
                 default:
                     users = users.OrderBy(p => p.Email);

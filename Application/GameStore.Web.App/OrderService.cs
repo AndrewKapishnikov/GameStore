@@ -157,6 +157,7 @@ namespace GameStore.Web.App
         {
             var order = await GetOrderAsync();
             order.Payment = payment;
+            order.DateOfOrder = DateTime.UtcNow;
             await orderRepository.UpdateAsync(order);
             Session.RemoveCart();   //
             return Map(order);
@@ -197,10 +198,10 @@ namespace GameStore.Web.App
                     orders = orders.OrderByDescending(p => p.User.UserName);
                     break;
                 case SortOrderStates.UserNameAsc:
-                    orders = orders.OrderBy(p => p.User.Name);
+                    orders = orders.OrderBy(p => p.User.Name).ThenBy(p => p.User.Surname);
                     break;
                 case SortOrderStates.UserNameDesc:
-                    orders = orders.OrderByDescending(p => p.User.Name);
+                    orders = orders.OrderByDescending(p => p.User.Name).ThenByDescending(p => p.User.Surname);
                     break;
                 default:
                     orders = orders.OrderBy(p => p.DateOfOrder);

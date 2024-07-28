@@ -127,7 +127,7 @@ else
     {
        <td style="width:30px;">@order.Id</td>
        <td style="width:140px;">
-           @order.OrderDateAndTime.ConvertUtcToMoscowTime().ToString(CultureInfo.InvariantCulture)
+           @order.OrderDateAndTime.ConvertUtcToMoscowTime().ToString("HH:mm:ss dd.MM.yy",CultureInfo.CurrentCulture)
        </td>
        <td>@order.UserEmail</td>
        <td>@order.UserName @order.UserSurname</td>
