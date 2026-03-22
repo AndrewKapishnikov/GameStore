@@ -86,7 +86,7 @@ namespace GameStore.Web.TagHelpers
             link.AddCssClass("page-link");
             if (home)
             {
-                PageUrlValues["page"] = pageNumber;
+                PageUrlValues["page"] = pageNumber;  // [Route("{controller}/{action}/{page:int}")]
                 link.Attributes["href"] = urlHelper.Action(PageAction, PageController, PageUrlValues);
                 // link.InnerHtml.Append("<");
                 link.AddCssClass("glyphicon-chevron-padding");

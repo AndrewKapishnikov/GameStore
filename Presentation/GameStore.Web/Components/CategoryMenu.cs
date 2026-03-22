@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace GameStore.Web.Components
 {
-    public class CategoryMenuViewComponent: ViewComponent
+    public class CategoryMenu: ViewComponent
     {
         private readonly AbstractCategoryService category;
-        public CategoryMenuViewComponent(AbstractCategoryService categoryService)
+        public CategoryMenu(AbstractCategoryService categoryService)
         {
             category = categoryService;
         }

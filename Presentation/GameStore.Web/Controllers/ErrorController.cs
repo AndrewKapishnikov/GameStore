@@ -36,9 +36,11 @@ namespace GameStore.Web.Controllers
             switch (exceptionMessage)
             {
                 case ExceptionMessages.NoElements:
+                    HttpContext.Response.StatusCode = 404;
                     ViewBag.ErrorMessage = ErrorMessages.PageNotFound;
                     return View("NotFound");
                 case ExceptionMessages.EmptySession:
+                    HttpContext.Response.StatusCode = 404;
                     ViewBag.ErrorMessage = ErrorMessages.SelectNewProduct;
                     return View("NotFound");
                 case ExceptionMessages.DatabaseNoConnectionString:
@@ -50,7 +52,8 @@ namespace GameStore.Web.Controllers
                     {
                         case "/admin/deletecategory": return View("DeleteCategoryWarning");
                         case "/admin/deleteuser":     return View("DeleteUserWarning");
-                        default:                      return View("NotFound");
+                        default:                      HttpContext.Response.StatusCode = 404;
+                                                      return View("NotFound");
                     }
             }
 
